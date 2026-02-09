@@ -1,0 +1,7 @@
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using AIREADI data from the years 2023 to 2025.
+The study will include all individuals whose age was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age is less than 30 years old, or age when first told the patient had diabetes was before age 30, don't have diabetes.
+We will also exclude anyone with missing data on serum albumin or diabetic retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles Q1: <25%, Q2: ≥25 and <50, Q3: ≥50 and <75%, Q4: ≥75%. 
+The outcome variable will be the presence or absence of diabetic retinopathy, coded as 1 for "Yes" and 0 for "No".
+We will adjust the analysis for potential confounding factors including age.

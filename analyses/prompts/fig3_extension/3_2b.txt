@@ -1,0 +1,4 @@
+We want to do a logistic regression analysis to study the association between hemoglobin (g/dl) and diabetic retinopathy using AIREADI data.
+Hemoglobin (g/dl) will be categegorized as tertiles(%) T1: <=33, T2: >33 and <=66, T3: >66 and the outcome will be diabetic retinopathy categorized as 0 for no retinopathy and 1 for any retinopathy.
+We will use 2023-2025 data and exclude people with missing data on hemoglobin (g/dl) and missing diabetic retinopathy status and who didn't say "Yes" to a question on being diagnosed with diabetes.
+We will adjust the analysis for other factors like age.

@@ -1,0 +1,11 @@
+We will plan to do a logistic regression from NHANES data from 2011-2020. We will exclude participants whose age at screening is less than 18 years, missing values in gender, race/Hispanic origin, urine albumin (mg/L), or urine creatinine (mg/dL), serum creatinine (mg/dl), serum total folate (nmol/l), red blood cell folate (nmol/l).
+We will include participants who had diabetes, defined as meeting one of the criteria: having self-reported diabetes, fasting plasma glucose >= 7.0 mmol/L, glycohemoglobin (HbA1c) (%) >=6.5 , or random glucose level >= 11.1 mmol/L
+The main predictor is red blood cell folate (nmol/l), categorized in quintiles(%) QN1: ≤20, QN2: >20 and ≤40, QN3: >40 and ≤60, QN4: >60 and ≤80, QN5: >80.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/Hispanic origin for 4 different cases: 
+1. if gender is female and race/Hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/Hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/Hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/Hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for age at screening, gender, and race/Hispanic origin.

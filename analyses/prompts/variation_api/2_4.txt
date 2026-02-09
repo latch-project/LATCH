@@ -1,0 +1,5 @@
+Using NHANES data from the years 2005 to 2008, we will do a weigted logistic regression using exam weights.
+Participants who don't have missing values for four level retinopathy grading will be included.
+Participants who have diabetes will be included when diabetes was defined as meeting any of the following criteria: self-reported diabetes, use of insulin, use of diabetes medication, glycohemoglobin A1c level (%) >= 6.5%, oral glucose tolerance test (mmol/L) >= 11.1mmol/L, or serum glucose (mmol/L) >=7.0mmol/L.
+Participants missing hdl-cholestrol will be excluded. The main predictor is hdl-cholestrol, categorized in tertiles(%) T1: ≤33, T2: >33 and ≤66, T3: >66. Adjust the analysis for race/Hispanic origin, age at screening, and gender.
+The outcome is retinopathy presence, based on the four level retinopathy grading. 

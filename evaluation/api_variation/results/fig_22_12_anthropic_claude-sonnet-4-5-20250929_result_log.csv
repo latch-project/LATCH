@@ -1,0 +1,773 @@
+Title,Schema,Question,Structured Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log
+76833,nhanes,"We will plan to do a logistic regression from NHANES data from 2011-2020. We will exclude participants whose age at screening is less than 18 years, missing values in gender, race/Hispanic origin, urine albumin (mg/L), or urine creatinine (mg/dL), serum creatinine (mg/dl), serum total folate (nmol/l), red blood cell folate (nmol/l).
+We will include participants who had diabetes, defined as meeting one of the criteria: having self-reported diabetes, fasting plasma glucose >= 7.0 mmol/L, glycohemoglobin (HbA1c) (%) >=6.5 , or random glucose level >= 11.1 mmol/L
+The main predictor is red blood cell folate (nmol/l), categorized in quintiles(%) QN1: ≤20, QN2: >20 and ≤40, QN3: >40 and ≤60, QN4: >60 and ≤80, QN5: >80.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/Hispanic origin for 4 different cases: 
+1. if gender is female and race/Hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/Hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/Hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/Hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for age at screening, gender, and race/Hispanic origin.","Analysis Type: logistic regression
+
+Dataset: NHANES
+
+Period of Interest: 2011-2020
+
+Inclusion Criteria:
+- diabetes defined as meeting one of the criteria:
+  having self-reported diabetes OR fasting plasma glucose >= 7.0 mmol/L OR glycohemoglobin (HbA1c) (%) >= 6.5 OR random glucose level >= 11.1 mmol/L
+
+Exclusion Criteria:
+- age at screening < 18
+- missing gender
+- missing race/Hispanic origin
+- missing urine albumin (mg/L)
+- missing urine creatinine (mg/dL)
+- missing serum creatinine (mg/dl)
+- missing serum total folate (nmol/l)
+- missing red blood cell folate (nmol/l)
+
+Covariates:
+- age at screening
+- gender
+- race/Hispanic origin
+
+Predictor:
+- red blood cell folate (nmol/l) categorized in quintiles(%):
+  QN1: ≤20, QN2: >20 and ≤40, QN3: >40 and ≤60, QN4: >60 and ≤80, QN5: >80
+
+Outcome:
+- presence of kidney disease = 1 if (1) or (2) is met; 0 otherwise
+  (1) eGFR < 60 mL/min/1.73m^2, where eGFR is calculated for 4 cases:
+    If gender = female and race/Hispanic origin = Non-Hispanic Black:
+      eGFR = 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+    If gender = female and race/Hispanic origin ≠ Non-Hispanic Black:
+      eGFR = 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+    If gender = male and race/Hispanic origin = Non-Hispanic Black:
+      eGFR = 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+    If gender = male and race/Hispanic origin ≠ Non-Hispanic Black:
+      eGFR = 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+or
+  (2) urine albumin-to-creatinine ratio (mg/g) >= 30, where:
+    urine albumin-to-creatinine ratio (mg/g) = 100 * (urine albumin (mg/L) / urine creatinine (mg/dL))","{'dataset': 'NHANES', 'inclusion': [{'keyword': 'diabetes', 'derived': True, 'depends_on': [{'keyword': 'self-reported diabetes', 'derived': False, 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'fasting plasma glucose (mmol/L)', 'derived': False, 'table': 'final_master_table', 'column': 'fasting_glucose_mmol_l', 'examples': ['5.162', '5.33', '5.38', '7.16', '7.161']}, {'keyword': 'glycohemoglobin (HbA1c) (%)', 'derived': False, 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '12.4', '13.2']}, {'keyword': 'random glucose level (mmol/L)', 'derived': False, 'table': 'final_master_table', 'column': 'glucose_serum_mmol_l', 'examples': ['3.0', '5.33', '5.38', '8.38', '11.32']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['self-reported diabetes', 'fasting plasma glucose >= 7.0 mmol/L', 'glycohemoglobin (HbA1c) (%) >= 6.5', 'random glucose level >= 11.1 mmol/L']}}]}], 'exclusion': [{'keyword': 'age at screening', 'derived': False, 'condition': '< 18', 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'gender', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/Hispanic origin', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'keyword': 'urine albumin (mg/L)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'albumin_urine_mg_l', 'examples': ['4.8', '14.1', '24.2', '31.5', '44.6']}, {'keyword': 'urine creatinine (mg/dL)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'creatinine_urine_mg_dl', 'examples': ['61.0', '96.0', '154.0', '174.0', '322.0']}, {'keyword': 'serum creatinine (mg/dl)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'creatinine_mg_dl', 'examples': ['0.58', '0.66', '0.7', '0.76', '0.93']}, {'keyword': 'serum total folate (nmol/l)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'serum_total_folate_nmol_l', 'examples': ['14.1', '44.6', '60.5', '76.1', '79.2']}, {'keyword': 'red blood cell folate (nmol/l)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'rbc_folate_nmol_l', 'examples': ['504.0', '571.0', '572.0', '725.0', '845.0']}], 'covariates': [{'keyword': 'age at screening', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'gender', 'derived': False, 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/Hispanic origin', 'derived': False, 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'predictor': [{'keyword': 'red blood cell folate (nmol/l)', 'derived': True, 'depends_on': [{'keyword': 'red blood cell folate (nmol/l)', 'derived': False, 'table': 'final_master_table', 'column': 'rbc_folate_nmol_l', 'examples': ['504.0', '571.0', '572.0', '725.0', '845.0']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'quintiles', 'num_bins': 5, 'labels': ['QN1: ≤20', 'QN2: >20 and ≤40', 'QN3: >40 and ≤60', 'QN4: >60 and ≤80', 'QN5: >80']}}], 'table': 'final_master_table', 'column': 'rbc_folate_nmol_l', 'examples': ['504.0', '571.0', '572.0', '725.0', '845.0']}], 'outcome': [{'keyword': 'presence of kidney disease', 'derived': True, 'depends_on': [{'keyword': 'serum creatinine (mg/dl)', 'derived': False, 'table': 'final_master_table', 'column': 'creatinine_mg_dl', 'examples': ['0.58', '0.66', '0.7', '0.76', '0.93']}, {'keyword': 'age at screening', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'gender', 'derived': False, 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/Hispanic origin', 'derived': False, 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'keyword': 'urine albumin (mg/L)', 'derived': False, 'table': 'final_master_table', 'column': 'albumin_urine_mg_l', 'examples': ['4.8', '14.1', '24.2', '31.5', '44.6']}, {'keyword': 'urine creatinine (mg/dL)', 'derived': False, 'table': 'final_master_table', 'column': 'creatinine_urine_mg_dl', 'examples': ['61.0', '96.0', '154.0', '174.0', '322.0']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'eGFR = 141 * min(serum creatinine (mg/dl) / K, 1) ** A * max(serum creatinine (mg/dl) / K, 1) ** -1.209 * (0.993 ** age at screening) * F * R, where K, A, F, and R depend on gender and race/Hispanic origin', 'logic': [{'condition1': 'gender = female and race/Hispanic origin = Non-Hispanic Black', 'formula1': '141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159'}, {'condition2': 'gender = female and race/Hispanic origin ≠ Non-Hispanic Black', 'formula2': '141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018'}, {'condition3': 'gender = male and race/Hispanic origin = Non-Hispanic Black', 'formula3': '141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159'}, {'condition4': 'gender = male and race/Hispanic origin ≠ Non-Hispanic Black', 'formula4': '141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)'}], 'output': 'eGFR (mL/min/1.73m^2)'}}, {'step': 2, 'derivation_method': {'type': 'formula', 'description': 'urine albumin-to-creatinine ratio (mg/g) = 100 * (urine albumin (mg/L) / urine creatinine (mg/dL))'}}, {'step': 3, 'derivation_method': {'type': 'boolean_or', 'criteria': [{'condition': 'eGFR < 60 mL/min/1.73m^2'}, {'condition': 'urine albumin-to-creatinine ratio (mg/g) >= 30'}]}}, {'step': 4, 'derivation_method': {'type': 'mapping', 'labels': ['1', '0']}}]}]}","{'analysis_type': 'logistic regression', 'dataset': 'NHANES', 'period_of_interest': '2011-2020', 'inclusion': [{'keyword': 'diabetes', 'derived': True, 'depends_on': [{'keyword': 'self-reported diabetes', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_diq', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'fasting plasma glucose (mmol/L)', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_glu', 'column': 'fasting_glucose_mmol_l', 'example_values': ['5.38', '12.4', '8.38', '13.2', '7.16']}, {'cycle': '2011-2012', 'table': 'nhanes.glu_g', 'column': 'fasting_glucose_mmol_l', 'example_values': ['5.162', '7.161', '8.937', '7.327', '17.819']}, {'cycle': '2013-2014', 'table': 'nhanes.glu_h', 'column': 'fasting_glucose_mmol_l', 'example_values': ['10.769', '14.1', '5.162', '8.937', '7.161']}, {'cycle': '2015-2016', 'table': 'nhanes.glu_i', 'column': 'fasting_glucose_mmol_l', 'example_values': ['5.38', '12.4', '8.38', '14.7', '5.33']}]}, {'keyword': 'glycohemoglobin (HbA1c) (%)', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_ghb', 'column': 'glycohemoglobin', 'example_values': ['12.4', '14.7', '13.2', '5.8', '4.8']}, {'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}, {'cycle': '2015-2016', 'table': 'nhanes.ghb_i', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}]}, {'keyword': 'random glucose level (mmol/L)', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_biopro', 'column': 'glucose_serum_mmol_l', 'example_values': ['5.38', '8.38', '5.33', '11.32', '3.0']}, {'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'glucose_serum_mmol_l', 'example_values': ['5.38', '8.38', '5.33', '11.32', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'glucose_serum_mmol_l', 'example_values': ['5.38', '8.38', '5.33', '11.32', '27.42']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'glucose_serum_mmol_l', 'example_values': ['5.38', '8.38', '5.33', '11.32', '27.42']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['self-reported diabetes', 'fasting plasma glucose >= 7.0 mmol/L', 'glycohemoglobin (HbA1c) (%) >= 6.5', 'random glucose level >= 11.1 mmol/L']}}]}], 'exclusion': [{'keyword': 'age at screening', 'derived': False, 'condition': '< 18', 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_demo', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'gender', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_demo', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/Hispanic origin', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_demo', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}, {'keyword': 'urine albumin (mg/L)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_alb_cr', 'column': 'albumin_urine_mg_l', 'example_values': ['14.1', '60.5', '1860.0', '79.2', '44.6']}, {'cycle': '2011-2012', 'table': 'nhanes.alb_cr_g', 'column': 'albumin_urine_mg_l', 'example_values': ['7410.0', '57.0', '145.4', '31.5', '24.2']}, {'cycle': '2013-2014', 'table': 'nhanes.alb_cr_h', 'column': 'albumin_urine_mg_l', 'example_values': ['154.0', '717.5', '1640.0', '96.0', '4.8']}, {'cycle': '2015-2016', 'table': 'nhanes.alb_cr_i', 'column': 'albumin_urine_mg_l', 'example_values': ['79.2', '44.6', '136.2', '76.1', '4.8']}]}, {'keyword': 'urine creatinine (mg/dL)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_alb_cr', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '615.0', '96.0', '61.0', '322.0']}, {'cycle': '2011-2012', 'table': 'nhanes.alb_cr_g', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '96.0', '322.0']}, {'cycle': '2013-2014', 'table': 'nhanes.alb_cr_h', 'column': 'creatinine_urine_mg_dl', 'example_values': ['519.0', '154.0', '346.0', '174.0', '96.0']}, {'cycle': '2015-2016', 'table': 'nhanes.alb_cr_i', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '96.0', '322.0']}]}, {'keyword': 'serum creatinine (mg/dl)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_biopro', 'column': 'creatinine_mg_dl', 'example_values': ['1.57', '8.74', '1.28', '2.74', '1.86']}, {'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'creatinine_mg_dl', 'example_values': ['0.66', '1.36', '1.15', '2.11', '4.27']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'creatinine_mg_dl', 'example_values': ['1.45', '2.16', '2.06', '4.35', '0.58']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'creatinine_mg_dl', 'example_values': ['0.7', '0.76', '1.18', '0.94', '0.93']}]}, {'keyword': 'serum total folate (nmol/l)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_folfms', 'column': 'serum_total_folate_nmol_l', 'example_values': ['14.1', '60.5', '79.2', '44.6', '76.1']}, {'cycle': '2011-2012', 'table': 'nhanes.folfms_g', 'column': 'serum_total_folate_nmol_l', 'example_values': ['14.1', '60.5', '79.2', '44.6', '96.0']}, {'cycle': '2013-2014', 'table': 'nhanes.folfms_h', 'column': 'serum_total_folate_nmol_l', 'example_values': ['14.1', '60.5', '79.2', '44.6', '96.0']}, {'cycle': '2015-2016', 'table': 'nhanes.folfms_i', 'column': 'serum_total_folate_nmol_l', 'example_values': ['14.1', '60.5', '79.2', '44.6', '76.1']}]}, {'keyword': 'red blood cell folate (nmol/l)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_folate', 'column': 'rbc_folate_nmol_l', 'example_values': ['571.0', '845.0', '572.0', '725.0', '504.0']}, {'cycle': '2011-2012', 'table': 'nhanes.folate_g', 'column': 'rbc_folate_nmol_l', 'example_values': ['571.0', '572.0', '845.0', '725.0', '504.0']}, {'cycle': '2013-2014', 'table': 'nhanes.folate_h', 'column': 'rbc_folate_nmol_l', 'example_values': ['572.0', '845.0', '5040.0', '725.0', '504.0']}, {'cycle': '2015-2016', 'table': 'nhanes.folate_i', 'column': 'rbc_folate_nmol_l', 'example_values': ['571.0', '572.0', '845.0', '4100.0', '725.0']}]}], 'covariates': [{'keyword': 'age at screening', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_demo', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'gender', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_demo', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/Hispanic origin', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_demo', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'predictor': [{'keyword': 'red blood cell folate (nmol/l)', 'derived': True, 'depends_on': [{'keyword': 'red blood cell folate (nmol/l)', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_folate', 'column': 'rbc_folate_nmol_l', 'example_values': ['571.0', '845.0', '572.0', '725.0', '504.0']}, {'cycle': '2011-2012', 'table': 'nhanes.folate_g', 'column': 'rbc_folate_nmol_l', 'example_values': ['571.0', '572.0', '845.0', '725.0', '504.0']}, {'cycle': '2013-2014', 'table': 'nhanes.folate_h', 'column': 'rbc_folate_nmol_l', 'example_values': ['572.0', '845.0', '5040.0', '725.0', '504.0']}, {'cycle': '2015-2016', 'table': 'nhanes.folate_i', 'column': 'rbc_folate_nmol_l', 'example_values': ['571.0', '572.0', '845.0', '4100.0', '725.0']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'quintiles', 'num_bins': 5, 'labels': ['QN1: ≤20', 'QN2: >20 and ≤40', 'QN3: >40 and ≤60', 'QN4: >60 and ≤80', 'QN5: >80']}}], 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_folate', 'column': 'rbc_folate_nmol_l', 'example_values': ['571.0', '845.0', '572.0', '725.0', '504.0']}, {'cycle': '2011-2012', 'table': 'nhanes.folate_g', 'column': 'rbc_folate_nmol_l', 'example_values': ['571.0', '572.0', '845.0', '725.0', '504.0']}, {'cycle': '2013-2014', 'table': 'nhanes.folate_h', 'column': 'rbc_folate_nmol_l', 'example_values': ['572.0', '845.0', '5040.0', '725.0', '504.0']}, {'cycle': '2015-2016', 'table': 'nhanes.folate_i', 'column': 'rbc_folate_nmol_l', 'example_values': ['571.0', '572.0', '845.0', '4100.0', '725.0']}]}], 'outcome': [{'keyword': 'presence of kidney disease', 'derived': True, 'depends_on': [{'keyword': 'serum creatinine (mg/dl)', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_biopro', 'column': 'creatinine_mg_dl', 'example_values': ['1.57', '8.74', '1.28', '2.74', '1.86']}, {'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'creatinine_mg_dl', 'example_values': ['0.66', '1.36', '1.15', '2.11', '4.27']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'creatinine_mg_dl', 'example_values': ['1.45', '2.16', '2.06', '4.35', '0.58']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'creatinine_mg_dl', 'example_values': ['0.7', '0.76', '1.18', '0.94', '0.93']}]}, {'keyword': 'age at screening', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_demo', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'gender', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_demo', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/Hispanic origin', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_demo', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}, {'keyword': 'urine albumin (mg/L)', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_alb_cr', 'column': 'albumin_urine_mg_l', 'example_values': ['14.1', '60.5', '1860.0', '79.2', '44.6']}, {'cycle': '2011-2012', 'table': 'nhanes.alb_cr_g', 'column': 'albumin_urine_mg_l', 'example_values': ['7410.0', '57.0', '145.4', '31.5', '24.2']}, {'cycle': '2013-2014', 'table': 'nhanes.alb_cr_h', 'column': 'albumin_urine_mg_l', 'example_values': ['154.0', '717.5', '1640.0', '96.0', '4.8']}, {'cycle': '2015-2016', 'table': 'nhanes.alb_cr_i', 'column': 'albumin_urine_mg_l', 'example_values': ['79.2', '44.6', '136.2', '76.1', '4.8']}]}, {'keyword': 'urine creatinine (mg/dL)', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_alb_cr', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '615.0', '96.0', '61.0', '322.0']}, {'cycle': '2011-2012', 'table': 'nhanes.alb_cr_g', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '96.0', '322.0']}, {'cycle': '2013-2014', 'table': 'nhanes.alb_cr_h', 'column': 'creatinine_urine_mg_dl', 'example_values': ['519.0', '154.0', '346.0', '174.0', '96.0']}, {'cycle': '2015-2016', 'table': 'nhanes.alb_cr_i', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '96.0', '322.0']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'eGFR = 141 * min(serum creatinine (mg/dl) / K, 1) ** A * max(serum creatinine (mg/dl) / K, 1) ** -1.209 * (0.993 ** age at screening) * F * R, where K, A, F, and R depend on gender and race/Hispanic origin', 'logic': [{'condition1': 'gender = female and race/Hispanic origin = Non-Hispanic Black', 'formula1': '141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159'}, {'condition2': 'gender = female and race/Hispanic origin ≠ Non-Hispanic Black', 'formula2': '141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018'}, {'condition3': 'gender = male and race/Hispanic origin = Non-Hispanic Black', 'formula3': '141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159'}, {'condition4': 'gender = male and race/Hispanic origin ≠ Non-Hispanic Black', 'formula4': '141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)'}], 'output': 'eGFR (mL/min/1.73m^2)'}}, {'step': 2, 'derivation_method': {'type': 'formula', 'description': 'urine albumin-to-creatinine ratio (mg/g) = 100 * (urine albumin (mg/L) / urine creatinine (mg/dL))'}}, {'step': 3, 'derivation_method': {'type': 'boolean_or', 'criteria': [{'condition': 'eGFR < 60 mL/min/1.73m^2'}, {'condition': 'urine albumin-to-creatinine ratio (mg/g) >= 30'}]}}, {'step': 4, 'derivation_method': {'type': 'mapping', 'labels': ['1', '0']}}]}]}",,"-- TEMP TABLE FOR ""self-reported diabetes""
+DROP TABLE IF EXISTS temp_master_doctor_told_you_have_diabetes;
+CREATE TEMP TABLE temp_master_doctor_told_you_have_diabetes AS
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.p_diq
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_doctor_told_you_have_diabetes ON temp_master_doctor_told_you_have_diabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""fasting plasma glucose (mmol/L)""
+DROP TABLE IF EXISTS temp_master_fasting_glucose_mmol_l;
+CREATE TEMP TABLE temp_master_fasting_glucose_mmol_l AS
+SELECT respondent_sequence_number, ""fasting_glucose_mmol_l"" AS ""fasting_glucose_mmol_l""
+FROM nhanes.p_glu
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mmol_l"" AS ""fasting_glucose_mmol_l""
+FROM nhanes.glu_g
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mmol_l"" AS ""fasting_glucose_mmol_l""
+FROM nhanes.glu_h
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mmol_l"" AS ""fasting_glucose_mmol_l""
+FROM nhanes.glu_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_fasting_glucose_mmol_l ON temp_master_fasting_glucose_mmol_l (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""glycohemoglobin (HbA1c) (%)""
+DROP TABLE IF EXISTS temp_master_glycohemoglobin;
+CREATE TEMP TABLE temp_master_glycohemoglobin AS
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.p_ghb
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_g
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_h
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_glycohemoglobin ON temp_master_glycohemoglobin (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""random glucose level (mmol/L)""
+DROP TABLE IF EXISTS temp_master_glucose_serum_mmol_l;
+CREATE TEMP TABLE temp_master_glucose_serum_mmol_l AS
+SELECT respondent_sequence_number, ""glucose_serum_mmol_l"" AS ""glucose_serum_mmol_l""
+FROM nhanes.p_biopro
+UNION ALL
+SELECT respondent_sequence_number, ""glucose_serum_mmol_l"" AS ""glucose_serum_mmol_l""
+FROM nhanes.biopro_g
+UNION ALL
+SELECT respondent_sequence_number, ""glucose_serum_mmol_l"" AS ""glucose_serum_mmol_l""
+FROM nhanes.biopro_h
+UNION ALL
+SELECT respondent_sequence_number, ""glucose_serum_mmol_l"" AS ""glucose_serum_mmol_l""
+FROM nhanes.biopro_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_glucose_serum_mmol_l ON temp_master_glucose_serum_mmol_l (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""age at screening"", ""age at screening"", ""age at screening""
+DROP TABLE IF EXISTS temp_master_age_in_years_at_screening;
+CREATE TEMP TABLE temp_master_age_in_years_at_screening AS
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.p_demo
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_in_years_at_screening ON temp_master_age_in_years_at_screening (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""gender"", ""gender"", ""gender""
+DROP TABLE IF EXISTS temp_master_gender;
+CREATE TEMP TABLE temp_master_gender AS
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.p_demo
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_gender ON temp_master_gender (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""race/Hispanic origin"", ""race/Hispanic origin"", ""race/Hispanic origin""
+DROP TABLE IF EXISTS temp_master_race_hispanic_origin;
+CREATE TEMP TABLE temp_master_race_hispanic_origin AS
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.p_demo
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_race_hispanic_origin ON temp_master_race_hispanic_origin (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""urine albumin (mg/L)"", ""urine albumin (mg/L)""
+DROP TABLE IF EXISTS temp_master_albumin_urine_mg_l;
+CREATE TEMP TABLE temp_master_albumin_urine_mg_l AS
+SELECT respondent_sequence_number, ""albumin_urine_mg_l"" AS ""albumin_urine_mg_l""
+FROM nhanes.p_alb_cr
+UNION ALL
+SELECT respondent_sequence_number, ""albumin_urine_mg_l"" AS ""albumin_urine_mg_l""
+FROM nhanes.alb_cr_g
+UNION ALL
+SELECT respondent_sequence_number, ""albumin_urine_mg_l"" AS ""albumin_urine_mg_l""
+FROM nhanes.alb_cr_h
+UNION ALL
+SELECT respondent_sequence_number, ""albumin_urine_mg_l"" AS ""albumin_urine_mg_l""
+FROM nhanes.alb_cr_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_albumin_urine_mg_l ON temp_master_albumin_urine_mg_l (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""urine creatinine (mg/dL)"", ""urine creatinine (mg/dL)""
+DROP TABLE IF EXISTS temp_master_creatinine_urine_mg_dl;
+CREATE TEMP TABLE temp_master_creatinine_urine_mg_dl AS
+SELECT respondent_sequence_number, ""creatinine_urine_mg_dl"" AS ""creatinine_urine_mg_dl""
+FROM nhanes.p_alb_cr
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_urine_mg_dl"" AS ""creatinine_urine_mg_dl""
+FROM nhanes.alb_cr_g
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_urine_mg_dl"" AS ""creatinine_urine_mg_dl""
+FROM nhanes.alb_cr_h
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_urine_mg_dl"" AS ""creatinine_urine_mg_dl""
+FROM nhanes.alb_cr_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_creatinine_urine_mg_dl ON temp_master_creatinine_urine_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""serum creatinine (mg/dl)"", ""serum creatinine (mg/dl)""
+DROP TABLE IF EXISTS temp_master_creatinine_mg_dl;
+CREATE TEMP TABLE temp_master_creatinine_mg_dl AS
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.p_biopro
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_g
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_h
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_creatinine_mg_dl ON temp_master_creatinine_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""serum total folate (nmol/l)""
+DROP TABLE IF EXISTS temp_master_serum_total_folate_nmol_l;
+CREATE TEMP TABLE temp_master_serum_total_folate_nmol_l AS
+SELECT respondent_sequence_number, ""serum_total_folate_nmol_l"" AS ""serum_total_folate_nmol_l""
+FROM nhanes.p_folfms
+UNION ALL
+SELECT respondent_sequence_number, ""serum_total_folate_nmol_l"" AS ""serum_total_folate_nmol_l""
+FROM nhanes.folfms_g
+UNION ALL
+SELECT respondent_sequence_number, ""serum_total_folate_nmol_l"" AS ""serum_total_folate_nmol_l""
+FROM nhanes.folfms_h
+UNION ALL
+SELECT respondent_sequence_number, ""serum_total_folate_nmol_l"" AS ""serum_total_folate_nmol_l""
+FROM nhanes.folfms_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_serum_total_folate_nmol_l ON temp_master_serum_total_folate_nmol_l (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""red blood cell folate (nmol/l)"", ""red blood cell folate (nmol/l)"", ""red blood cell folate (nmol/l)""
+DROP TABLE IF EXISTS temp_master_rbc_folate_nmol_l;
+CREATE TEMP TABLE temp_master_rbc_folate_nmol_l AS
+SELECT respondent_sequence_number, ""rbc_folate_nmol_l"" AS ""rbc_folate_nmol_l""
+FROM nhanes.p_folate
+UNION ALL
+SELECT respondent_sequence_number, ""rbc_folate_nmol_l"" AS ""rbc_folate_nmol_l""
+FROM nhanes.folate_g
+UNION ALL
+SELECT respondent_sequence_number, ""rbc_folate_nmol_l"" AS ""rbc_folate_nmol_l""
+FROM nhanes.folate_h
+UNION ALL
+SELECT respondent_sequence_number, ""rbc_folate_nmol_l"" AS ""rbc_folate_nmol_l""
+FROM nhanes.folate_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_rbc_folate_nmol_l ON temp_master_rbc_folate_nmol_l (respondent_sequence_number);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT respondent_sequence_number FROM temp_master_doctor_told_you_have_diabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_fasting_glucose_mmol_l
+UNION
+SELECT respondent_sequence_number FROM temp_master_glycohemoglobin
+UNION
+SELECT respondent_sequence_number FROM temp_master_glucose_serum_mmol_l
+UNION
+SELECT respondent_sequence_number FROM temp_master_age_in_years_at_screening
+UNION
+SELECT respondent_sequence_number FROM temp_master_gender
+UNION
+SELECT respondent_sequence_number FROM temp_master_race_hispanic_origin
+UNION
+SELECT respondent_sequence_number FROM temp_master_albumin_urine_mg_l
+UNION
+SELECT respondent_sequence_number FROM temp_master_creatinine_urine_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_creatinine_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_serum_total_folate_nmol_l
+UNION
+SELECT respondent_sequence_number FROM temp_master_rbc_folate_nmol_l;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_respondent_sequence_number ON temp_all_ids (respondent_sequence_number);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.respondent_sequence_number,
+    t0.""doctor_told_you_have_diabetes"",
+    t1.""fasting_glucose_mmol_l"",
+    t2.""glycohemoglobin"",
+    t3.""glucose_serum_mmol_l"",
+    t4.""age_in_years_at_screening"",
+    t5.""gender"",
+    t6.""race_hispanic_origin"",
+    t7.""albumin_urine_mg_l"",
+    t8.""creatinine_urine_mg_dl"",
+    t9.""creatinine_mg_dl"",
+    t10.""serum_total_folate_nmol_l"",
+    t11.""rbc_folate_nmol_l""
+FROM temp_all_ids a
+LEFT JOIN temp_master_doctor_told_you_have_diabetes t0 ON a.respondent_sequence_number = t0.respondent_sequence_number 
+LEFT JOIN temp_master_fasting_glucose_mmol_l t1 ON a.respondent_sequence_number = t1.respondent_sequence_number 
+LEFT JOIN temp_master_glycohemoglobin t2 ON a.respondent_sequence_number = t2.respondent_sequence_number 
+LEFT JOIN temp_master_glucose_serum_mmol_l t3 ON a.respondent_sequence_number = t3.respondent_sequence_number 
+LEFT JOIN temp_master_age_in_years_at_screening t4 ON a.respondent_sequence_number = t4.respondent_sequence_number 
+LEFT JOIN temp_master_gender t5 ON a.respondent_sequence_number = t5.respondent_sequence_number 
+LEFT JOIN temp_master_race_hispanic_origin t6 ON a.respondent_sequence_number = t6.respondent_sequence_number 
+LEFT JOIN temp_master_albumin_urine_mg_l t7 ON a.respondent_sequence_number = t7.respondent_sequence_number 
+LEFT JOIN temp_master_creatinine_urine_mg_dl t8 ON a.respondent_sequence_number = t8.respondent_sequence_number 
+LEFT JOIN temp_master_creatinine_mg_dl t9 ON a.respondent_sequence_number = t9.respondent_sequence_number 
+LEFT JOIN temp_master_serum_total_folate_nmol_l t10 ON a.respondent_sequence_number = t10.respondent_sequence_number 
+LEFT JOIN temp_master_rbc_folate_nmol_l t11 ON a.respondent_sequence_number = t11.respondent_sequence_number;
+
+CREATE INDEX idx_final_master_respondent_sequence_number    
+    ON final_master_table (respondent_sequence_number);
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Include patients with diabetes (self-reported, FPG>=7.0, HbA1c>=6.5, or random glucose>=11.1)
+CREATE TEMP TABLE temp_inclusion AS
+SELECT ""respondent_sequence_number""
+FROM final_master_table
+WHERE (""doctor_told_you_have_diabetes"" = 'Yes')
+   OR (""fasting_glucose_mmol_l"" >= 7.0)
+   OR (""glycohemoglobin"" >= 6.5)
+   OR (""glucose_serum_mmol_l"" >= 11.1);
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude patients with age at screening < 18
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""age_in_years_at_screening"" >= 18;
+
+-- STEP 2.2: Exclude patients with missing gender
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""gender"" IS NOT NULL;
+
+-- STEP 2.3: Exclude patients with missing race/Hispanic origin
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""race_hispanic_origin"" IS NOT NULL;
+
+-- STEP 2.4: Exclude patients with missing urine albumin (mg/L)
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step3 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""albumin_urine_mg_l"" IS NOT NULL;
+
+-- STEP 2.5: Exclude patients with missing urine creatinine (mg/dL)
+CREATE TEMP TABLE temp_exclusion_step5 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step4 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""creatinine_urine_mg_dl"" IS NOT NULL;
+
+-- STEP 2.6: Exclude patients with missing serum creatinine (mg/dl)
+CREATE TEMP TABLE temp_exclusion_step6 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step5 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""creatinine_mg_dl"" IS NOT NULL;
+
+-- STEP 2.7: Exclude patients with missing serum total folate (nmol/l)
+CREATE TEMP TABLE temp_exclusion_step7 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step6 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""serum_total_folate_nmol_l"" IS NOT NULL;
+
+-- STEP 2.8: Exclude patients with missing red blood cell folate (nmol/l)
+CREATE TEMP TABLE temp_exclusion_step8 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step7 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""rbc_folate_nmol_l"" IS NOT NULL;
+
+-- ========== STEP 3: Cohort ==========
+
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""respondent_sequence_number""
+FROM temp_exclusion_step8;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Age at screening
+CREATE TEMP TABLE temp_age_at_screening AS
+SELECT c.""respondent_sequence_number"", f.""age_in_years_at_screening""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.2 Gender
+CREATE TEMP TABLE temp_gender AS
+SELECT c.""respondent_sequence_number"", f.""gender""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.3 Race/Hispanic origin
+CREATE TEMP TABLE temp_race_hispanic_origin AS
+SELECT c.""respondent_sequence_number"", f.""race_hispanic_origin""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.4 Red blood cell folate - raw values
+CREATE TEMP TABLE temp_rbc_folate_raw AS
+SELECT c.""respondent_sequence_number"", f.""rbc_folate_nmol_l""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Compute quintile cutoffs for red blood cell folate within cohort
+CREATE TEMP TABLE temp_rbc_folate_cutoffs AS
+SELECT
+  PERCENTILE_CONT(0.20) WITHIN GROUP (ORDER BY ""rbc_folate_nmol_l"") AS q1,
+  PERCENTILE_CONT(0.40) WITHIN GROUP (ORDER BY ""rbc_folate_nmol_l"") AS q2,
+  PERCENTILE_CONT(0.60) WITHIN GROUP (ORDER BY ""rbc_folate_nmol_l"") AS q3,
+  PERCENTILE_CONT(0.80) WITHIN GROUP (ORDER BY ""rbc_folate_nmol_l"") AS q4
+FROM temp_rbc_folate_raw;
+
+-- Assign red blood cell folate quintile groups
+CREATE TEMP TABLE temp_rbc_folate_quintiles AS
+SELECT ""respondent_sequence_number"",
+  CASE
+    WHEN ""rbc_folate_nmol_l"" IS NULL THEN NULL
+    WHEN ""rbc_folate_nmol_l"" <= (SELECT q1 FROM temp_rbc_folate_cutoffs) THEN 'QN1'
+    WHEN ""rbc_folate_nmol_l"" <= (SELECT q2 FROM temp_rbc_folate_cutoffs) THEN 'QN2'
+    WHEN ""rbc_folate_nmol_l"" <= (SELECT q3 FROM temp_rbc_folate_cutoffs) THEN 'QN3'
+    WHEN ""rbc_folate_nmol_l"" <= (SELECT q4 FROM temp_rbc_folate_cutoffs) THEN 'QN4'
+    ELSE 'QN5'
+  END AS ""red_blood_cell_folate_nmol_l""
+FROM temp_rbc_folate_raw;
+
+-- 4.5 Outcome: Presence of kidney disease
+-- Calculate eGFR based on gender, race, age, and serum creatinine
+CREATE TEMP TABLE temp_egfr AS
+SELECT c.""respondent_sequence_number"",
+  CASE
+    WHEN f.""gender"" = 'Female' AND f.""race_hispanic_origin"" = 'Non-Hispanic Black' THEN
+      141 * POWER(LEAST(f.""creatinine_mg_dl"" / 0.7, 1), -0.329) * 
+      POWER(GREATEST(f.""creatinine_mg_dl"" / 0.7, 1), -1.209) * 
+      POWER(0.993, f.""age_in_years_at_screening"") * 1.018 * 1.159
+    WHEN f.""gender"" = 'Female' AND f.""race_hispanic_origin"" != 'Non-Hispanic Black' THEN
+      141 * POWER(LEAST(f.""creatinine_mg_dl"" / 0.7, 1), -0.329) * 
+      POWER(GREATEST(f.""creatinine_mg_dl"" / 0.7, 1), -1.209) * 
+      POWER(0.993, f.""age_in_years_at_screening"") * 1.018
+    WHEN f.""gender"" = 'Male' AND f.""race_hispanic_origin"" = 'Non-Hispanic Black' THEN
+      141 * POWER(LEAST(f.""creatinine_mg_dl"" / 0.9, 1), -0.411) * 
+      POWER(GREATEST(f.""creatinine_mg_dl"" / 0.9, 1), -1.209) * 
+      POWER(0.993, f.""age_in_years_at_screening"") * 1.159
+    WHEN f.""gender"" = 'Male' AND f.""race_hispanic_origin"" != 'Non-Hispanic Black' THEN
+      141 * POWER(LEAST(f.""creatinine_mg_dl"" / 0.9, 1), -0.411) * 
+      POWER(GREATEST(f.""creatinine_mg_dl"" / 0.9, 1), -1.209) * 
+      POWER(0.993, f.""age_in_years_at_screening"")
+    ELSE NULL
+  END AS ""egfr""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Calculate urine albumin-to-creatinine ratio (UACR)
+CREATE TEMP TABLE temp_uacr AS
+SELECT c.""respondent_sequence_number"",
+       (100.0 * f.""albumin_urine_mg_l"" / f.""creatinine_urine_mg_dl"") AS ""uacr""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Determine presence of kidney disease
+CREATE TEMP TABLE temp_kidney_disease AS
+SELECT c.""respondent_sequence_number"",
+  CASE
+    WHEN e.""egfr"" < 60 OR u.""uacr"" >= 30 THEN 1
+    ELSE 0
+  END AS ""presence_of_kidney_disease""
+FROM temp_cohort c
+JOIN temp_egfr e ON c.""respondent_sequence_number"" = e.""respondent_sequence_number""
+JOIN temp_uacr u ON c.""respondent_sequence_number"" = u.""respondent_sequence_number"";
+
+-- ========== STEP 5: Final Table ==========
+CREATE TEMP TABLE temp_final_table AS
+SELECT 
+  c.""respondent_sequence_number"",
+  a.""age_in_years_at_screening"" AS ""age_at_screening"",
+  g.""gender"",
+  r.""race_hispanic_origin"",
+  rbc.""red_blood_cell_folate_nmol_l"",
+  kd.""presence_of_kidney_disease""
+FROM temp_cohort c
+JOIN temp_age_at_screening a ON c.""respondent_sequence_number"" = a.""respondent_sequence_number""
+JOIN temp_gender g ON c.""respondent_sequence_number"" = g.""respondent_sequence_number""
+JOIN temp_race_hispanic_origin r ON c.""respondent_sequence_number"" = r.""respondent_sequence_number""
+JOIN temp_rbc_folate_quintiles rbc ON c.""respondent_sequence_number"" = rbc.""respondent_sequence_number""
+JOIN temp_kidney_disease kd ON c.""respondent_sequence_number"" = kd.""respondent_sequence_number"";
+
+-- ========== STEP 6: View Output ==========
+SELECT * FROM temp_final_table;","    step_num                                                                                                     step  remaining_after_step  excluded_at_step
+0          0  STEP 1.1: Include patients with diabetes (self-reported, FPG>=7.0, HbA1c>=6.5, or random glucose>=11.1)                  4821               NaN
+1          1                                                    STEP 2.1: Exclude patients with age at screening < 18                  4762              59.0
+2          2                                                           STEP 2.2: Exclude patients with missing gender                  4762               0.0
+3          3                                             STEP 2.3: Exclude patients with missing race/Hispanic origin                  4762               0.0
+4          4                                             STEP 2.4: Exclude patients with missing urine albumin (mg/L)                  4430             332.0
+5          5                                         STEP 2.5: Exclude patients with missing urine creatinine (mg/dL)                  4430               0.0
+6          6                                         STEP 2.6: Exclude patients with missing serum creatinine (mg/dl)                  4189             241.0
+7          7                                      STEP 2.7: Exclude patients with missing serum total folate (nmol/l)                  3437             752.0
+8          8                                   STEP 2.8: Exclude patients with missing red blood cell folate (nmol/l)                  3396              41.0
+9          9                                                                     ========== STEP 3: Cohort ==========                  3396               0.0
+10        10                                                                                     4.1 Age at screening                  3396               0.0
+11        11                                                                                               4.2 Gender                  3396               0.0
+12        12                                                                                 4.3 Race/Hispanic origin                  3396               0.0
+13        13                                                                   4.4 Red blood cell folate - raw values                  3396               0.0
+14        14                                         Compute quintile cutoffs for red blood cell folate within cohort                     1            3395.0
+15        15                                                             Assign red blood cell folate quintile groups                  3396           -3395.0
+16        16                                          Calculate eGFR based on gender, race, age, and serum creatinine                  3396               0.0
+17        17                                                       Calculate urine albumin-to-creatinine ratio (UACR)                  3396               0.0
+18        18                                                                     Determine presence of kidney disease                  3396               0.0
+19        19                                                                ========== STEP 5: Final Table ==========                  3396               0.0","(3396, 6)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""respondent_sequence_number"")
+    outcome_vars <- c(""presence_of_kidney_disease"")
+    
+    cohort <- df
+
+
+    outcome_roles <- c()
+    outcome_roles[""presence_of_kidney_disease""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    x_raw <- df[[outcome_var]]
+    x_chr <- trimws(tolower(as.character(x_raw)))
+
+    none_tokens <- c(""none"", ""nan"", ""na"", """", ""null"", ""nil"", ""missing"")
+    x_chr[x_chr %in% none_tokens] <- NA_character_
+
+    y <- rep(NA_integer_, length(x_chr))
+
+    y[x_chr %in% c(""yes"", ""y"", ""true"", ""t"")]  <- 1L
+    y[x_chr %in% c(""no"",  ""n"", ""false"", ""f"")] <- 0L
+
+    x_num <- suppressWarnings(as.numeric(x_chr))
+    y[is.na(y) & !is.na(x_num) & x_num == 1] <- 1L
+    y[is.na(y) & !is.na(x_num) & x_num == 0] <- 0L
+
+    idx <- is.na(y) & !is.na(x_chr)
+    if (any(idx)) {
+    vals <- sort(unique(x_chr[idx]))
+
+    if (length(vals) != 2) {
+        stop(sprintf(
+        ""Outcome '%s' must have exactly 2 non-missing classes after excluding none. Found: %s"",
+        outcome_var, paste(vals, collapse = "", "")
+        ))
+    }
+
+    tab <- table(x_chr[idx])
+    minority <- names(tab)[which.min(tab)]
+    majority <- setdiff(vals, minority)
+
+    cat(sprintf(
+        ""Outcome '%s' recoding: 1 = %s (minority)  0 = %s (majority)"",
+        outcome_var, minority, majority
+    ))
+
+    y[idx] <- as.integer(x_chr[idx] == minority)
+    }
+
+    df[[outcome_var]] <- y
+
+    # Must contain both 0 and 1 somewhere (plus NA allowed)
+    u <- sort(unique(df[[outcome_var]][!is.na(df[[outcome_var]])]))
+    if (!(length(u) == 2 && all(u == c(0, 1)))) {
+    stop(sprintf(
+        ""After recoding, '%s' must contain both 0 and 1 (plus NA for none). Found: %s"",
+        outcome_var,
+        ifelse(length(u) == 0, ""<no non-missing values>"", paste(u, collapse = "", ""))
+    ))
+    }
+
+    formula <- as.formula(paste0(outcome_var, "" ~ "", paste(predictor_vars, collapse = "" + "")))
+                
+    
+        
+    
+    model <- glm(formula,
+                data = df,
+                family =  binomial(link = ""logit""))
+            
+    
+    result_table <- tidy(model, conf.int = TRUE, exponentiate = TRUE) %>%
+        select(term, estimate, p.value, conf.low, conf.high)
+
+            
+    ","[{'variable': 'respondent_sequence_number', 'category': 'identifier', 'n_unique': 3396, 'na_count': 0, 'summary': 'Total rows = 3396'}, {'variable': 'age_at_screening', 'category': 'numerical', 'n_unique': 63, 'na_count': 0, 'summary': 'mean = 60.163, sd = 14.474'}, {'variable': 'gender', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'Female: 48.6%; Male: 51.4%'}, {'variable': 'race_hispanic_origin', 'category': 'categorical', 'n_unique': 5, 'na_count': 0, 'summary': 'Mexican American: 17.1%; Non-Hispanic Black: 26.6%; Non-Hispanic White: 30.1%; Other Hispanic: 11.8%; Other Race - Including Multi-Racial: 14.5%'}, {'variable': 'red_blood_cell_folate_nmol_l', 'category': 'categorical', 'n_unique': 5, 'na_count': 0, 'summary': 'QN1: 20%; QN2: 20.7%; QN3: 19.3%; QN4: 20%; QN5: 20%'}, {'variable': 'presence_of_kidney_disease', 'category': 'outcome', 'n_unique': 2, 'na_count': 0, 'summary': '0: 61%; 1: 39%'}]","[{'term': '(Intercept)', 'estimate': 0.04148969523809992, 'p.value': 4.152075821268555e-49, 'conf.low': 0.0270518943374037, 'conf.high': 0.0631083492156694}, {'term': 'age_at_screening', 'estimate': 1.0442458484265236, 'p.value': 1.0746105081944718e-51, 'conf.low': 1.0384552692547817, 'conf.high': 1.0501743847959535}, {'term': 'genderFemale', 'estimate': 0.9808439972903142, 'p.value': 0.7954562647515153, 'conf.low': 0.8474027068378975, 'conf.high': 1.1353481583752822}, {'term': 'race_hispanic_originMexican American', 'estimate': 0.9221041503475887, 'p.value': 0.4777660444959285, 'conf.low': 0.7367807764362229, 'conf.high': 1.1531408973713508}, {'term': 'race_hispanic_originNon-Hispanic Black', 'estimate': 1.0902118026022145, 'p.value': 0.39186500037754307, 'conf.low': 0.8947473816404463, 'conf.high': 1.3288218184907783}, {'term': 'race_hispanic_originOther Hispanic', 'estimate': 0.7027915376946351, 'p.value': 0.006657603937654305, 'conf.low': 0.5438134594318411, 'conf.high': 0.9054201434285474}, {'term': 'race_hispanic_originOther Race - Including Multi-Racial', 'estimate': 0.8328466240400548, 'p.value': 0.13038758169755768, 'conf.low': 0.6565295983150546, 'conf.high': 1.054877295384701}, {'term': 'red_blood_cell_folate_nmol_lQN2', 'estimate': 1.0173342057793957, 'p.value': 0.8846370415500857, 'conf.low': 0.8065708513393401, 'conf.high': 1.2833681980941423}, {'term': 'red_blood_cell_folate_nmol_lQN3', 'estimate': 1.2259001471043085, 'p.value': 0.0893520637325363, 'conf.low': 0.9693240865291911, 'conf.high': 1.5510931332892577}, {'term': 'red_blood_cell_folate_nmol_lQN4', 'estimate': 1.0743495716573486, 'p.value': 0.5499711459684832, 'conf.low': 0.849268924353728, 'conf.high': 1.3593764841690776}, {'term': 'red_blood_cell_folate_nmol_lQN5', 'estimate': 1.5749939884315418, 'p.value': 0.00015377941961858849, 'conf.low': 1.2453654296539802, 'conf.high': 1.9937622384960696}]",,,,logistic regression,2011-2020,"[[2011, 2012], [2013, 2014], [2015, 2016], [2017, 2020]]",anthropic_claude-sonnet-4-5-20250929,"**Pass**
+
+This analysis plan is comprehensive and well-structured. You have provided all the critical information needed for a logistic regression analysis:
+
+✓ **Analysis type**: Logistic regression (appropriate for binary outcome)
+
+✓ **Dataset and period**: NHANES 2011-2020
+
+✓ **Inclusion criteria**: Clearly defined diabetes population using multiple diagnostic criteria (self-reported diabetes, fasting plasma glucose ≥7.0 mmol/L, HbA1c ≥6.5%, or random glucose ≥11.1 mmol/L)
+
+✓ **Exclusion criteria**: Well-specified (age <18 years, missing values in key variables: gender, race/Hispanic origin, urine albumin, urine creatinine, serum creatinine, serum total folate, red blood cell folate)
+
+✓ **Predictor**: Red blood cell folate (nmol/L) categorized into quintiles with clear cut-points
+
+✓ **Outcome**: Binary outcome (presence of kidney disease) with clear definition (eGFR <60 mL/min/1.73m² OR UACR ≥30 mg/g), including detailed eGFR calculation formulas for different demographic groups
+
+✓ **Covariates**: Age at screening, gender, and race/Hispanic origin
+
+The analysis plan is methodologically sound with appropriate variable definitions, clear calculation formulas, and proper adjustment for confounders. You may proceed with this analysis.","[""The selected candidate variable may not be the suitable keyword [\n  {'cycle': '2017-2020', 'table': 'nhanes.p_folate', 'column': 'rbc_folate_nmol_l', 'example_values': ['571.0', '845.0', '572.0', '725.0', '504.0']},\n  {'cycle': '2011-2012', 'table': 'nhanes.folate_g', 'column': 'rbc_folate_nmol_l', 'example_values': ['571.0', '572.0', '845.0', '725.0', '504.0']},\n  {'cycle': '2013-2014', 'table': 'nhanes.folate_h', 'column': 'rbc_folate_nmol_l', 'example_values': ['572.0', '845.0', '5040.0', '725.0', '504.0']},\n  {'cycle': '2015-2016', 'table': 'nhanes.folate_i', 'column': 'rbc_folate_nmol_l', 'example_values': ['571.0', '572.0', '845.0', '4100.0', '725.0']}\n]""]",,306.528336,"[[{'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 1263, 'output_tokens': 345, 'total_cost': 0.008964, 'formatted_total_cost': '$0.008964'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 2523, 'output_tokens': 843, 'total_cost': 0.020214, 'formatted_total_cost': '$0.020214'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 3284, 'output_tokens': 1979, 'total_cost': 0.039536999999999996, 'formatted_total_cost': '$0.039537'}], [{'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4155, 'output_tokens': 98, 'total_cost': 0.013935, 'formatted_total_cost': '$0.013935'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4155, 'output_tokens': 98, 'total_cost': 0.013935, 'formatted_total_cost': '$0.013935'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4123, 'output_tokens': 96, 'total_cost': 0.013809, 'formatted_total_cost': '$0.013809'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4123, 'output_tokens': 96, 'total_cost': 0.013809, 'formatted_total_cost': '$0.013809'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4070, 'output_tokens': 98, 'total_cost': 0.013679999999999998, 'formatted_total_cost': '$0.013680'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4070, 'output_tokens': 98, 'total_cost': 0.013679999999999998, 'formatted_total_cost': '$0.013680'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4089, 'output_tokens': 98, 'total_cost': 0.013737, 'formatted_total_cost': '$0.013737'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4089, 'output_tokens': 98, 'total_cost': 0.013737, 'formatted_total_cost': '$0.013737'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 477, 'output_tokens': 8, 'total_cost': 0.0015509999999999999, 'formatted_total_cost': '$0.001551'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4490, 'output_tokens': 110, 'total_cost': 0.01512, 'formatted_total_cost': '$0.015120'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4490, 'output_tokens': 110, 'total_cost': 0.01512, 'formatted_total_cost': '$0.015120'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4166, 'output_tokens': 110, 'total_cost': 0.014148000000000003, 'formatted_total_cost': '$0.014148'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4166, 'output_tokens': 110, 'total_cost': 0.014148000000000003, 'formatted_total_cost': '$0.014148'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4137, 'output_tokens': 110, 'total_cost': 0.014061, 'formatted_total_cost': '$0.014061'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4137, 'output_tokens': 110, 'total_cost': 0.014061, 'formatted_total_cost': '$0.014061'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4145, 'output_tokens': 110, 'total_cost': 0.014085000000000002, 'formatted_total_cost': '$0.014085'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4145, 'output_tokens': 110, 'total_cost': 0.014085000000000002, 'formatted_total_cost': '$0.014085'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 464, 'output_tokens': 8, 'total_cost': 0.0015119999999999999, 'formatted_total_cost': '$0.001512'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4776, 'output_tokens': 131, 'total_cost': 0.016293000000000002, 'formatted_total_cost': '$0.016293'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4776, 'output_tokens': 131, 'total_cost': 0.016293000000000002, 'formatted_total_cost': '$0.016293'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4629, 'output_tokens': 131, 'total_cost': 0.015852, 'formatted_total_cost': '$0.015852'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4629, 'output_tokens': 131, 'total_cost': 0.015852, 'formatted_total_cost': '$0.015852'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4653, 'output_tokens': 131, 'total_cost': 0.015924, 'formatted_total_cost': '$0.015924'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4653, 'output_tokens': 131, 'total_cost': 0.015924, 'formatted_total_cost': '$0.015924'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4637, 'output_tokens': 131, 'total_cost': 0.015876, 'formatted_total_cost': '$0.015876'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4637, 'output_tokens': 131, 'total_cost': 0.015876, 'formatted_total_cost': '$0.015876'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 421, 'output_tokens': 8, 'total_cost': 0.0013830000000000001, 'formatted_total_cost': '$0.001383'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4047, 'output_tokens': 102, 'total_cost': 0.013671, 'formatted_total_cost': '$0.013671'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4047, 'output_tokens': 102, 'total_cost': 0.013671, 'formatted_total_cost': '$0.013671'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4200, 'output_tokens': 102, 'total_cost': 0.01413, 'formatted_total_cost': '$0.014130'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4200, 'output_tokens': 102, 'total_cost': 0.01413, 'formatted_total_cost': '$0.014130'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4374, 'output_tokens': 102, 'total_cost': 0.014652000000000002, 'formatted_total_cost': '$0.014652'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4374, 'output_tokens': 102, 'total_cost': 0.014652000000000002, 'formatted_total_cost': '$0.014652'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4411, 'output_tokens': 102, 'total_cost': 0.014763, 'formatted_total_cost': '$0.014763'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4411, 'output_tokens': 102, 'total_cost': 0.014763, 'formatted_total_cost': '$0.014763'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 484, 'output_tokens': 8, 'total_cost': 0.001572, 'formatted_total_cost': '$0.001572'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4247, 'output_tokens': 90, 'total_cost': 0.014091, 'formatted_total_cost': '$0.014091'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4247, 'output_tokens': 90, 'total_cost': 0.014091, 'formatted_total_cost': '$0.014091'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4219, 'output_tokens': 90, 'total_cost': 0.014006999999999999, 'formatted_total_cost': '$0.014007'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4219, 'output_tokens': 90, 'total_cost': 0.014006999999999999, 'formatted_total_cost': '$0.014007'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4213, 'output_tokens': 90, 'total_cost': 0.013989, 'formatted_total_cost': '$0.013989'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4213, 'output_tokens': 90, 'total_cost': 0.013989, 'formatted_total_cost': '$0.013989'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4146, 'output_tokens': 90, 'total_cost': 0.013788000000000002, 'formatted_total_cost': '$0.013788'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4146, 'output_tokens': 90, 'total_cost': 0.013788000000000002, 'formatted_total_cost': '$0.013788'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 485, 'output_tokens': 8, 'total_cost': 0.001575, 'formatted_total_cost': '$0.001575'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4276, 'output_tokens': 81, 'total_cost': 0.014043000000000002, 'formatted_total_cost': '$0.014043'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4276, 'output_tokens': 81, 'total_cost': 0.014043000000000002, 'formatted_total_cost': '$0.014043'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4184, 'output_tokens': 81, 'total_cost': 0.013767000000000001, 'formatted_total_cost': '$0.013767'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 752, 'output_tokens': 87, 'total_cost': 0.003561, 'formatted_total_cost': '$0.003561'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 752, 'output_tokens': 87, 'total_cost': 0.003561, 'formatted_total_cost': '$0.003561'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4207, 'output_tokens': 81, 'total_cost': 0.013836000000000001, 'formatted_total_cost': '$0.013836'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 768, 'output_tokens': 87, 'total_cost': 0.0036090000000000002, 'formatted_total_cost': '$0.003609'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 768, 'output_tokens': 87, 'total_cost': 0.0036090000000000002, 'formatted_total_cost': '$0.003609'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4204, 'output_tokens': 81, 'total_cost': 0.013827000000000002, 'formatted_total_cost': '$0.013827'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 752, 'output_tokens': 87, 'total_cost': 0.003561, 'formatted_total_cost': '$0.003561'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 752, 'output_tokens': 87, 'total_cost': 0.003561, 'formatted_total_cost': '$0.003561'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 358, 'output_tokens': 8, 'total_cost': 0.0011939999999999997, 'formatted_total_cost': '$0.001194'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4067, 'output_tokens': 106, 'total_cost': 0.013791, 'formatted_total_cost': '$0.013791'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4067, 'output_tokens': 106, 'total_cost': 0.013791, 'formatted_total_cost': '$0.013791'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4203, 'output_tokens': 106, 'total_cost': 0.014199, 'formatted_total_cost': '$0.014199'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 2172, 'output_tokens': 110, 'total_cost': 0.008166, 'formatted_total_cost': '$0.008166'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 2172, 'output_tokens': 110, 'total_cost': 0.008166, 'formatted_total_cost': '$0.008166'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4353, 'output_tokens': 106, 'total_cost': 0.014649, 'formatted_total_cost': '$0.014649'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 2059, 'output_tokens': 112, 'total_cost': 0.007857, 'formatted_total_cost': '$0.007857'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 2059, 'output_tokens': 112, 'total_cost': 0.007857, 'formatted_total_cost': '$0.007857'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4470, 'output_tokens': 106, 'total_cost': 0.015, 'formatted_total_cost': '$0.015000'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4470, 'output_tokens': 106, 'total_cost': 0.015, 'formatted_total_cost': '$0.015000'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 487, 'output_tokens': 8, 'total_cost': 0.001581, 'formatted_total_cost': '$0.001581'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4248, 'output_tokens': 94, 'total_cost': 0.014154, 'formatted_total_cost': '$0.014154'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4248, 'output_tokens': 94, 'total_cost': 0.014154, 'formatted_total_cost': '$0.014154'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4195, 'output_tokens': 94, 'total_cost': 0.013994999999999999, 'formatted_total_cost': '$0.013995'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4195, 'output_tokens': 94, 'total_cost': 0.013994999999999999, 'formatted_total_cost': '$0.013995'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4555, 'output_tokens': 94, 'total_cost': 0.015075, 'formatted_total_cost': '$0.015075'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4555, 'output_tokens': 94, 'total_cost': 0.015075, 'formatted_total_cost': '$0.015075'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4523, 'output_tokens': 94, 'total_cost': 0.014979000000000001, 'formatted_total_cost': '$0.014979'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4523, 'output_tokens': 94, 'total_cost': 0.014979000000000001, 'formatted_total_cost': '$0.014979'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 467, 'output_tokens': 8, 'total_cost': 0.0015210000000000002, 'formatted_total_cost': '$0.001521'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4070, 'output_tokens': 98, 'total_cost': 0.013679999999999998, 'formatted_total_cost': '$0.013680'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4070, 'output_tokens': 98, 'total_cost': 0.013679999999999998, 'formatted_total_cost': '$0.013680'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4181, 'output_tokens': 93, 'total_cost': 0.013937999999999999, 'formatted_total_cost': '$0.013938'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4181, 'output_tokens': 93, 'total_cost': 0.013937999999999999, 'formatted_total_cost': '$0.013938'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4239, 'output_tokens': 93, 'total_cost': 0.014112, 'formatted_total_cost': '$0.014112'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4239, 'output_tokens': 93, 'total_cost': 0.014112, 'formatted_total_cost': '$0.014112'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4134, 'output_tokens': 98, 'total_cost': 0.013871999999999999, 'formatted_total_cost': '$0.013872'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4134, 'output_tokens': 98, 'total_cost': 0.013871999999999999, 'formatted_total_cost': '$0.013872'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 470, 'output_tokens': 6, 'total_cost': 0.0015, 'formatted_total_cost': '$0.001500'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4096, 'output_tokens': 105, 'total_cost': 0.013863, 'formatted_total_cost': '$0.013863'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4096, 'output_tokens': 105, 'total_cost': 0.013863, 'formatted_total_cost': '$0.013863'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4112, 'output_tokens': 105, 'total_cost': 0.013911, 'formatted_total_cost': '$0.013911'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4112, 'output_tokens': 105, 'total_cost': 0.013911, 'formatted_total_cost': '$0.013911'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4120, 'output_tokens': 105, 'total_cost': 0.013935000000000001, 'formatted_total_cost': '$0.013935'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4120, 'output_tokens': 105, 'total_cost': 0.013935000000000001, 'formatted_total_cost': '$0.013935'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4086, 'output_tokens': 105, 'total_cost': 0.013833000000000002, 'formatted_total_cost': '$0.013833'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4086, 'output_tokens': 105, 'total_cost': 0.013833000000000002, 'formatted_total_cost': '$0.013833'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 491, 'output_tokens': 8, 'total_cost': 0.0015929999999999998, 'formatted_total_cost': '$0.001593'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4113, 'output_tokens': 95, 'total_cost': 0.013764000000000002, 'formatted_total_cost': '$0.013764'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4113, 'output_tokens': 95, 'total_cost': 0.013764000000000002, 'formatted_total_cost': '$0.013764'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4125, 'output_tokens': 131, 'total_cost': 0.01434, 'formatted_total_cost': '$0.014340'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4125, 'output_tokens': 131, 'total_cost': 0.01434, 'formatted_total_cost': '$0.014340'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4141, 'output_tokens': 131, 'total_cost': 0.014388, 'formatted_total_cost': '$0.014388'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4141, 'output_tokens': 131, 'total_cost': 0.014388, 'formatted_total_cost': '$0.014388'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4135, 'output_tokens': 95, 'total_cost': 0.013829999999999999, 'formatted_total_cost': '$0.013830'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4135, 'output_tokens': 95, 'total_cost': 0.013829999999999999, 'formatted_total_cost': '$0.013830'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 481, 'output_tokens': 314, 'total_cost': 0.006153, 'formatted_total_cost': '$0.006153'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4342, 'output_tokens': 96, 'total_cost': 0.014466000000000001, 'formatted_total_cost': '$0.014466'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4342, 'output_tokens': 96, 'total_cost': 0.014466000000000001, 'formatted_total_cost': '$0.014466'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4205, 'output_tokens': 99, 'total_cost': 0.014100000000000001, 'formatted_total_cost': '$0.014100'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4205, 'output_tokens': 99, 'total_cost': 0.014100000000000001, 'formatted_total_cost': '$0.014100'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4284, 'output_tokens': 96, 'total_cost': 0.014292, 'formatted_total_cost': '$0.014292'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4284, 'output_tokens': 96, 'total_cost': 0.014292, 'formatted_total_cost': '$0.014292'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4329, 'output_tokens': 96, 'total_cost': 0.014427000000000002, 'formatted_total_cost': '$0.014427'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4329, 'output_tokens': 96, 'total_cost': 0.014427000000000002, 'formatted_total_cost': '$0.014427'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 474, 'output_tokens': 8, 'total_cost': 0.001542, 'formatted_total_cost': '$0.001542'}], [{'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 9532, 'output_tokens': 3009, 'total_cost': 0.073731, 'formatted_total_cost': '$0.073731'}]]",False,0,,/home/nayoonkim/LATCH/analyses/results/fig_22_12_anthropic_claude-sonnet-4-5-20250929_result_log.csv,

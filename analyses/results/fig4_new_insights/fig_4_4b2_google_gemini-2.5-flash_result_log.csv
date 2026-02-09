@@ -1,0 +1,517 @@
+Title,Schema,Question,Structured Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log
+12895,aireadi,"We will be performing a linear regression using AIREADI data from 2023-2025. We will exclude participants with missing study group, missing values in the following variables: photopic log contrast sensitivity od, photopic log contrast sensitivity os, glaucoma diagnosis, cataract diagnosis, diabetic retinopathy diagnosis, AMD diagnosis, retinal vascular occlusion diagnosis. 
+The main predictor will be a study group and covariates are age, diagnosed with glaucoma, diagnosed with cataract, diagnosed with diabetic retinopathy, diagnosed with AMD, retinal vascular occlusion stroke in the eye
+The outcome will be photopic contrast sensitivy defined as higher one among  photopic od log contrast sensitivity or  photopic os log contrast sensitivity.","Analysis Type: linear regression
+
+Dataset: AIREADI
+
+Period of Interest: 2023-2025
+
+Inclusion Criteria: None
+
+Exclusion Criteria:
+- missing study group
+- missing photopic log contrast sensitivity od
+- missing photopic log contrast sensitivity os
+- missing glaucoma diagnosis
+- missing cataract diagnosis
+- missing diabetic retinopathy diagnosis
+- missing AMD diagnosis
+- missing retinal vascular occlusion diagnosis
+
+Covariates:
+- age
+- diagnosed with glaucoma
+- diagnosed with cataract
+- diagnosed with diabetic retinopathy
+- diagnosed with AMD
+- retinal vascular occlusion stroke in the eye
+
+Predictor:
+- study group
+
+Outcome:
+- photopic contrast sensitivy defined as:
+  MAX(photopic log contrast sensitivity od, photopic log contrast sensitivity os)","{'dataset': 'aireadi', 'inclusion': [], 'exclusion': [{'keyword': 'study group', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'study_group', 'examples': ['healthy', 'insulin_dependent', 'oral_medication_and_or_non_insulin_injectable_medication_controlled', 'pre_diabetes_lifestyle_controlled']}, {'keyword': 'photopic log contrast sensitivity od', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'od_log_contrast_sensitivity_photopic', 'examples': ['0.0', '0.04', '0.08', '0.24', '0.36']}, {'keyword': 'photopic log contrast sensitivity os', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'os_log_contrast_sensitivity_photopic', 'examples': ['0.0', '0.08', '0.4', '0.52', '0.6']}, {'keyword': 'glaucoma diagnosis', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'glaucoma_in_one_or_both_eyes', 'examples': ['No', 'Yes']}, {'keyword': 'cataract diagnosis', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cataracts_in_one_or_both_eyes', 'examples': ['No', 'Yes']}, {'keyword': 'diabetic retinopathy diagnosis', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'examples': ['No', 'Yes']}, {'keyword': 'amd diagnosis', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'age_related_macular_degeneration_amd_in_one_or_both', 'examples': ['No', 'Yes']}, {'keyword': 'retinal vascular occlusion diagnosis', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'retinal_vascular_occlusion_stroke_in_the_eye', 'examples': ['No', 'Yes']}], 'covariates': [{'keyword': 'age', 'derived': False, 'table': 'final_master_table', 'column': 'age', 'examples': ['40', '42', '43', '44', '51']}, {'keyword': 'diagnosed with glaucoma', 'derived': False, 'table': 'final_master_table', 'column': 'glaucoma_in_one_or_both_eyes', 'examples': ['No', 'Yes']}, {'keyword': 'diagnosed with cataract', 'derived': False, 'table': 'final_master_table', 'column': 'cataracts_in_one_or_both_eyes', 'examples': ['No', 'Yes']}, {'keyword': 'diagnosed with diabetic retinopathy', 'derived': False, 'table': 'final_master_table', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'examples': ['No', 'Yes']}, {'keyword': 'diagnosed with amd', 'derived': False, 'table': 'final_master_table', 'column': 'age_related_macular_degeneration_amd_in_one_or_both', 'examples': ['No', 'Yes']}, {'keyword': 'retinal vascular occlusion stroke in the eye', 'derived': False, 'table': 'final_master_table', 'column': 'retinal_vascular_occlusion_stroke_in_the_eye', 'examples': ['No', 'Yes']}], 'predictor': [{'keyword': 'study group', 'derived': False, 'table': 'final_master_table', 'column': 'study_group', 'examples': ['healthy', 'insulin_dependent', 'oral_medication_and_or_non_insulin_injectable_medication_controlled', 'pre_diabetes_lifestyle_controlled']}], 'outcome': [{'keyword': 'photopic contrast sensitivy', 'derived': True, 'depends_on': [{'keyword': 'photopic log contrast sensitivity od', 'derived': False, 'table': 'final_master_table', 'column': 'od_log_contrast_sensitivity_photopic', 'examples': ['0.0', '0.04', '0.08', '0.24', '0.36']}, {'keyword': 'photopic log contrast sensitivity os', 'derived': False, 'table': 'final_master_table', 'column': 'os_log_contrast_sensitivity_photopic', 'examples': ['0.0', '0.08', '0.4', '0.52', '0.6']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'MAX(photopic log contrast sensitivity od, photopic log contrast sensitivity os)', 'output': 'photopic contrast sensitivy'}}]}]}","{'analysis_type': 'linear regression', 'dataset': 'aireadi', 'period_of_interest': '2023-2025', 'inclusion': [], 'exclusion': [{'keyword': 'study group', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.participants', 'column': 'study_group', 'example_values': ['healthy', 'pre_diabetes_lifestyle_controlled', 'insulin_dependent', 'oral_medication_and_or_non_insulin_injectable_medication_controlled', '', '', '', '', '', '']}]}, {'keyword': 'photopic log contrast sensitivity od', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'od_log_contrast_sensitivity_photopic', 'example_values': ['1.68', '0.0', '1.6', '1.28', '0.24', '1.32', '1.4', '1.5', '0.36', '0.92', '0.08', '0.88', '1.88', '0.96', '1.2', '0.52', '1.12', '1.56', '0.04', '0.68']}]}, {'keyword': 'photopic log contrast sensitivity os', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'os_log_contrast_sensitivity_photopic', 'example_values': ['1.68', '0.0', '1.66', '1.6', '1.28', '0.4', '1.32', '1.4', '0.92', '0.64', '0.08', '0.88', '1.88', '0.96', '1.92', '0.6', '1.2', '0.52', '1.12', '1.56']}]}, {'keyword': 'glaucoma diagnosis', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'glaucoma_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'cataract diagnosis', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'cataracts_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'diabetic retinopathy diagnosis', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'amd diagnosis', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'age_related_macular_degeneration_amd_in_one_or_both', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'retinal vascular occlusion diagnosis', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'retinal_vascular_occlusion_stroke_in_the_eye', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}], 'covariates': [{'keyword': 'age', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.participants', 'column': 'age', 'example_values': ['87', '71', '68', '51', '70', '80', '52', '84', '92', '69', '60', '59', '65', '73', '44', '42', '88', '82', '40', '43']}]}, {'keyword': 'diagnosed with glaucoma', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'glaucoma_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'diagnosed with cataract', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'cataracts_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'diagnosed with diabetic retinopathy', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'diagnosed with amd', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'age_related_macular_degeneration_amd_in_one_or_both', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'retinal vascular occlusion stroke in the eye', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'retinal_vascular_occlusion_stroke_in_the_eye', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}], 'predictor': [{'keyword': 'study group', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.participants', 'column': 'study_group', 'example_values': ['healthy', 'pre_diabetes_lifestyle_controlled', 'insulin_dependent', 'oral_medication_and_or_non_insulin_injectable_medication_controlled', '', '', '', '', '', '']}]}], 'outcome': [{'keyword': 'photopic contrast sensitivy', 'derived': True, 'depends_on': [{'keyword': 'photopic log contrast sensitivity od', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'od_log_contrast_sensitivity_photopic', 'example_values': ['1.68', '0.0', '1.6', '1.28', '0.24', '1.32', '1.4', '1.5', '0.36', '0.92', '0.08', '0.88', '1.88', '0.96', '1.2', '0.52', '1.12', '1.56', '0.04', '0.68']}]}, {'keyword': 'photopic log contrast sensitivity os', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'os_log_contrast_sensitivity_photopic', 'example_values': ['1.68', '0.0', '1.66', '1.6', '1.28', '0.4', '1.32', '1.4', '0.92', '0.64', '0.08', '0.88', '1.88', '0.96', '1.92', '0.6', '1.2', '0.52', '1.12', '1.56']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'MAX(photopic log contrast sensitivity od, photopic log contrast sensitivity os)', 'output': 'photopic contrast sensitivy'}}]}]}",,"-- TEMP TABLE FOR ""study group"", ""study group""
+DROP TABLE IF EXISTS temp_master_study_group;
+CREATE TEMP TABLE temp_master_study_group AS
+SELECT person_id, ""study_group"" AS ""study_group""
+FROM aireadi.participants;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_study_group ON temp_master_study_group (person_id);
+
+-- TEMP TABLE FOR ""photopic log contrast sensitivity od"", ""photopic log contrast sensitivity od""
+DROP TABLE IF EXISTS temp_master_od_log_contrast_sensitivity_photopic;
+CREATE TEMP TABLE temp_master_od_log_contrast_sensitivity_photopic AS
+SELECT person_id, ""od_log_contrast_sensitivity_photopic"" AS ""od_log_contrast_sensitivity_photopic""
+FROM aireadi.measurement;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_od_log_contrast_sensitivity_photopic ON temp_master_od_log_contrast_sensitivity_photopic (person_id);
+
+-- TEMP TABLE FOR ""photopic log contrast sensitivity os"", ""photopic log contrast sensitivity os""
+DROP TABLE IF EXISTS temp_master_os_log_contrast_sensitivity_photopic;
+CREATE TEMP TABLE temp_master_os_log_contrast_sensitivity_photopic AS
+SELECT person_id, ""os_log_contrast_sensitivity_photopic"" AS ""os_log_contrast_sensitivity_photopic""
+FROM aireadi.measurement;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_os_log_contrast_sensitivity_photopic ON temp_master_os_log_contrast_sensitivity_photopic (person_id);
+
+-- TEMP TABLE FOR ""diagnosed with glaucoma"", ""glaucoma diagnosis""
+DROP TABLE IF EXISTS temp_master_glaucoma_in_one_or_both_eyes;
+CREATE TEMP TABLE temp_master_glaucoma_in_one_or_both_eyes AS
+SELECT person_id, ""glaucoma_in_one_or_both_eyes"" AS ""glaucoma_in_one_or_both_eyes""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_glaucoma_in_one_or_both_eyes ON temp_master_glaucoma_in_one_or_both_eyes (person_id);
+
+-- TEMP TABLE FOR ""cataract diagnosis"", ""diagnosed with cataract""
+DROP TABLE IF EXISTS temp_master_cataracts_in_one_or_both_eyes;
+CREATE TEMP TABLE temp_master_cataracts_in_one_or_both_eyes AS
+SELECT person_id, ""cataracts_in_one_or_both_eyes"" AS ""cataracts_in_one_or_both_eyes""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cataracts_in_one_or_both_eyes ON temp_master_cataracts_in_one_or_both_eyes (person_id);
+
+-- TEMP TABLE FOR ""diabetic retinopathy diagnosis"", ""diagnosed with diabetic retinopathy""
+DROP TABLE IF EXISTS temp_master_diabetic_retinopathy_in_one_or_both_eyes;
+CREATE TEMP TABLE temp_master_diabetic_retinopathy_in_one_or_both_eyes AS
+SELECT person_id, ""diabetic_retinopathy_in_one_or_both_eyes"" AS ""diabetic_retinopathy_in_one_or_both_eyes""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_diabetic_retinopathy_in_one_or_both_eyes ON temp_master_diabetic_retinopathy_in_one_or_both_eyes (person_id);
+
+-- TEMP TABLE FOR ""amd diagnosis"", ""diagnosed with amd""
+DROP TABLE IF EXISTS temp_master_age_related_macular_degeneration_amd_in_one_or_both;
+CREATE TEMP TABLE temp_master_age_related_macular_degeneration_amd_in_one_or_both AS
+SELECT person_id, ""age_related_macular_degeneration_amd_in_one_or_both"" AS ""age_related_macular_degeneration_amd_in_one_or_both""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_related_macular_degeneration_amd_in_one_or_both ON temp_master_age_related_macular_degeneration_amd_in_one_or_both (person_id);
+
+-- TEMP TABLE FOR ""retinal vascular occlusion diagnosis"", ""retinal vascular occlusion stroke in the eye""
+DROP TABLE IF EXISTS temp_master_retinal_vascular_occlusion_stroke_in_the_eye;
+CREATE TEMP TABLE temp_master_retinal_vascular_occlusion_stroke_in_the_eye AS
+SELECT person_id, ""retinal_vascular_occlusion_stroke_in_the_eye"" AS ""retinal_vascular_occlusion_stroke_in_the_eye""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_retinal_vascular_occlusion_stroke_in_the_eye ON temp_master_retinal_vascular_occlusion_stroke_in_the_eye (person_id);
+
+-- TEMP TABLE FOR ""age""
+DROP TABLE IF EXISTS temp_master_age;
+CREATE TEMP TABLE temp_master_age AS
+SELECT person_id, ""age"" AS ""age""
+FROM aireadi.participants;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age ON temp_master_age (person_id);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT person_id FROM temp_master_study_group
+UNION
+SELECT person_id FROM temp_master_od_log_contrast_sensitivity_photopic
+UNION
+SELECT person_id FROM temp_master_os_log_contrast_sensitivity_photopic
+UNION
+SELECT person_id FROM temp_master_glaucoma_in_one_or_both_eyes
+UNION
+SELECT person_id FROM temp_master_cataracts_in_one_or_both_eyes
+UNION
+SELECT person_id FROM temp_master_diabetic_retinopathy_in_one_or_both_eyes
+UNION
+SELECT person_id FROM temp_master_age_related_macular_degeneration_amd_in_one_or_both
+UNION
+SELECT person_id FROM temp_master_retinal_vascular_occlusion_stroke_in_the_eye
+UNION
+SELECT person_id FROM temp_master_age;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_person_id ON temp_all_ids (person_id);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.person_id,
+    t0.""study_group"",
+    t1.""od_log_contrast_sensitivity_photopic"",
+    t2.""os_log_contrast_sensitivity_photopic"",
+    t3.""glaucoma_in_one_or_both_eyes"",
+    t4.""cataracts_in_one_or_both_eyes"",
+    t5.""diabetic_retinopathy_in_one_or_both_eyes"",
+    t6.""age_related_macular_degeneration_amd_in_one_or_both"",
+    t7.""retinal_vascular_occlusion_stroke_in_the_eye"",
+    t8.""age""
+FROM temp_all_ids a
+LEFT JOIN temp_master_study_group t0 ON a.person_id = t0.person_id 
+LEFT JOIN temp_master_od_log_contrast_sensitivity_photopic t1 ON a.person_id = t1.person_id 
+LEFT JOIN temp_master_os_log_contrast_sensitivity_photopic t2 ON a.person_id = t2.person_id 
+LEFT JOIN temp_master_glaucoma_in_one_or_both_eyes t3 ON a.person_id = t3.person_id 
+LEFT JOIN temp_master_cataracts_in_one_or_both_eyes t4 ON a.person_id = t4.person_id 
+LEFT JOIN temp_master_diabetic_retinopathy_in_one_or_both_eyes t5 ON a.person_id = t5.person_id 
+LEFT JOIN temp_master_age_related_macular_degeneration_amd_in_one_or_both t6 ON a.person_id = t6.person_id 
+LEFT JOIN temp_master_retinal_vascular_occlusion_stroke_in_the_eye t7 ON a.person_id = t7.person_id 
+LEFT JOIN temp_master_age t8 ON a.person_id = t8.person_id;
+
+CREATE INDEX idx_final_master_person_id    
+    ON final_master_table (person_id);
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Includes all patients from final_master_table as no specific inclusion criteria were provided.
+CREATE TEMP TABLE temp_inclusion AS
+SELECT ""person_id""
+FROM final_master_table;
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude patients with missing study group
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""person_id""
+FROM temp_inclusion i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""study_group"" IS NOT NULL;
+
+-- STEP 2.2: Exclude patients with missing photopic log contrast sensitivity od
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""od_log_contrast_sensitivity_photopic"" IS NOT NULL;
+
+-- STEP 2.3: Exclude patients with missing photopic log contrast sensitivity os
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""os_log_contrast_sensitivity_photopic"" IS NOT NULL;
+
+-- STEP 2.4: Exclude patients with missing glaucoma diagnosis
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step3 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""glaucoma_in_one_or_both_eyes"" IS NOT NULL;
+
+-- STEP 2.5: Exclude patients with missing cataract diagnosis
+CREATE TEMP TABLE temp_exclusion_step5 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step4 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""cataracts_in_one_or_both_eyes"" IS NOT NULL;
+
+-- STEP 2.6: Exclude patients with missing diabetic retinopathy diagnosis
+CREATE TEMP TABLE temp_exclusion_step6 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step5 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""diabetic_retinopathy_in_one_or_both_eyes"" IS NOT NULL;
+
+-- STEP 2.7: Exclude patients with missing AMD diagnosis
+CREATE TEMP TABLE temp_exclusion_step7 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step6 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""age_related_macular_degeneration_amd_in_one_or_both"" IS NOT NULL;
+
+-- STEP 2.8: Exclude patients with missing retinal vascular occlusion diagnosis
+CREATE TEMP TABLE temp_exclusion_step8 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step7 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""retinal_vascular_occlusion_stroke_in_the_eye"" IS NOT NULL;
+
+-- ========== STEP 3: Cohort ==========
+
+-- The final temp table in the exclusion sequence becomes temp_cohort.
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""person_id""
+FROM temp_exclusion_step8;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Age
+-- Extract age for the cohort
+CREATE TEMP TABLE temp_age AS
+SELECT c.""person_id"",
+       f.""age""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.2 Diagnosed with glaucoma
+-- Extract glaucoma diagnosis for the cohort
+CREATE TEMP TABLE temp_diagnosed_with_glaucoma AS
+SELECT c.""person_id"",
+       f.""glaucoma_in_one_or_both_eyes"" AS ""diagnosed_with_glaucoma""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.3 Diagnosed with cataract
+-- Extract cataract diagnosis for the cohort
+CREATE TEMP TABLE temp_diagnosed_with_cataract AS
+SELECT c.""person_id"",
+       f.""cataracts_in_one_or_both_eyes"" AS ""diagnosed_with_cataract""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.4 Diagnosed with diabetic retinopathy
+-- Extract diabetic retinopathy diagnosis for the cohort
+CREATE TEMP TABLE temp_diagnosed_with_diabetic_retinopathy AS
+SELECT c.""person_id"",
+       f.""diabetic_retinopathy_in_one_or_both_eyes"" AS ""diagnosed_with_diabetic_retinopathy""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.5 Diagnosed with AMD
+-- Extract AMD diagnosis for the cohort
+CREATE TEMP TABLE temp_diagnosed_with_amd AS
+SELECT c.""person_id"",
+       f.""age_related_macular_degeneration_amd_in_one_or_both"" AS ""diagnosed_with_amd""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.6 Retinal vascular occlusion stroke in the eye
+-- Extract retinal vascular occlusion diagnosis for the cohort
+CREATE TEMP TABLE temp_retinal_vascular_occlusion_stroke_in_the_eye AS
+SELECT c.""person_id"",
+       f.""retinal_vascular_occlusion_stroke_in_the_eye""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.7 Study group
+-- Extract study group for the cohort
+CREATE TEMP TABLE temp_study_group AS
+SELECT c.""person_id"",
+       f.""study_group""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.8 Photopic contrast sensitivy
+-- Calculate photopic contrast sensitivy as the maximum of OD and OS log contrast sensitivity
+CREATE TEMP TABLE temp_photopic_contrast_sensitivy AS
+SELECT c.""person_id"",
+       GREATEST(f.""od_log_contrast_sensitivity_photopic"", f.""os_log_contrast_sensitivity_photopic"") AS ""photopic_contrast_sensitivy""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- ========== STEP 5: Final Table ==========
+CREATE TEMP TABLE temp_final_table AS
+SELECT
+  c.""person_id"",
+  t_age.""age"",
+  t_glaucoma.""diagnosed_with_glaucoma"",
+  t_cataract.""diagnosed_with_cataract"",
+  t_dr.""diagnosed_with_diabetic_retinopathy"",
+  t_amd.""diagnosed_with_amd"",
+  t_rvo.""retinal_vascular_occlusion_stroke_in_the_eye"",
+  t_sg.""study_group"",
+  t_pcs.""photopic_contrast_sensitivy""
+FROM temp_cohort c
+LEFT JOIN temp_age t_age ON c.""person_id"" = t_age.""person_id""
+LEFT JOIN temp_diagnosed_with_glaucoma t_glaucoma ON c.""person_id"" = t_glaucoma.""person_id""
+LEFT JOIN temp_diagnosed_with_cataract t_cataract ON c.""person_id"" = t_cataract.""person_id""
+LEFT JOIN temp_diagnosed_with_diabetic_retinopathy t_dr ON c.""person_id"" = t_dr.""person_id""
+LEFT JOIN temp_diagnosed_with_amd t_amd ON c.""person_id"" = t_amd.""person_id""
+LEFT JOIN temp_retinal_vascular_occlusion_stroke_in_the_eye t_rvo ON c.""person_id"" = t_rvo.""person_id""
+LEFT JOIN temp_study_group t_sg ON c.""person_id"" = t_sg.""person_id""
+LEFT JOIN temp_photopic_contrast_sensitivy t_pcs ON c.""person_id"" = t_pcs.""person_id"";
+
+-- ========== STEP 6: Final Output ==========
+SELECT * FROM temp_final_table;","    step_num                                                                                                      step  remaining_after_step  excluded_at_step
+0          0  STEP 1.1: Includes all patients from final_master_table as no specific inclusion criteria were provided.                  2280               NaN
+1          1                                                       STEP 2.1: Exclude patients with missing study group                  2280               0.0
+2          2                              STEP 2.2: Exclude patients with missing photopic log contrast sensitivity od                  2266              14.0
+3          3                              STEP 2.3: Exclude patients with missing photopic log contrast sensitivity os                  2257               9.0
+4          4                                                STEP 2.4: Exclude patients with missing glaucoma diagnosis                  2239              18.0
+5          5                                                STEP 2.5: Exclude patients with missing cataract diagnosis                  2229              10.0
+6          6                                    STEP 2.6: Exclude patients with missing diabetic retinopathy diagnosis                  2222               7.0
+7          7                                                     STEP 2.7: Exclude patients with missing AMD diagnosis                  2206              16.0
+8          8                              STEP 2.8: Exclude patients with missing retinal vascular occlusion diagnosis                  2200               6.0
+9          9                                       The final temp table in the exclusion sequence becomes temp_cohort.                  2200               0.0
+10        10                                                                                Extract age for the cohort                  2200               0.0
+11        11                                                                 Extract glaucoma diagnosis for the cohort                  2200               0.0
+12        12                                                                 Extract cataract diagnosis for the cohort                  2200               0.0
+13        13                                                     Extract diabetic retinopathy diagnosis for the cohort                  2200               0.0
+14        14                                                                      Extract AMD diagnosis for the cohort                  2200               0.0
+15        15                                               Extract retinal vascular occlusion diagnosis for the cohort                  2200               0.0
+16        16                                                                        Extract study group for the cohort                  2200               0.0
+17        17                Calculate photopic contrast sensitivy as the maximum of OD and OS log contrast sensitivity                  2200               0.0
+18        18                                                                 ========== STEP 5: Final Table ==========                  2200               0.0","(2200, 9)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""person_id"")
+    outcome_vars <- c(""photopic_contrast_sensitivy"")
+    
+    cohort <- df
+
+
+    outcome_roles <- c()
+    outcome_roles[""photopic_contrast_sensitivy""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    formula <- as.formula(paste0(outcome_var, "" ~ "", paste(predictor_vars, collapse = "" + "")))
+            
+    
+        
+    
+    model <- lm(formula, data = df)
+
+            
+    
+    result_table <- tidy(model, conf.int = TRUE) %>%
+            select(term, estimate, p.value, conf.low, conf.high)
+
+            
+    ","[{'variable': 'person_id', 'category': 'identifier', 'n_unique': 2200, 'na_count': 0, 'summary': 'Total rows = 2200'}, {'variable': 'age', 'category': 'numerical', 'n_unique': 54, 'na_count': 0, 'summary': 'mean = 60.785, sd = 11.238'}, {'variable': 'diagnosed_with_glaucoma', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'No: 91.6%; Yes: 8.4%'}, {'variable': 'diagnosed_with_cataract', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'No: 70%; Yes: 30%'}, {'variable': 'diagnosed_with_diabetic_retinopathy', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'No: 95.9%; Yes: 4.1%'}, {'variable': 'diagnosed_with_amd', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'No: 94.8%; Yes: 5.2%'}, {'variable': 'retinal_vascular_occlusion_stroke_in_the_eye', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'No: 98.7%; Yes: 1.3%'}, {'variable': 'study_group', 'category': 'categorical', 'n_unique': 4, 'na_count': 0, 'summary': 'healthy: 34.2%; insulin_dependent: 11.3%; oral_medication_and_or_non_insulin_injectable_medication_controlled: 29.8%; pre_diabetes_lifestyle_controlled: 24.8%'}, {'variable': 'photopic_contrast_sensitivy', 'category': 'outcome', 'n_unique': 34, 'na_count': 0, 'summary': 'mean = 1.618, sd = 0.148'}]","[{'term': '(Intercept)', 'estimate': 1.8691983982558247, 'p.value': 0.0, 'conf.low': 1.8351593365416157, 'conf.high': 1.9032374599700337}, {'term': 'age', 'estimate': -0.0035572294667952343, 'p.value': 4.7365361453852045e-33, 'conf.low': -0.00413013266932707, 'conf.high': -0.0029843262642633983}, {'term': 'diagnosed_with_glaucomaYes', 'estimate': -0.037524477477137455, 'p.value': 0.0005183234877367547, 'conf.low': -0.058692872408092345, 'conf.high': -0.016356082546182565}, {'term': 'diagnosed_with_cataractYes', 'estimate': -0.030710366014823576, 'p.value': 2.7441047308385644e-05, 'conf.low': -0.04504052330661061, 'conf.high': -0.01638020872303654}, {'term': 'diagnosed_with_diabetic_retinopathyYes', 'estimate': -0.06139904502820258, 'p.value': 7.690083468569168e-05, 'conf.low': -0.09179413470712144, 'conf.high': -0.031003955349283713}, {'term': 'diagnosed_with_amdYes', 'estimate': -0.040396351684344356, 'p.value': 0.0021785365751801136, 'conf.low': -0.06621420311523864, 'conf.high': -0.014578500253450071}, {'term': 'retinal_vascular_occlusion_stroke_in_the_eyeYes', 'estimate': -0.038818900321809645, 'p.value': 0.1369526266792302, 'conf.low': -0.08998618893931923, 'conf.high': 0.012348388295699939}, {'term': 'study_groupinsulin_dependent', 'estimate': -0.06424530932707694, 'p.value': 6.181318154677402e-10, 'conf.low': -0.08452159988682136, 'conf.high': -0.043969018767332516}, {'term': 'study_grouporal_medication_and_or_non_insulin_injectable_medication_controlled', 'estimate': -0.024922046872261985, 'p.value': 0.0005807985211417676, 'conf.low': -0.0391068349809098, 'conf.high': -0.010737258763614171}, {'term': 'study_grouppre_diabetes_lifestyle_controlled', 'estimate': -0.01156944667326434, 'p.value': 0.12556591577457088, 'conf.low': -0.0263750465501607, 'conf.high': 0.0032361532036320213}]",,,,linear regression,2023-2025,"[[2023, 2025]]",google_gemini-2.5-flash,Pass,[],,106.330536,"[[{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 565, 'output_tokens': 1, 'total_cost': 0.00017199999999999998, 'formatted_total_cost': '$0.000172'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 1772, 'output_tokens': 169, 'total_cost': 0.0009540999999999998, 'formatted_total_cost': '$0.000954'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 2564, 'output_tokens': 689, 'total_cost': 0.0024917, 'formatted_total_cost': '$0.002492'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6278, 'output_tokens': 90, 'total_cost': 0.0021084, 'formatted_total_cost': '$0.002108'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6278, 'output_tokens': 90, 'total_cost': 0.0021084, 'formatted_total_cost': '$0.002108'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 237, 'output_tokens': 3, 'total_cost': 7.86e-05, 'formatted_total_cost': '$0.000079'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 11494, 'output_tokens': 202, 'total_cost': 0.0039532000000000005, 'formatted_total_cost': '$0.003953'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 11494, 'output_tokens': 202, 'total_cost': 0.0039532000000000005, 'formatted_total_cost': '$0.003953'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 331, 'output_tokens': 3, 'total_cost': 0.00010680000000000001, 'formatted_total_cost': '$0.000107'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6307, 'output_tokens': 87, 'total_cost': 0.0021095999999999997, 'formatted_total_cost': '$0.002110'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6307, 'output_tokens': 87, 'total_cost': 0.0021095999999999997, 'formatted_total_cost': '$0.002110'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 234, 'output_tokens': 3, 'total_cost': 7.77e-05, 'formatted_total_cost': '$0.000078'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 8245, 'output_tokens': 89, 'total_cost': 0.002696, 'formatted_total_cost': '$0.002696'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 8245, 'output_tokens': 89, 'total_cost': 0.002696, 'formatted_total_cost': '$0.002696'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 240, 'output_tokens': 3, 'total_cost': 7.950000000000001e-05, 'formatted_total_cost': '$0.000080'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 9284, 'output_tokens': 93, 'total_cost': 0.0030177000000000003, 'formatted_total_cost': '$0.003018'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 9284, 'output_tokens': 93, 'total_cost': 0.0030177000000000003, 'formatted_total_cost': '$0.003018'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 239, 'output_tokens': 3, 'total_cost': 7.92e-05, 'formatted_total_cost': '$0.000079'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5535, 'output_tokens': 90, 'total_cost': 0.0018854999999999998, 'formatted_total_cost': '$0.001885'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5535, 'output_tokens': 90, 'total_cost': 0.0018854999999999998, 'formatted_total_cost': '$0.001885'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 238, 'output_tokens': 3, 'total_cost': 7.890000000000001e-05, 'formatted_total_cost': '$0.000079'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6772, 'output_tokens': 87, 'total_cost': 0.0022491, 'formatted_total_cost': '$0.002249'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6772, 'output_tokens': 87, 'total_cost': 0.0022491, 'formatted_total_cost': '$0.002249'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 234, 'output_tokens': 3, 'total_cost': 7.77e-05, 'formatted_total_cost': '$0.000078'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7927, 'output_tokens': 66, 'total_cost': 0.0025430999999999995, 'formatted_total_cost': '$0.002543'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7927, 'output_tokens': 66, 'total_cost': 0.0025430999999999995, 'formatted_total_cost': '$0.002543'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 233, 'output_tokens': 3, 'total_cost': 7.74e-05, 'formatted_total_cost': '$0.000077'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 8715, 'output_tokens': 68, 'total_cost': 0.0027845, 'formatted_total_cost': '$0.002785'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 8715, 'output_tokens': 68, 'total_cost': 0.0027845, 'formatted_total_cost': '$0.002785'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 237, 'output_tokens': 3, 'total_cost': 7.86e-05, 'formatted_total_cost': '$0.000079'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 12247, 'output_tokens': 203, 'total_cost': 0.0041816, 'formatted_total_cost': '$0.004182'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 12247, 'output_tokens': 203, 'total_cost': 0.0041816, 'formatted_total_cost': '$0.004182'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 332, 'output_tokens': 3, 'total_cost': 0.0001071, 'formatted_total_cost': '$0.000107'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4831, 'output_tokens': 159, 'total_cost': 0.0018468, 'formatted_total_cost': '$0.001847'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4831, 'output_tokens': 159, 'total_cost': 0.0018468, 'formatted_total_cost': '$0.001847'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 283, 'output_tokens': 3, 'total_cost': 9.24e-05, 'formatted_total_cost': '$0.000092'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6096, 'output_tokens': 93, 'total_cost': 0.0020613, 'formatted_total_cost': '$0.002061'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6096, 'output_tokens': 93, 'total_cost': 0.0020613, 'formatted_total_cost': '$0.002061'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 240, 'output_tokens': 3, 'total_cost': 7.950000000000001e-05, 'formatted_total_cost': '$0.000080'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7129, 'output_tokens': 87, 'total_cost': 0.0023561999999999997, 'formatted_total_cost': '$0.002356'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7129, 'output_tokens': 87, 'total_cost': 0.0023561999999999997, 'formatted_total_cost': '$0.002356'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 233, 'output_tokens': 3, 'total_cost': 7.74e-05, 'formatted_total_cost': '$0.000077'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5737, 'output_tokens': 85, 'total_cost': 0.0019336, 'formatted_total_cost': '$0.001934'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5737, 'output_tokens': 85, 'total_cost': 0.0019336, 'formatted_total_cost': '$0.001934'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 252, 'output_tokens': 3, 'total_cost': 8.31e-05, 'formatted_total_cost': '$0.000083'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6968, 'output_tokens': 2030, 'total_cost': 0.007165400000000001, 'formatted_total_cost': '$0.007165'}]]",False,0,,,

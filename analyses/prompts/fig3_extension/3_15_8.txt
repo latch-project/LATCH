@@ -1,0 +1,8 @@
+This study will use a weighted Cox proportional hazards regression analysis that used exam survey weights to investigate the association between the Prognostic Nutritional Index (PNI) and all-cause mortality using NHANES data from the 2005-2018 period.
+The study population includes individuals whose age in years at screening is 20 or more years and identified as having T2DM. The definition for T2DM is met if a participant reported doctor told them that they have diabetes, taking insulin now or take diabetic pills to lower blood sugar, had a fasting glucose level exceeding 7.0 mmol/L, or a glycated hemoglobin A1c (HbA1c) level greater than 6.5%. 
+Participants were excluded from the analysis if their pregnancy status at exam was positive, or if ever told them that they had coronary heart disease or ever told them had cancer or malignancy 
+Additionally, individuals with missing data for serum albumin (g/dL), lymphocyte count (1000 cells/ul), mortality data or follow-up information were not included in the final cohort.
+The primary predictor for this analysis is the Prognostic Nutritional Index (PNI), which is calculated from laboratory values using the formula: (10 * serum albumin [g/dL]) + (5 * lymphocyte count(1000 cells/ul)).
+This continuous PNI score was then categorized into four groups based on its distribution, Q1: <25%, Q2: ≥25 and <50, Q3: ≥50 and <75%, Q4: ≥75%.
+The model will be adjusted for several potential confounding variables, including age in years at screening, sex, and race/Hispanic origin, categorized as non-Hispanic white or other.
+The outcome for the Cox regression model is mortality data and the time variable is the months followup examination. 

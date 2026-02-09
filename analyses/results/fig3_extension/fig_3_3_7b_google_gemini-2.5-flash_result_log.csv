@@ -1,0 +1,493 @@
+Title,Schema,Question,Structured Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log
+23621,nhanes,"Do logistic regression using NHANES data from 2007-2020.
+Include participants who reported to have diabetes.
+Exclude participants who had missing diabetes status or missing status on diabetic retinopathy or participant who did not report to have diabetes or missing values in Diabetes duration (defined as age at screening - diabetes onset).
+Predictor will be Diabetes duration (defined as age at screening - diabetes onset): categorize as <10 (group1), ≥10 (group2). Outcome will be diabetic retinopathy presence. Consider age at screening in the analysis.
+    ","Analysis Type: logistic regression
+
+Dataset: NHANES
+
+Period of Interest: 2007-2020
+
+Inclusion Criteria:
+- reported to have diabetes
+
+Exclusion Criteria:
+- missing diabetes status
+- missing status on diabetic retinopathy
+- did not report to have diabetes
+- missing values in Diabetes duration
+
+Covariates:
+- age at screening
+
+Predictor:
+- Diabetes duration (years) calculated as:
+  age at screening - diabetes onset
+  categorized as:
+    group1: <10
+    group2: ≥10
+
+Outcome:
+- diabetic retinopathy presence (binary, 1 for presence, 0 for absence)","{'dataset': 'NHANES', 'inclusion': [{'keyword': 'reported to have diabetes', 'derived': False, 'condition': 'true', 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}], 'exclusion': [{'keyword': 'diabetes status', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'diabetic retinopathy status', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'diabetes_affected_eyes_had_retinopathy', 'examples': ['No', 'Yes']}, {'keyword': 'reported to have diabetes', 'derived': False, 'condition': 'false', 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'diabetes duration', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'age_when_first_told_you_had_diabetes', 'examples': ['3.0', '61.0', '62.0', '63.0', '70.0']}], 'covariates': [{'keyword': 'age at screening', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}], 'predictor': [{'keyword': 'diabetes duration (years)', 'derived': True, 'depends_on': [{'keyword': 'age at screening', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'diabetes onset', 'derived': False, 'table': 'final_master_table', 'column': 'age_when_first_told_you_had_diabetes', 'examples': ['3.0', '61.0', '62.0', '63.0', '70.0']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'diabetes duration (years) = age at screening - diabetes onset'}}, {'step': 2, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'labels': ['group1: <10', 'group2: ≥10']}}]}], 'outcome': [{'keyword': 'diabetic retinopathy presence', 'derived': False, 'table': 'final_master_table', 'column': 'diabetes_affected_eyes_had_retinopathy', 'examples': ['No', 'Yes']}]}","{'analysis_type': 'logistic regression', 'dataset': 'NHANES', 'period_of_interest': '2007-2020', 'inclusion': [{'keyword': 'reported to have diabetes', 'derived': False, 'condition': 'true', 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_diq', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}], 'exclusion': [{'keyword': 'diabetes status', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_diq', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'diabetic retinopathy status', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_diq', 'column': 'diabetes_affected_eyes_had_retinopathy', 'example_values': ['No', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'diabetes_affected_eyes_had_retinopathy', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'diabetes_affected_eyes_had_retinopathy', 'example_values': ['No', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'diabetes_affected_eyes_had_retinopathy', 'example_values': ['No', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'diabetes_affected_eyes_had_retinopathy', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'diabetes_affected_eyes_had_retinopathy', 'example_values': ['No', 'Yes']}]}, {'keyword': 'reported to have diabetes', 'derived': False, 'condition': 'false', 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_diq', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'diabetes duration', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_diq', 'column': 'age_when_first_told_you_had_diabetes', 'example_values': ['62.0', '76.0', '61.0', '3.0', '63.0']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'age_when_first_told_you_had_diabetes', 'example_values': ['62.0', '76.0', '61.0', '3.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'age_when_first_told_you_had_diabetes', 'example_values': ['62.0', '61.0', '3.0', '63.0', '70.0']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'age_when_first_told_you_had_diabetes', 'example_values': ['62.0', '76.0', '61.0', '3.0', '63.0']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'age_when_first_told_you_had_diabetes', 'example_values': ['62.0', '76.0', '61.0', '3.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'age_when_first_told_you_had_diabetes', 'example_values': ['62.0', '76.0', '61.0', '63.0', '3.0']}]}], 'covariates': [{'keyword': 'age at screening', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_demo', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}], 'predictor': [{'keyword': 'diabetes duration (years)', 'derived': True, 'depends_on': [{'keyword': 'age at screening', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_demo', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'diabetes onset', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_diq', 'column': 'age_when_first_told_you_had_diabetes', 'example_values': ['62.0', '76.0', '61.0', '3.0', '63.0']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'age_when_first_told_you_had_diabetes', 'example_values': ['62.0', '76.0', '61.0', '3.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'age_when_first_told_you_had_diabetes', 'example_values': ['62.0', '61.0', '3.0', '63.0', '70.0']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'age_when_first_told_you_had_diabetes', 'example_values': ['62.0', '76.0', '61.0', '3.0', '63.0']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'age_when_first_told_you_had_diabetes', 'example_values': ['62.0', '76.0', '61.0', '3.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'age_when_first_told_you_had_diabetes', 'example_values': ['62.0', '76.0', '61.0', '63.0', '3.0']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'diabetes duration (years) = age at screening - diabetes onset'}}, {'step': 2, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'labels': ['group1: <10', 'group2: ≥10']}}]}], 'outcome': [{'keyword': 'diabetic retinopathy presence', 'derived': False, 'data_sources': [{'cycle': '2017-2020', 'table': 'nhanes.p_diq', 'column': 'diabetes_affected_eyes_had_retinopathy', 'example_values': ['No', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'diabetes_affected_eyes_had_retinopathy', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'diabetes_affected_eyes_had_retinopathy', 'example_values': ['No', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'diabetes_affected_eyes_had_retinopathy', 'example_values': ['No', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'diabetes_affected_eyes_had_retinopathy', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'diabetes_affected_eyes_had_retinopathy', 'example_values': ['No', 'Yes']}]}]}",,"-- TEMP TABLE FOR ""diabetes status"", ""reported to have diabetes"", ""reported to have diabetes""
+DROP TABLE IF EXISTS temp_master_doctor_told_you_have_diabetes;
+CREATE TEMP TABLE temp_master_doctor_told_you_have_diabetes AS
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.p_diq
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_e
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_doctor_told_you_have_diabetes ON temp_master_doctor_told_you_have_diabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""diabetic retinopathy presence"", ""diabetic retinopathy status""
+DROP TABLE IF EXISTS temp_master_diabetes_affected_eyes_had_retinopathy;
+CREATE TEMP TABLE temp_master_diabetes_affected_eyes_had_retinopathy AS
+SELECT respondent_sequence_number, ""diabetes_affected_eyes_had_retinopathy"" AS ""diabetes_affected_eyes_had_retinopathy""
+FROM nhanes.p_diq
+UNION ALL
+SELECT respondent_sequence_number, ""diabetes_affected_eyes_had_retinopathy"" AS ""diabetes_affected_eyes_had_retinopathy""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""diabetes_affected_eyes_had_retinopathy"" AS ""diabetes_affected_eyes_had_retinopathy""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""diabetes_affected_eyes_had_retinopathy"" AS ""diabetes_affected_eyes_had_retinopathy""
+FROM nhanes.diq_e
+UNION ALL
+SELECT respondent_sequence_number, ""diabetes_affected_eyes_had_retinopathy"" AS ""diabetes_affected_eyes_had_retinopathy""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""diabetes_affected_eyes_had_retinopathy"" AS ""diabetes_affected_eyes_had_retinopathy""
+FROM nhanes.diq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_diabetes_affected_eyes_had_retinopathy ON temp_master_diabetes_affected_eyes_had_retinopathy (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""diabetes duration"", ""diabetes onset""
+DROP TABLE IF EXISTS temp_master_age_when_first_told_you_had_diabetes;
+CREATE TEMP TABLE temp_master_age_when_first_told_you_had_diabetes AS
+SELECT respondent_sequence_number, ""age_when_first_told_you_had_diabetes"" AS ""age_when_first_told_you_had_diabetes""
+FROM nhanes.p_diq
+UNION ALL
+SELECT respondent_sequence_number, ""age_when_first_told_you_had_diabetes"" AS ""age_when_first_told_you_had_diabetes""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""age_when_first_told_you_had_diabetes"" AS ""age_when_first_told_you_had_diabetes""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""age_when_first_told_you_had_diabetes"" AS ""age_when_first_told_you_had_diabetes""
+FROM nhanes.diq_e
+UNION ALL
+SELECT respondent_sequence_number, ""age_when_first_told_you_had_diabetes"" AS ""age_when_first_told_you_had_diabetes""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""age_when_first_told_you_had_diabetes"" AS ""age_when_first_told_you_had_diabetes""
+FROM nhanes.diq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_when_first_told_you_had_diabetes ON temp_master_age_when_first_told_you_had_diabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""age at screening"", ""age at screening""
+DROP TABLE IF EXISTS temp_master_age_in_years_at_screening;
+CREATE TEMP TABLE temp_master_age_in_years_at_screening AS
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.p_demo
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_in_years_at_screening ON temp_master_age_in_years_at_screening (respondent_sequence_number);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT respondent_sequence_number FROM temp_master_doctor_told_you_have_diabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_diabetes_affected_eyes_had_retinopathy
+UNION
+SELECT respondent_sequence_number FROM temp_master_age_when_first_told_you_had_diabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_age_in_years_at_screening;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_respondent_sequence_number ON temp_all_ids (respondent_sequence_number);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.respondent_sequence_number,
+    t0.""doctor_told_you_have_diabetes"",
+    t1.""diabetes_affected_eyes_had_retinopathy"",
+    t2.""age_when_first_told_you_had_diabetes"",
+    t3.""age_in_years_at_screening""
+FROM temp_all_ids a
+LEFT JOIN temp_master_doctor_told_you_have_diabetes t0 ON a.respondent_sequence_number = t0.respondent_sequence_number 
+LEFT JOIN temp_master_diabetes_affected_eyes_had_retinopathy t1 ON a.respondent_sequence_number = t1.respondent_sequence_number 
+LEFT JOIN temp_master_age_when_first_told_you_had_diabetes t2 ON a.respondent_sequence_number = t2.respondent_sequence_number 
+LEFT JOIN temp_master_age_in_years_at_screening t3 ON a.respondent_sequence_number = t3.respondent_sequence_number;
+
+CREATE INDEX idx_final_master_respondent_sequence_number    
+    ON final_master_table (respondent_sequence_number);
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Includes participants who reported to have diabetes ('Yes')
+CREATE TEMP TABLE temp_inclusion_step1 AS
+SELECT ""respondent_sequence_number""
+FROM final_master_table
+WHERE ""doctor_told_you_have_diabetes"" = 'Yes';
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude participants with missing diabetes status
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""doctor_told_you_have_diabetes"" IS NOT NULL;
+
+-- STEP 2.2: Exclude participants with missing status on diabetic retinopathy
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""diabetes_affected_eyes_had_retinopathy"" IS NOT NULL;
+
+-- STEP 2.3: Exclude participants who did not report to have diabetes (i.e., 'No' or 'Borderline')
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""doctor_told_you_have_diabetes"" = 'Yes';
+
+-- STEP 2.4: Exclude participants with missing values in Diabetes duration (age at screening or diabetes onset)
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step3 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""age_in_years_at_screening"" IS NOT NULL
+  AND f.""age_when_first_told_you_had_diabetes"" IS NOT NULL;
+
+-- ========== STEP 3: Cohort ==========
+
+-- The final temp table in the exclusion sequence becomes temp_cohort.
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""respondent_sequence_number""
+FROM temp_exclusion_step4;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Covariate: age at screening
+CREATE TEMP TABLE temp_age_at_screening AS
+SELECT
+  c.""respondent_sequence_number"",
+  f.""age_in_years_at_screening"" AS ""age_at_screening""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.2 Predictor: diabetes duration (years)
+-- Calculate raw diabetes duration
+CREATE TEMP TABLE temp_diabetes_duration_raw AS
+SELECT
+  c.""respondent_sequence_number"",
+  (f.""age_in_years_at_screening"" - f.""age_when_first_told_you_had_diabetes"") AS ""diabetes_duration_years_raw""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Bin diabetes duration into custom groups
+CREATE TEMP TABLE temp_diabetes_duration_binned AS
+SELECT
+  ""respondent_sequence_number"",
+  CASE
+    WHEN ""diabetes_duration_years_raw"" IS NULL THEN NULL
+    WHEN ""diabetes_duration_years_raw"" < 10 THEN 'group1: <10'
+    ELSE 'group2: >=10'
+  END AS ""diabetes_duration_years""
+FROM temp_diabetes_duration_raw;
+
+-- 4.3 Outcome: diabetic retinopathy presence
+CREATE TEMP TABLE temp_diabetic_retinopathy_presence AS
+SELECT
+  c.""respondent_sequence_number"",
+  f.""diabetes_affected_eyes_had_retinopathy"" AS ""diabetic_retinopathy_presence""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- ========== STEP 5: Final Table ==========
+CREATE TEMP TABLE temp_final_table AS
+SELECT
+  c.""respondent_sequence_number"",
+  tas.""age_at_screening"",
+  tddb.""diabetes_duration_years"",
+  tdrp.""diabetic_retinopathy_presence""
+FROM temp_cohort c
+JOIN temp_age_at_screening tas ON c.""respondent_sequence_number"" = tas.""respondent_sequence_number""
+JOIN temp_diabetes_duration_binned tddb ON c.""respondent_sequence_number"" = tddb.""respondent_sequence_number""
+JOIN temp_diabetic_retinopathy_presence tdrp ON c.""respondent_sequence_number"" = tdrp.""respondent_sequence_number"";
+
+-- ========== STEP 6: Final Output ==========
+SELECT * FROM temp_final_table;","    step_num                                                                                                          step  remaining_after_step  excluded_at_step
+0          0                                         STEP 1.1: Includes participants who reported to have diabetes ('Yes')                  5262               NaN
+1          1                                                   STEP 2.1: Exclude participants with missing diabetes status                  5262               0.0
+2          2                                    STEP 2.2: Exclude participants with missing status on diabetic retinopathy                  5170              92.0
+3          3               STEP 2.3: Exclude participants who did not report to have diabetes (i.e., 'No' or 'Borderline')                  5170               0.0
+4          4  STEP 2.4: Exclude participants with missing values in Diabetes duration (age at screening or diabetes onset)                  5107              63.0
+5          5                                           The final temp table in the exclusion sequence becomes temp_cohort.                  5107               0.0
+6          6                                                                               4.1 Covariate: age at screening                  5107               0.0
+7          7                                                                               Calculate raw diabetes duration                  5107               0.0
+8          8                                                                      Bin diabetes duration into custom groups                  5107               0.0
+9          9                                                                    4.3 Outcome: diabetic retinopathy presence                  5107               0.0
+10        10                                                                     ========== STEP 5: Final Table ==========                  5107               0.0","(5107, 4)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""respondent_sequence_number"")
+    outcome_vars <- c(""diabetic_retinopathy_presence"")
+    
+    cohort <- df
+
+
+    outcome_roles <- c()
+    outcome_roles[""diabetic_retinopathy_presence""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    x_raw <- df[[outcome_var]]
+    x_chr <- trimws(tolower(as.character(x_raw)))
+
+    none_tokens <- c(""none"", ""nan"", ""na"", """", ""null"", ""nil"", ""missing"")
+    x_chr[x_chr %in% none_tokens] <- NA_character_
+
+    y <- rep(NA_integer_, length(x_chr))
+
+    y[x_chr %in% c(""yes"", ""y"", ""true"", ""t"")]  <- 1L
+    y[x_chr %in% c(""no"",  ""n"", ""false"", ""f"")] <- 0L
+
+    x_num <- suppressWarnings(as.numeric(x_chr))
+    y[is.na(y) & !is.na(x_num) & x_num == 1] <- 1L
+    y[is.na(y) & !is.na(x_num) & x_num == 0] <- 0L
+
+    idx <- is.na(y) & !is.na(x_chr)
+    if (any(idx)) {
+    vals <- sort(unique(x_chr[idx]))
+
+    if (length(vals) != 2) {
+        stop(sprintf(
+        ""Outcome '%s' must have exactly 2 non-missing classes after excluding none. Found: %s"",
+        outcome_var, paste(vals, collapse = "", "")
+        ))
+    }
+
+    tab <- table(x_chr[idx])
+    minority <- names(tab)[which.min(tab)]
+    majority <- setdiff(vals, minority)
+
+    cat(sprintf(
+        ""Outcome '%s' recoding: 1 = %s (minority)  0 = %s (majority)"",
+        outcome_var, minority, majority
+    ))
+
+    y[idx] <- as.integer(x_chr[idx] == minority)
+    }
+
+    df[[outcome_var]] <- y
+
+    # Must contain both 0 and 1 somewhere (plus NA allowed)
+    u <- sort(unique(df[[outcome_var]][!is.na(df[[outcome_var]])]))
+    if (!(length(u) == 2 && all(u == c(0, 1)))) {
+    stop(sprintf(
+        ""After recoding, '%s' must contain both 0 and 1 (plus NA for none). Found: %s"",
+        outcome_var,
+        ifelse(length(u) == 0, ""<no non-missing values>"", paste(u, collapse = "", ""))
+    ))
+    }
+
+    formula <- as.formula(paste0(outcome_var, "" ~ "", paste(predictor_vars, collapse = "" + "")))
+                
+    
+        
+    
+    model <- glm(formula,
+                data = df,
+                family =  binomial(link = ""logit""))
+            
+    
+    result_table <- tidy(model, conf.int = TRUE, exponentiate = TRUE) %>%
+        select(term, estimate, p.value, conf.low, conf.high)
+
+            
+    ","[{'variable': 'respondent_sequence_number', 'category': 'identifier', 'n_unique': 5107, 'na_count': 0, 'summary': 'Total rows = 5107'}, {'variable': 'age_at_screening', 'category': 'numerical', 'n_unique': 69, 'na_count': 0, 'summary': 'mean = 62.019, sd = 14.437'}, {'variable': 'diabetes_duration_years', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'group1: <10: 47.6%; group2: >=10: 52.4%'}, {'variable': 'diabetic_retinopathy_presence', 'category': 'outcome', 'n_unique': 2, 'na_count': 0, 'summary': 'No: 79.1%; Yes: 20.9%'}]","[{'term': '(Intercept)', 'estimate': 0.18515963013228165, 'p.value': 7.123706585194898e-27, 'conf.low': 0.1357172182411516, 'conf.high': 0.2513076948085154}, {'term': 'age_at_screening', 'estimate': 0.9970353770383558, 'p.value': 0.24277677542570478, 'conf.low': 0.9920941302864555, 'conf.high': 1.0020308374360063}, {'term': 'diabetes_duration_yearsgroup2: >=10', 'estimate': 2.507325902392, 'p.value': 3.128283672007476e-33, 'conf.low': 2.1599386823350026, 'conf.high': 2.9158600592257957}]",,,,logistic regression,2007-2020,"[[2007, 2008], [2009, 2010], [2011, 2012], [2013, 2014], [2015, 2016], [2017, 2020]]",google_gemini-2.5-flash,Pass,"[""Multiple variables candidates detected for 'diabetes duration' across cycles: ['diabetes_condition_days', 'age_when_first_told_you_had_diabetes']"", '\nSearching for a candidate available in all cycles...', ""  - Skipping candidate 'diabetes_condition_days' (From: 'Physical Functioning' - pfq_e). Missing from cycles: [(2017, 2020), (2011, 2012), (2013, 2014), (2009, 2010), (2015, 2016)]"", ""Found a candidate that is available from all cycles: 'age_when_first_told_you_had_diabetes'"", ""   (From: 'Diabetes' - p_diq)"", '   If you prefer to use other candidates, consider adjusting your time period and replace diabetes duration with other candidate\n', ""   Rebuilding results for 'diabetes duration' using 'age_when_first_told_you_had_diabetes'."", ""Multiple variables candidates detected for 'diabetes onset' across cycles: ['when_was_your_diabetes_diagnosed', 'age_when_first_told_you_had_diabetes']"", '\nSearching for a candidate available in all cycles...', ""  - Skipping candidate 'when_was_your_diabetes_diagnosed' (From: 'Diabetes' - diq_e). Missing from cycles: [(2017, 2020), (2011, 2012), (2013, 2014), (2009, 2010), (2015, 2016)]"", ""Found a candidate that is available from all cycles: 'age_when_first_told_you_had_diabetes'"", ""   (From: 'Diabetes' - p_diq)"", '   If you prefer to use other candidates, consider adjusting your time period and replace diabetes onset with other candidate\n', ""   Rebuilding results for 'diabetes onset' using 'age_when_first_told_you_had_diabetes'.""]",,295.342663,"[[{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 540, 'output_tokens': 1, 'total_cost': 0.00016450000000000001, 'formatted_total_cost': '$0.000165'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 1747, 'output_tokens': 147, 'total_cost': 0.0008916, 'formatted_total_cost': '$0.000892'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 2542, 'output_tokens': 514, 'total_cost': 0.0020476, 'formatted_total_cost': '$0.002048'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3945, 'output_tokens': 112, 'total_cost': 0.0014635, 'formatted_total_cost': '$0.001463'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3945, 'output_tokens': 112, 'total_cost': 0.0014635, 'formatted_total_cost': '$0.001463'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3689, 'output_tokens': 112, 'total_cost': 0.0013866999999999998, 'formatted_total_cost': '$0.001387'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3689, 'output_tokens': 112, 'total_cost': 0.0013866999999999998, 'formatted_total_cost': '$0.001387'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3705, 'output_tokens': 112, 'total_cost': 0.0013915, 'formatted_total_cost': '$0.001391'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3705, 'output_tokens': 112, 'total_cost': 0.0013915, 'formatted_total_cost': '$0.001391'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3745, 'output_tokens': 93, 'total_cost': 0.001356, 'formatted_total_cost': '$0.001356'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3745, 'output_tokens': 93, 'total_cost': 0.001356, 'formatted_total_cost': '$0.001356'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3745, 'output_tokens': 112, 'total_cost': 0.0014034999999999998, 'formatted_total_cost': '$0.001403'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3745, 'output_tokens': 112, 'total_cost': 0.0014034999999999998, 'formatted_total_cost': '$0.001403'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3812, 'output_tokens': 112, 'total_cost': 0.0014235999999999997, 'formatted_total_cost': '$0.001424'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3812, 'output_tokens': 112, 'total_cost': 0.0014235999999999997, 'formatted_total_cost': '$0.001424'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 245, 'output_tokens': 24, 'total_cost': 0.0001335, 'formatted_total_cost': '$0.000133'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 638, 'output_tokens': 3, 'total_cost': 0.00019889999999999998, 'formatted_total_cost': '$0.000199'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3841, 'output_tokens': 103, 'total_cost': 0.0014098, 'formatted_total_cost': '$0.001410'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3841, 'output_tokens': 103, 'total_cost': 0.0014098, 'formatted_total_cost': '$0.001410'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3529, 'output_tokens': 103, 'total_cost': 0.0013161999999999998, 'formatted_total_cost': '$0.001316'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3529, 'output_tokens': 103, 'total_cost': 0.0013161999999999998, 'formatted_total_cost': '$0.001316'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3503, 'output_tokens': 101, 'total_cost': 0.0013034000000000001, 'formatted_total_cost': '$0.001303'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3503, 'output_tokens': 101, 'total_cost': 0.0013034000000000001, 'formatted_total_cost': '$0.001303'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3531, 'output_tokens': 105, 'total_cost': 0.0013218000000000001, 'formatted_total_cost': '$0.001322'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3531, 'output_tokens': 105, 'total_cost': 0.0013218000000000001, 'formatted_total_cost': '$0.001322'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3580, 'output_tokens': 103, 'total_cost': 0.0013314999999999998, 'formatted_total_cost': '$0.001331'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3580, 'output_tokens': 103, 'total_cost': 0.0013314999999999998, 'formatted_total_cost': '$0.001331'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3509, 'output_tokens': 101, 'total_cost': 0.0013051999999999998, 'formatted_total_cost': '$0.001305'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3509, 'output_tokens': 101, 'total_cost': 0.0013051999999999998, 'formatted_total_cost': '$0.001305'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 607, 'output_tokens': 3, 'total_cost': 0.0001896, 'formatted_total_cost': '$0.000190'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3931, 'output_tokens': 112, 'total_cost': 0.0014592999999999997, 'formatted_total_cost': '$0.001459'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3931, 'output_tokens': 112, 'total_cost': 0.0014592999999999997, 'formatted_total_cost': '$0.001459'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3800, 'output_tokens': 112, 'total_cost': 0.0014199999999999998, 'formatted_total_cost': '$0.001420'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3800, 'output_tokens': 112, 'total_cost': 0.0014199999999999998, 'formatted_total_cost': '$0.001420'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3843, 'output_tokens': 110, 'total_cost': 0.0014279, 'formatted_total_cost': '$0.001428'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3843, 'output_tokens': 110, 'total_cost': 0.0014279, 'formatted_total_cost': '$0.001428'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3764, 'output_tokens': 81, 'total_cost': 0.0013317, 'formatted_total_cost': '$0.001332'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3764, 'output_tokens': 81, 'total_cost': 0.0013317, 'formatted_total_cost': '$0.001332'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3778, 'output_tokens': 112, 'total_cost': 0.0014134, 'formatted_total_cost': '$0.001413'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3778, 'output_tokens': 112, 'total_cost': 0.0014134, 'formatted_total_cost': '$0.001413'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3809, 'output_tokens': 112, 'total_cost': 0.0014226999999999998, 'formatted_total_cost': '$0.001423'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3809, 'output_tokens': 112, 'total_cost': 0.0014226999999999998, 'formatted_total_cost': '$0.001423'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 250, 'output_tokens': 29, 'total_cost': 0.0001475, 'formatted_total_cost': '$0.000148'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 638, 'output_tokens': 3, 'total_cost': 0.00019889999999999998, 'formatted_total_cost': '$0.000199'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3788, 'output_tokens': 118, 'total_cost': 0.0014314000000000002, 'formatted_total_cost': '$0.001431'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3788, 'output_tokens': 118, 'total_cost': 0.0014314000000000002, 'formatted_total_cost': '$0.001431'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3782, 'output_tokens': 118, 'total_cost': 0.0014296, 'formatted_total_cost': '$0.001430'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3782, 'output_tokens': 118, 'total_cost': 0.0014296, 'formatted_total_cost': '$0.001430'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3766, 'output_tokens': 116, 'total_cost': 0.0014197999999999997, 'formatted_total_cost': '$0.001420'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3766, 'output_tokens': 116, 'total_cost': 0.0014197999999999997, 'formatted_total_cost': '$0.001420'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4157, 'output_tokens': 118, 'total_cost': 0.0015420999999999998, 'formatted_total_cost': '$0.001542'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4157, 'output_tokens': 118, 'total_cost': 0.0015420999999999998, 'formatted_total_cost': '$0.001542'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3770, 'output_tokens': 118, 'total_cost': 0.0014259999999999998, 'formatted_total_cost': '$0.001426'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3770, 'output_tokens': 118, 'total_cost': 0.0014259999999999998, 'formatted_total_cost': '$0.001426'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3827, 'output_tokens': 118, 'total_cost': 0.0014431000000000001, 'formatted_total_cost': '$0.001443'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3827, 'output_tokens': 118, 'total_cost': 0.0014431000000000001, 'formatted_total_cost': '$0.001443'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 489, 'output_tokens': 5, 'total_cost': 0.0001592, 'formatted_total_cost': '$0.000159'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4029, 'output_tokens': 127, 'total_cost': 0.0015261999999999997, 'formatted_total_cost': '$0.001526'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4029, 'output_tokens': 127, 'total_cost': 0.0015261999999999997, 'formatted_total_cost': '$0.001526'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4073, 'output_tokens': 127, 'total_cost': 0.0015393999999999998, 'formatted_total_cost': '$0.001539'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4073, 'output_tokens': 127, 'total_cost': 0.0015393999999999998, 'formatted_total_cost': '$0.001539'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4079, 'output_tokens': 127, 'total_cost': 0.0015412, 'formatted_total_cost': '$0.001541'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4079, 'output_tokens': 127, 'total_cost': 0.0015412, 'formatted_total_cost': '$0.001541'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3898, 'output_tokens': 127, 'total_cost': 0.0014868999999999998, 'formatted_total_cost': '$0.001487'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3898, 'output_tokens': 127, 'total_cost': 0.0014868999999999998, 'formatted_total_cost': '$0.001487'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3936, 'output_tokens': 127, 'total_cost': 0.0014983000000000002, 'formatted_total_cost': '$0.001498'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3936, 'output_tokens': 127, 'total_cost': 0.0014983000000000002, 'formatted_total_cost': '$0.001498'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4031, 'output_tokens': 127, 'total_cost': 0.0015268, 'formatted_total_cost': '$0.001527'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4031, 'output_tokens': 127, 'total_cost': 0.0015268, 'formatted_total_cost': '$0.001527'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 502, 'output_tokens': 3, 'total_cost': 0.00015809999999999997, 'formatted_total_cost': '$0.000158'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3768, 'output_tokens': 125, 'total_cost': 0.0014429, 'formatted_total_cost': '$0.001443'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3768, 'output_tokens': 125, 'total_cost': 0.0014429, 'formatted_total_cost': '$0.001443'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3700, 'output_tokens': 127, 'total_cost': 0.0014275, 'formatted_total_cost': '$0.001427'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3700, 'output_tokens': 127, 'total_cost': 0.0014275, 'formatted_total_cost': '$0.001427'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3729, 'output_tokens': 127, 'total_cost': 0.0014361999999999999, 'formatted_total_cost': '$0.001436'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3729, 'output_tokens': 127, 'total_cost': 0.0014361999999999999, 'formatted_total_cost': '$0.001436'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3639, 'output_tokens': 127, 'total_cost': 0.0014091999999999998, 'formatted_total_cost': '$0.001409'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3639, 'output_tokens': 127, 'total_cost': 0.0014091999999999998, 'formatted_total_cost': '$0.001409'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3632, 'output_tokens': 127, 'total_cost': 0.0014070999999999997, 'formatted_total_cost': '$0.001407'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3632, 'output_tokens': 127, 'total_cost': 0.0014070999999999997, 'formatted_total_cost': '$0.001407'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3729, 'output_tokens': 127, 'total_cost': 0.0014361999999999999, 'formatted_total_cost': '$0.001436'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3729, 'output_tokens': 127, 'total_cost': 0.0014361999999999999, 'formatted_total_cost': '$0.001436'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 500, 'output_tokens': 3, 'total_cost': 0.00015749999999999998, 'formatted_total_cost': '$0.000157'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3885, 'output_tokens': 118, 'total_cost': 0.0014605, 'formatted_total_cost': '$0.001460'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3885, 'output_tokens': 118, 'total_cost': 0.0014605, 'formatted_total_cost': '$0.001460'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3934, 'output_tokens': 116, 'total_cost': 0.0014702, 'formatted_total_cost': '$0.001470'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3934, 'output_tokens': 116, 'total_cost': 0.0014702, 'formatted_total_cost': '$0.001470'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3885, 'output_tokens': 116, 'total_cost': 0.0014554999999999998, 'formatted_total_cost': '$0.001455'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3885, 'output_tokens': 116, 'total_cost': 0.0014554999999999998, 'formatted_total_cost': '$0.001455'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4290, 'output_tokens': 118, 'total_cost': 0.001582, 'formatted_total_cost': '$0.001582'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4290, 'output_tokens': 118, 'total_cost': 0.001582, 'formatted_total_cost': '$0.001582'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3913, 'output_tokens': 116, 'total_cost': 0.0014638999999999998, 'formatted_total_cost': '$0.001464'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3913, 'output_tokens': 116, 'total_cost': 0.0014638999999999998, 'formatted_total_cost': '$0.001464'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3885, 'output_tokens': 118, 'total_cost': 0.0014605, 'formatted_total_cost': '$0.001460'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3885, 'output_tokens': 118, 'total_cost': 0.0014605, 'formatted_total_cost': '$0.001460'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 489, 'output_tokens': 3, 'total_cost': 0.00015419999999999998, 'formatted_total_cost': '$0.000154'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6573, 'output_tokens': 1186, 'total_cost': 0.004936899999999999, 'formatted_total_cost': '$0.004937'}]]",False,0,,,

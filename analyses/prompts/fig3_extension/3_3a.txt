@@ -1,0 +1,5 @@
+We want to do a logistic regression analysis to study the association between UACR-SACR ratio and diabetic retinopathy. 
+UACR-SACR ratio will be calculated as urinary albumin-to-creatinine ratio UACR (mg/g)/ (serum albumin ALB (g/dL)/serum creatinine SCR (mg/dL))) and then categorized in quartiles(%) Q1: <=25, Q2: >25 and <=50, Q3: >50 and <=75, Q4: >75. 
+Diabetic retinopathy presence will be based on their response from diabetic retionopathy question, categorized as 1 and 0.
+We will used NHANES data from 2009-2016, and will exclude participants whose age in years at screening were less than 20 years old, who didn't say yes when asked about diabetes diagnosis, missing status on diabetic retinopathy, missing serum albumin (ALB)(g/dL), serum creatinine SCR (mg/dL), urinary albumin-to-creatinine ratio((UACR (mg/g)) 
+for analysis, include the following covariates: age at screening.

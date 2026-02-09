@@ -1,0 +1,5 @@
+This study will perform a weighted comparison between groups with and without diabetic retinopathy in the worse eye.The analysis will use NHANES data from the 2005-2008 period. 
+The study includes participants whoes age in years is 40 and older who have diabetes, defined as either doctor told you have diabetes or a glycated hemoglobin (HbA1c) level of 6.5 or higher. 
+Individuals with missing data for race/Hispanic origin, age, gender, or any diabetic retinopathy gradings from the worse eye will be excluded.
+The analysis will consider several variables, including age in years, systolic blood pressure 1st (mmHg), diastolic blood pressure 1st (mmHg), glycohemoglobin HbA1C (%).
+The primary grouping variable is the presence of any retinopathy level, worse eye, which is categorized as either no retinopathy (o) or any retinopathy (1).

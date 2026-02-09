@@ -1,0 +1,5 @@
+From NHANES data from the years 2009 to 2018, we will conduct a weighted logistic regression.
+Include participants who said yes when asked they were told by doctors they had diabetes, 
+Exclude participants with missing data on whether they were told they had diabetic retinopathy, lactate dehydrogenase (U/L).
+Categorize lactate dehydrogenas (U/L) in quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75. Adjust the analysis for gender, race/Hispanic origin, and age.
+Outcome is retinopathy presence based on whether were told they had diabetic retinopathy.

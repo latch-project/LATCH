@@ -1,0 +1,4 @@
+We want to do a weighted group comparison analysis to study the relationship between hemoglobin (g/dl) and diabetic retinopathy.
+Hemoglobin (g/dl) will be used as continous variable and the outcome will be diabetic retinopathy will be determined from a variable 4 levels retinopathy severity, worse eye, categorized as binary yes or no diabetic retinopathy. We will group by retinopathy groups.
+We will use NHANES 2005 - 2008 data and exclude individuals with missing data on hemoglobin (g/dl), or missing data in four levels retinopathy severity, worse eye, or not diagnosed with diabetes based on the questionaire doctor told you have diabetes, and missing data in glycohemoglobin or age in years at screening or diabetes onset.
+For comparison variable, include duration of diabetes, which will be calculated as age in years at screening - diabetes onset, glycohemoglobin, red cell distribution width.

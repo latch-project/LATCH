@@ -1,0 +1,1100 @@
+Title,Schema,Question,Structured Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log
+79806,nhanes,"This study aims to investigate the relationship between serum uric acid levels (mg/dl) and all-cause mortality.
+We will be using NHANES data between 1999 and 2018, the analysis will employ a weighted Cox proportional hazards regression model use exam weights.
+The study cohort will be composed of participants age in years at screening 20 years and older who meet the criteria for diabetes when an individual is considered to have diabetes if they reported doctor told them they have diabetes, had a glycohemoglobin A1c (HbA1c) level >= 6.5%, or a fasting plasma glucose level (mg/dl) is 126 mg/dL or greater. 
+Individuals will be excluded from the analysis if their pregnancy exam was positive. Participants with missing laboratory values for serum uric acid (mg/dl), serum creatinine (mg/dl), or  glycohemoglobin (HbA1c) (%), will be excluded. Anyone who reported ever being told they had cancer or a malignancy will be excluded, as well as those missing mortality data or months followup examination, will be excluded.
+The primary predictor for this analysis is the serum uric acid level (mg/dl), which will be categorized into five groups based on its distribution in the study population, using quintiles as cut-offs QN1: <20%, QN2: >=20 and <40%, QN3: >=40 and <60%, QN4: >=60 and <80%, QN5: >=80%,
+The main outcome is all-cause mortality, categorized as 1 or 0, with months followup examination serving as the time-to-event variable. 
+The analysis will control factors, including age in years at screening, gender, and race/Hispanic origin, which is categorized as Non-Hispanic White, Non-Hispanic Black, Mexican American or Hispanic, and Other.","Analysis Type: weighted cox regression (exam)
+
+Dataset: NHANES
+
+Period of Interest: 1999-2018
+
+Inclusion Criteria:
+- age in years at screening >= 20
+- diabetes defined as meeting any of the following:
+  (1) doctor told them they have diabetes = Yes
+  OR (2) glycohemoglobin A1c (HbA1c) (%) >= 6.5
+  OR (3) fasting plasma glucose level (mg/dl) >= 126
+
+Exclusion Criteria:
+- pregnancy exam = positive
+- missing serum uric acid (mg/dl)
+- missing serum creatinine (mg/dl)
+- missing glycohemoglobin (HbA1c) (%)
+- ever being told they had cancer or a malignancy = Yes
+- missing mortality data
+- missing months followup examination
+
+Covariates:
+- age in years at screening
+- gender
+- race/Hispanic origin categorized as:
+  ""Non-Hispanic White"",
+  ""Non-Hispanic Black"",
+  ""Mexican American or Hispanic"",
+  ""Other""
+
+Predictor:
+- serum uric acid (mg/dl) categorized into quintiles:
+  QN1: <20%, QN2: >=20 and <40%, QN3: >=40 and <60%, QN4: >=60 and <80%, QN5: >=80%
+
+Outcome:
+- (1) months followup examination
+- (2) all-cause mortality = 1 or 0","{'dataset': 'NHANES', 'inclusion': [{'keyword': 'age in years at screening', 'derived': False, 'condition': '>= 20', 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'diabetes', 'derived': True, 'depends_on': [{'keyword': 'doctor told them they have diabetes', 'derived': False, 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'glycohemoglobin a1c (hba1c) (%)', 'derived': False, 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '7.7', '12.4']}, {'keyword': 'fasting plasma glucose level (mg/dl)', 'derived': False, 'table': 'final_master_table', 'column': 'fasting_glucose_mg_dl', 'examples': ['61.0', '62.0', '76.0', '76.1', '79.2']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['doctor told them they have diabetes = Yes', 'glycohemoglobin a1c (hba1c) (%) >= 6.5', 'fasting plasma glucose level (mg/dl) >= 126']}}]}], 'exclusion': [{'keyword': 'pregnancy exam', 'derived': False, 'condition': '= positive', 'table': 'final_master_table', 'column': 'pregnancy_status_at_exam', 'examples': ['Cannot ascertain if SP is pregnant at exam', 'Cannot ascertain if the participant is pregnant at exam', 'SP not pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'keyword': 'serum uric acid (mg/dl)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'uric_acid_mg_dl', 'examples': ['0.4', '1.6', '3.0', '4.8', '5.8']}, {'keyword': 'serum creatinine (mg/dl)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'creatinine_mg_dl', 'examples': ['0.4', '0.54', '0.58', '0.66', '0.7']}, {'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '7.7', '12.4']}, {'keyword': 'ever being told they had cancer or a malignancy', 'derived': False, 'condition': '= Yes', 'table': 'final_master_table', 'column': 'ever_told_you_had_cancer_or_malignancy', 'examples': ['No', 'Yes']}, {'keyword': 'mortality data', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'mortality_status', 'examples': ['0.0', '1.0']}, {'keyword': 'months followup examination', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'months_followup_examination', 'examples': ['0.0', '3.0', '7.0', '33.0', '34.0']}], 'covariates': [{'keyword': 'age in years at screening', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'gender', 'derived': False, 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['Non-Hispanic White', 'Non-Hispanic Black', 'Mexican American or Hispanic', 'Other']}}], 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'predictor': [{'keyword': 'serum uric acid (mg/dl)', 'derived': True, 'depends_on': [{'keyword': 'serum uric acid (mg/dl)', 'derived': False, 'table': 'final_master_table', 'column': 'uric_acid_mg_dl', 'examples': ['0.4', '1.6', '3.0', '4.8', '5.8']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'quintiles', 'num_bins': 5, 'labels': ['QN1: <20%', 'QN2: >=20 and <40%', 'QN3: >=40 and <60%', 'QN4: >=60 and <80%', 'QN5: >=80%']}}], 'table': 'final_master_table', 'column': 'uric_acid_mg_dl', 'examples': ['0.4', '1.6', '3.0', '4.8', '5.8']}], 'outcome': [{'keyword': 'months followup examination', 'derived': False, 'table': 'final_master_table', 'column': 'months_followup_examination', 'examples': ['0.0', '3.0', '7.0', '33.0', '34.0']}, {'keyword': 'all-cause mortality', 'derived': False, 'table': 'final_master_table', 'column': 'mortality_status', 'examples': ['0.0', '1.0']}]}","{'analysis_type': 'weighted cox regression (exam)', 'dataset': 'NHANES', 'period_of_interest': '1999-2018', 'inclusion': [{'keyword': 'age in years at screening', 'derived': False, 'condition': '>= 20', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}]}, {'keyword': 'diabetes', 'derived': True, 'depends_on': [{'keyword': 'doctor told them they have diabetes', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.diq_d', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2017-2018', 'table': 'nhanes.diq_j', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2001-2002', 'table': 'nhanes.diq_b', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2003-2004', 'table': 'nhanes.diq_c', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '1999-2000', 'table': 'nhanes.diq', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'glycohemoglobin a1c (hba1c) (%)', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.ghb_d', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2017-2018', 'table': 'nhanes.ghb_j', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}, {'cycle': '2001-2002', 'table': 'nhanes.l10_b', 'column': 'glycohemoglobin', 'example_values': ['12.4', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2003-2004', 'table': 'nhanes.l10_c', 'column': 'glycohemoglobin', 'example_values': ['13.2', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2007-2008', 'table': 'nhanes.ghb_e', 'column': 'glycohemoglobin', 'example_values': ['12.4', '14.7', '13.2', '5.8', '4.8']}, {'cycle': '2009-2010', 'table': 'nhanes.ghb_f', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2015-2016', 'table': 'nhanes.ghb_i', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '1999-2000', 'table': 'nhanes.lab10', 'column': 'glycohemoglobin', 'example_values': ['12.4', '14.7', '13.2', '5.8', '4.8']}]}, {'keyword': 'fasting plasma glucose level (mg/dl)', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.glu_d', 'column': 'fasting_glucose_mg_dl', 'example_values': ['62.0', '154.0', '174.0', '96.0', '76.0']}, {'cycle': '2011-2012', 'table': 'nhanes.glu_g', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '217.0', '76.0']}, {'cycle': '2017-2018', 'table': 'nhanes.glu_j', 'column': 'fasting_glucose_mg_dl', 'example_values': ['62.0', '154.0', '346.0', '174.0', '217.0']}, {'cycle': '2013-2014', 'table': 'nhanes.glu_h', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '76.0', '96.0']}, {'cycle': '2001-2002', 'table': 'nhanes.l10am_b', 'column': 'fasting_glucose_mg_dl', 'example_values': ['211.7', '79.2', '132.7', '185.2', '76.1']}, {'cycle': '2003-2004', 'table': 'nhanes.l10am_c', 'column': 'fasting_glucose_mg_dl', 'example_values': ['211.7', '79.2', '155.1', '149.2', '96.0']}, {'cycle': '2007-2008', 'table': 'nhanes.glu_e', 'column': 'fasting_glucose_mg_dl', 'example_values': ['174.0', '162.0', '76.0', '96.0', '61.0']}, {'cycle': '2009-2010', 'table': 'nhanes.glu_f', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '217.0', '76.0']}, {'cycle': '2015-2016', 'table': 'nhanes.glu_i', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '76.0', '96.0']}, {'cycle': '1999-2000', 'table': 'nhanes.lab10am', 'column': 'fasting_glucose_mg_dl', 'example_values': ['79.2', '214.9', '76.1', '96.0', '89.9']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['doctor told them they have diabetes = Yes', 'glycohemoglobin a1c (hba1c) (%) >= 6.5', 'fasting plasma glucose level (mg/dl) >= 126']}}]}], 'exclusion': [{'keyword': 'pregnancy exam', 'derived': False, 'condition': '= positive', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if SP is pregnant at exam', 'SP not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if the participant is pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if the participant is pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if the participant is pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if SP is pregnant at exam', 'SP not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if SP is pregnant at exam', 'SP not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if SP is pregnant at exam', 'SP not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if SP is pregnant at exam', 'SP not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if the participant is pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if SP is pregnant at exam', 'SP not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}]}, {'keyword': 'serum uric acid (mg/dl)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.biopro_d', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2017-2018', 'table': 'nhanes.biopro_j', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '1.6', '4.8', '6.2']}, {'cycle': '2001-2002', 'table': 'nhanes.l40_b', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2003-2004', 'table': 'nhanes.l40_c', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.biopro_e', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2009-2010', 'table': 'nhanes.biopro_f', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '1999-2000', 'table': 'nhanes.lab18', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}]}, {'keyword': 'serum creatinine (mg/dl)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.biopro_d', 'column': 'creatinine_mg_dl', 'example_values': ['0.9', '1.6', '6.2', '0.4', '4.3']}, {'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'creatinine_mg_dl', 'example_values': ['0.66', '1.36', '1.15', '2.11', '4.27']}, {'cycle': '2017-2018', 'table': 'nhanes.biopro_j', 'column': 'creatinine_mg_dl', 'example_values': ['6.19', '0.66', '1.36', '1.15', '6.75']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'creatinine_mg_dl', 'example_values': ['1.45', '2.16', '2.06', '4.35', '0.58']}, {'cycle': '2001-2002', 'table': 'nhanes.l40_b', 'column': 'creatinine_mg_dl', 'example_values': ['0.9', '1.6', '0.4', '3.0', '3.7']}, {'cycle': '2003-2004', 'table': 'nhanes.l40_c', 'column': 'creatinine_mg_dl', 'example_values': ['0.9', '1.6', '0.4', '3.0', '1.4']}, {'cycle': '2007-2008', 'table': 'nhanes.biopro_e', 'column': 'creatinine_mg_dl', 'example_values': ['2.79', '0.54', '2.1', '2.12', '2.06']}, {'cycle': '2009-2010', 'table': 'nhanes.biopro_f', 'column': 'creatinine_mg_dl', 'example_values': ['0.54', '1.45', '2.1', '2.12', '2.06']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'creatinine_mg_dl', 'example_values': ['0.7', '0.76', '1.18', '0.94', '0.93']}, {'cycle': '1999-2000', 'table': 'nhanes.lab18', 'column': 'creatinine_mg_dl', 'example_values': ['0.9', '1.6', '7.7', '0.4', '8.7']}]}, {'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.ghb_d', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2017-2018', 'table': 'nhanes.ghb_j', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}, {'cycle': '2001-2002', 'table': 'nhanes.l10_b', 'column': 'glycohemoglobin', 'example_values': ['12.4', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2003-2004', 'table': 'nhanes.l10_c', 'column': 'glycohemoglobin', 'example_values': ['13.2', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2007-2008', 'table': 'nhanes.ghb_e', 'column': 'glycohemoglobin', 'example_values': ['12.4', '14.7', '13.2', '5.8', '4.8']}, {'cycle': '2009-2010', 'table': 'nhanes.ghb_f', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2015-2016', 'table': 'nhanes.ghb_i', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '1999-2000', 'table': 'nhanes.lab10', 'column': 'glycohemoglobin', 'example_values': ['12.4', '14.7', '13.2', '5.8', '4.8']}]}, {'keyword': 'ever being told they had cancer or a malignancy', 'derived': False, 'condition': '= Yes', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mcq_d', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.mcq_g', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2017-2018', 'table': 'nhanes.mcq_j', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.mcq_h', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2001-2002', 'table': 'nhanes.mcq_b', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2003-2004', 'table': 'nhanes.mcq_c', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.mcq_e', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.mcq_f', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.mcq_i', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '1999-2000', 'table': 'nhanes.mcq', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}]}, {'keyword': 'mortality data', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2011-2012', 'table': 'nhanes.mortality_data_g', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2017-2018', 'table': 'nhanes.mortality_data_j', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2013-2014', 'table': 'nhanes.mortality_data_h', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2001-2002', 'table': 'nhanes.mortality_data_b', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2003-2004', 'table': 'nhanes.mortality_data_c', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2015-2016', 'table': 'nhanes.mortality_data_i', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '1999-2000', 'table': 'nhanes.mortality_data', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}]}, {'keyword': 'months followup examination', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'months_followup_examination', 'example_values': ['62.0', '154.0', '174.0', '162.0', '96.0']}, {'cycle': '2011-2012', 'table': 'nhanes.mortality_data_g', 'column': 'months_followup_examination', 'example_values': ['0.0', '62.0', '76.0', '96.0', '61.0']}, {'cycle': '2017-2018', 'table': 'nhanes.mortality_data_j', 'column': 'months_followup_examination', 'example_values': ['0.0', '3.0', '7.0', '33.0', '34.0']}, {'cycle': '2013-2014', 'table': 'nhanes.mortality_data_h', 'column': 'months_followup_examination', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2001-2002', 'table': 'nhanes.mortality_data_b', 'column': 'months_followup_examination', 'example_values': ['0.0', '154.0', '174.0', '96.0', '61.0']}, {'cycle': '2003-2004', 'table': 'nhanes.mortality_data_c', 'column': 'months_followup_examination', 'example_values': ['180.0', '109.0', '40.0', '39.0', '68.0']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'months_followup_examination', 'example_values': ['40.0', '109.0', '39.0', '68.0', '0.0']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'months_followup_examination', 'example_values': ['62.0', '76.0', '96.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.mortality_data_i', 'column': 'months_followup_examination', 'example_values': ['0.0', '61.0', '3.0', '7.0', '34.0']}, {'cycle': '1999-2000', 'table': 'nhanes.mortality_data', 'column': 'months_followup_examination', 'example_values': ['154.0', '174.0', '96.0', '61.0', '248.0']}]}], 'covariates': [{'keyword': 'age in years at screening', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}]}, {'keyword': 'gender', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['Non-Hispanic White', 'Non-Hispanic Black', 'Mexican American or Hispanic', 'Other']}}], 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'predictor': [{'keyword': 'serum uric acid (mg/dl)', 'derived': True, 'depends_on': [{'keyword': 'serum uric acid (mg/dl)', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.biopro_d', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2017-2018', 'table': 'nhanes.biopro_j', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '1.6', '4.8', '6.2']}, {'cycle': '2001-2002', 'table': 'nhanes.l40_b', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2003-2004', 'table': 'nhanes.l40_c', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.biopro_e', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2009-2010', 'table': 'nhanes.biopro_f', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '1999-2000', 'table': 'nhanes.lab18', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'quintiles', 'num_bins': 5, 'labels': ['QN1: <20%', 'QN2: >=20 and <40%', 'QN3: >=40 and <60%', 'QN4: >=60 and <80%', 'QN5: >=80%']}}], 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.biopro_d', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2017-2018', 'table': 'nhanes.biopro_j', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '1.6', '4.8', '6.2']}, {'cycle': '2001-2002', 'table': 'nhanes.l40_b', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2003-2004', 'table': 'nhanes.l40_c', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.biopro_e', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2009-2010', 'table': 'nhanes.biopro_f', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '1999-2000', 'table': 'nhanes.lab18', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}]}], 'outcome': [{'keyword': 'months followup examination', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'months_followup_examination', 'example_values': ['62.0', '154.0', '174.0', '162.0', '96.0']}, {'cycle': '2011-2012', 'table': 'nhanes.mortality_data_g', 'column': 'months_followup_examination', 'example_values': ['0.0', '62.0', '76.0', '96.0', '61.0']}, {'cycle': '2017-2018', 'table': 'nhanes.mortality_data_j', 'column': 'months_followup_examination', 'example_values': ['0.0', '3.0', '7.0', '33.0', '34.0']}, {'cycle': '2013-2014', 'table': 'nhanes.mortality_data_h', 'column': 'months_followup_examination', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2001-2002', 'table': 'nhanes.mortality_data_b', 'column': 'months_followup_examination', 'example_values': ['0.0', '154.0', '174.0', '96.0', '61.0']}, {'cycle': '2003-2004', 'table': 'nhanes.mortality_data_c', 'column': 'months_followup_examination', 'example_values': ['180.0', '109.0', '40.0', '39.0', '68.0']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'months_followup_examination', 'example_values': ['40.0', '109.0', '39.0', '68.0', '0.0']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'months_followup_examination', 'example_values': ['62.0', '76.0', '96.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.mortality_data_i', 'column': 'months_followup_examination', 'example_values': ['0.0', '61.0', '3.0', '7.0', '34.0']}, {'cycle': '1999-2000', 'table': 'nhanes.mortality_data', 'column': 'months_followup_examination', 'example_values': ['154.0', '174.0', '96.0', '61.0', '248.0']}]}, {'keyword': 'all-cause mortality', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2011-2012', 'table': 'nhanes.mortality_data_g', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2017-2018', 'table': 'nhanes.mortality_data_j', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2013-2014', 'table': 'nhanes.mortality_data_h', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2001-2002', 'table': 'nhanes.mortality_data_b', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2003-2004', 'table': 'nhanes.mortality_data_c', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2015-2016', 'table': 'nhanes.mortality_data_i', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '1999-2000', 'table': 'nhanes.mortality_data', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}]}]}",exam,"-- STEP 1: Create temp_master_weight
+
+-- TEMP TABLE FOR weight
+DROP TABLE IF EXISTS temp_master_weight;
+
+CREATE TEMP TABLE temp_master_weight AS
+SELECT respondent_sequence_number, 
+       (full_sample_4_year_mec_exam_weight * 4.0 / 24.0) AS survey_weight
+FROM nhanes.demo
+WHERE full_sample_4_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_4_year_mec_exam_weight * 4.0 / 24.0) AS survey_weight
+FROM nhanes.demo_b
+WHERE full_sample_4_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_c
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_d
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_e
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_f
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_g
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_h
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_i
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_j
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL;
+
+
+-- STEP 2: Create temp_psu_stratum
+
+-- TEMP TABLE FOR PSU and Stratum
+DROP TABLE IF EXISTS temp_psu_stratum;
+CREATE TEMP TABLE temp_psu_stratum AS
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_b
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_c
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_j;
+
+
+-- STEP 3: Create final weight+design table
+DROP TABLE IF EXISTS weight_design;
+CREATE TABLE weight_design AS
+SELECT 
+    s.respondent_sequence_number,
+    s.masked_variance_pseudo_psu,
+    s.masked_variance_pseudo_stratum,
+    w.survey_weight
+FROM temp_psu_stratum s
+INNER JOIN temp_master_weight w
+  ON s.respondent_sequence_number = w.respondent_sequence_number;
+
+
+
+
+-- TEMP TABLE FOR ""age in years at screening"", ""age in years at screening""
+DROP TABLE IF EXISTS temp_master_age_in_years_at_screening;
+CREATE TEMP TABLE temp_master_age_in_years_at_screening AS
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_j
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_b
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_c
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_in_years_at_screening ON temp_master_age_in_years_at_screening (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""doctor told them they have diabetes""
+DROP TABLE IF EXISTS temp_master_doctor_told_you_have_diabetes;
+CREATE TEMP TABLE temp_master_doctor_told_you_have_diabetes AS
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_d
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_j
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_b
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_c
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_e
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_i
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_doctor_told_you_have_diabetes ON temp_master_doctor_told_you_have_diabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""glycohemoglobin (hba1c) (%)"", ""glycohemoglobin a1c (hba1c) (%)""
+DROP TABLE IF EXISTS temp_master_glycohemoglobin;
+CREATE TEMP TABLE temp_master_glycohemoglobin AS
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_d
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_g
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_j
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_h
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.l10_b
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.l10_c
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_e
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_f
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_i
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.lab10;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_glycohemoglobin ON temp_master_glycohemoglobin (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""fasting plasma glucose level (mg/dl)""
+DROP TABLE IF EXISTS temp_master_fasting_glucose_mg_dl;
+CREATE TEMP TABLE temp_master_fasting_glucose_mg_dl AS
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_d
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_g
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_j
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_h
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.l10am_b
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.l10am_c
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_e
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_f
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_i
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.lab10am;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_fasting_glucose_mg_dl ON temp_master_fasting_glucose_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""pregnancy exam""
+DROP TABLE IF EXISTS temp_master_pregnancy_status_at_exam;
+CREATE TEMP TABLE temp_master_pregnancy_status_at_exam AS
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_j
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_b
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_c
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_pregnancy_status_at_exam ON temp_master_pregnancy_status_at_exam (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""serum uric acid (mg/dl)"", ""serum uric acid (mg/dl)"", ""serum uric acid (mg/dl)""
+DROP TABLE IF EXISTS temp_master_uric_acid_mg_dl;
+CREATE TEMP TABLE temp_master_uric_acid_mg_dl AS
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_d
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_g
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_j
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_h
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.l40_b
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.l40_c
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_e
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_f
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_i
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.lab18;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_uric_acid_mg_dl ON temp_master_uric_acid_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""serum creatinine (mg/dl)""
+DROP TABLE IF EXISTS temp_master_creatinine_mg_dl;
+CREATE TEMP TABLE temp_master_creatinine_mg_dl AS
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_d
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_g
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_j
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_h
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.l40_b
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.l40_c
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_e
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_f
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_i
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.lab18;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_creatinine_mg_dl ON temp_master_creatinine_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""ever being told they had cancer or a malignancy""
+DROP TABLE IF EXISTS temp_master_ever_told_you_had_cancer_or_malignancy;
+CREATE TEMP TABLE temp_master_ever_told_you_had_cancer_or_malignancy AS
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_d
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_g
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_j
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_h
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_b
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_c
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_e
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_f
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_i
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_ever_told_you_had_cancer_or_malignancy ON temp_master_ever_told_you_had_cancer_or_malignancy (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""all-cause mortality"", ""mortality data""
+DROP TABLE IF EXISTS temp_master_mortality_status;
+CREATE TEMP TABLE temp_master_mortality_status AS
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_d
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_g
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_j
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_h
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_b
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_c
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_e
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_f
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_i
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_mortality_status ON temp_master_mortality_status (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""months followup examination"", ""months followup examination""
+DROP TABLE IF EXISTS temp_master_months_followup_examination;
+CREATE TEMP TABLE temp_master_months_followup_examination AS
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_d
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_g
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_j
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_h
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_b
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_c
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_e
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_f
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_i
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_months_followup_examination ON temp_master_months_followup_examination (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""gender""
+DROP TABLE IF EXISTS temp_master_gender;
+CREATE TEMP TABLE temp_master_gender AS
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_j
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_b
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_c
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_gender ON temp_master_gender (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""race/hispanic origin"", ""race/hispanic origin""
+DROP TABLE IF EXISTS temp_master_race_hispanic_origin;
+CREATE TEMP TABLE temp_master_race_hispanic_origin AS
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_j
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_b
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_c
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_race_hispanic_origin ON temp_master_race_hispanic_origin (respondent_sequence_number);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT respondent_sequence_number FROM temp_master_age_in_years_at_screening
+UNION
+SELECT respondent_sequence_number FROM temp_master_doctor_told_you_have_diabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_glycohemoglobin
+UNION
+SELECT respondent_sequence_number FROM temp_master_fasting_glucose_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_pregnancy_status_at_exam
+UNION
+SELECT respondent_sequence_number FROM temp_master_uric_acid_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_creatinine_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_ever_told_you_had_cancer_or_malignancy
+UNION
+SELECT respondent_sequence_number FROM temp_master_mortality_status
+UNION
+SELECT respondent_sequence_number FROM temp_master_months_followup_examination
+UNION
+SELECT respondent_sequence_number FROM temp_master_gender
+UNION
+SELECT respondent_sequence_number FROM temp_master_race_hispanic_origin;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_respondent_sequence_number ON temp_all_ids (respondent_sequence_number);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.respondent_sequence_number,
+    t0.""age_in_years_at_screening"",
+    t1.""doctor_told_you_have_diabetes"",
+    t2.""glycohemoglobin"",
+    t3.""fasting_glucose_mg_dl"",
+    t4.""pregnancy_status_at_exam"",
+    t5.""uric_acid_mg_dl"",
+    t6.""creatinine_mg_dl"",
+    t7.""ever_told_you_had_cancer_or_malignancy"",
+    t8.""mortality_status"",
+    t9.""months_followup_examination"",
+    t10.""gender"",
+    t11.""race_hispanic_origin""
+FROM temp_all_ids a
+LEFT JOIN temp_master_age_in_years_at_screening t0 ON a.respondent_sequence_number = t0.respondent_sequence_number 
+LEFT JOIN temp_master_doctor_told_you_have_diabetes t1 ON a.respondent_sequence_number = t1.respondent_sequence_number 
+LEFT JOIN temp_master_glycohemoglobin t2 ON a.respondent_sequence_number = t2.respondent_sequence_number 
+LEFT JOIN temp_master_fasting_glucose_mg_dl t3 ON a.respondent_sequence_number = t3.respondent_sequence_number 
+LEFT JOIN temp_master_pregnancy_status_at_exam t4 ON a.respondent_sequence_number = t4.respondent_sequence_number 
+LEFT JOIN temp_master_uric_acid_mg_dl t5 ON a.respondent_sequence_number = t5.respondent_sequence_number 
+LEFT JOIN temp_master_creatinine_mg_dl t6 ON a.respondent_sequence_number = t6.respondent_sequence_number 
+LEFT JOIN temp_master_ever_told_you_had_cancer_or_malignancy t7 ON a.respondent_sequence_number = t7.respondent_sequence_number 
+LEFT JOIN temp_master_mortality_status t8 ON a.respondent_sequence_number = t8.respondent_sequence_number 
+LEFT JOIN temp_master_months_followup_examination t9 ON a.respondent_sequence_number = t9.respondent_sequence_number 
+LEFT JOIN temp_master_gender t10 ON a.respondent_sequence_number = t10.respondent_sequence_number 
+LEFT JOIN temp_master_race_hispanic_origin t11 ON a.respondent_sequence_number = t11.respondent_sequence_number;
+
+CREATE INDEX idx_final_master_respondent_sequence_number    
+    ON final_master_table (respondent_sequence_number);
+
+
+-- Clean up final_master_table
+DELETE FROM final_master_table
+WHERE respondent_sequence_number NOT IN (
+    SELECT respondent_sequence_number FROM weight_design
+);
+
+
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Include all patients age 20 or older
+CREATE TEMP TABLE temp_inclusion_step1 AS
+SELECT ""respondent_sequence_number""
+FROM final_master_table
+WHERE ""age_in_years_at_screening"" >= 20;
+
+-- STEP 1.2: From the above group, include only those with diabetes
+-- Diabetes defined as: doctor told them they have diabetes = Yes OR HbA1c >= 6.5 OR fasting glucose >= 126
+CREATE TEMP TABLE temp_inclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""doctor_told_you_have_diabetes"" = 'Yes'
+   OR f.""glycohemoglobin"" >= 6.5
+   OR f.""fasting_glucose_mg_dl"" >= 126;
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude patients with positive pregnancy exam
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion_step2 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""pregnancy_status_at_exam"" IS NULL
+   OR f.""pregnancy_status_at_exam"" NOT IN ('Yes, positive lab pregnancy test or self-reported pregnant at exam');
+
+-- STEP 2.2: Exclude patients with missing serum uric acid
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""uric_acid_mg_dl"" IS NOT NULL;
+
+-- STEP 2.3: Exclude patients with missing serum creatinine
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""creatinine_mg_dl"" IS NOT NULL;
+
+-- STEP 2.4: Exclude patients with missing glycohemoglobin
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step3 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""glycohemoglobin"" IS NOT NULL;
+
+-- STEP 2.5: Exclude patients who reported ever being told they had cancer or malignancy
+CREATE TEMP TABLE temp_exclusion_step5 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step4 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""ever_told_you_had_cancer_or_malignancy"" IS NULL
+   OR f.""ever_told_you_had_cancer_or_malignancy"" NOT IN ('Yes');
+
+-- STEP 2.6: Exclude patients with missing mortality data
+CREATE TEMP TABLE temp_exclusion_step6 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step5 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""mortality_status"" IS NOT NULL;
+
+-- STEP 2.7: Exclude patients with missing months followup examination
+CREATE TEMP TABLE temp_exclusion_step7 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step6 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""months_followup_examination"" IS NOT NULL;
+
+-- ========== STEP 3: Cohort ==========
+
+-- The final temp table in the exclusion sequence becomes temp_cohort
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""respondent_sequence_number""
+FROM temp_exclusion_step7;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Age in years at screening
+CREATE TEMP TABLE temp_age AS
+SELECT c.""respondent_sequence_number"", f.""age_in_years_at_screening""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.2 Gender
+CREATE TEMP TABLE temp_gender AS
+SELECT c.""respondent_sequence_number"", f.""gender""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.3 Race/Hispanic Origin
+-- Map race/hispanic origin to categories
+CREATE TEMP TABLE temp_race AS
+SELECT c.""respondent_sequence_number"",
+  CASE f.""race_hispanic_origin""
+    WHEN 'Non-Hispanic White' THEN 'Non-Hispanic White'
+    WHEN 'Non-Hispanic Black' THEN 'Non-Hispanic Black'
+    WHEN 'Mexican American' THEN 'Mexican American or Hispanic'
+    WHEN 'Other Hispanic' THEN 'Mexican American or Hispanic'
+    WHEN 'Other Race - Including Multi-Racial' THEN 'Other'
+    ELSE NULL
+  END AS ""race_hispanic_origin""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.4 Serum Uric Acid (Predictor)
+-- Extract serum uric acid values for cohort
+CREATE TEMP TABLE temp_uric_acid AS
+SELECT c.""respondent_sequence_number"", f.""uric_acid_mg_dl""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Calculate quintile cutoffs for serum uric acid within cohort
+CREATE TEMP TABLE temp_uric_acid_cutoffs AS
+SELECT
+  PERCENTILE_CONT(0.20) WITHIN GROUP (ORDER BY ""uric_acid_mg_dl"") AS qn1,
+  PERCENTILE_CONT(0.40) WITHIN GROUP (ORDER BY ""uric_acid_mg_dl"") AS qn2,
+  PERCENTILE_CONT(0.60) WITHIN GROUP (ORDER BY ""uric_acid_mg_dl"") AS qn3,
+  PERCENTILE_CONT(0.80) WITHIN GROUP (ORDER BY ""uric_acid_mg_dl"") AS qn4
+FROM temp_uric_acid;
+
+-- Assign patients to serum uric acid quintile groups
+CREATE TEMP TABLE temp_uric_acid_quintiles AS
+SELECT ""respondent_sequence_number"",
+  CASE
+    WHEN ""uric_acid_mg_dl"" IS NULL THEN NULL
+    WHEN ""uric_acid_mg_dl"" < (SELECT qn1 FROM temp_uric_acid_cutoffs) THEN 'QN1: <20%'
+    WHEN ""uric_acid_mg_dl"" < (SELECT qn2 FROM temp_uric_acid_cutoffs) THEN 'QN2: >=20 and <40%'
+    WHEN ""uric_acid_mg_dl"" < (SELECT qn3 FROM temp_uric_acid_cutoffs) THEN 'QN3: >=40 and <60%'
+    WHEN ""uric_acid_mg_dl"" < (SELECT qn4 FROM temp_uric_acid_cutoffs) THEN 'QN4: >=60 and <80%'
+    ELSE 'QN5: >=80%'
+  END AS ""serum_uric_acid_mg_dl""
+FROM temp_uric_acid;
+
+-- 4.5 Months Followup Examination (Time-to-event)
+CREATE TEMP TABLE temp_followup AS
+SELECT c.""respondent_sequence_number"", f.""months_followup_examination""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.6 All-Cause Mortality (Outcome)
+CREATE TEMP TABLE temp_mortality AS
+SELECT c.""respondent_sequence_number"", f.""mortality_status"" AS ""all_cause_mortality""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- ========== STEP 5: Final Table ==========
+CREATE TEMP TABLE temp_final_table AS
+SELECT 
+  c.""respondent_sequence_number"",
+  a.""age_in_years_at_screening"",
+  g.""gender"",
+  r.""race_hispanic_origin"",
+  ua.""serum_uric_acid_mg_dl"",
+  fu.""months_followup_examination"",
+  m.""all_cause_mortality""
+FROM temp_cohort c
+JOIN temp_age a ON c.""respondent_sequence_number"" = a.""respondent_sequence_number""
+JOIN temp_gender g ON c.""respondent_sequence_number"" = g.""respondent_sequence_number""
+JOIN temp_race r ON c.""respondent_sequence_number"" = r.""respondent_sequence_number""
+JOIN temp_uric_acid_quintiles ua ON c.""respondent_sequence_number"" = ua.""respondent_sequence_number""
+JOIN temp_followup fu ON c.""respondent_sequence_number"" = fu.""respondent_sequence_number""
+JOIN temp_mortality m ON c.""respondent_sequence_number"" = m.""respondent_sequence_number"";
+
+-- ========== STEP 6: View Output ==========
+SELECT * FROM temp_final_table;
+
+-- STEP: Create merged final table with design variables + in_analysis flag
+DROP TABLE IF EXISTS temp_final_with_weights;
+
+CREATE TEMP TABLE temp_final_with_weights AS
+SELECT 
+    wd.""respondent_sequence_number"",
+    wd.""masked_variance_pseudo_psu"",
+    wd.""masked_variance_pseudo_stratum"",
+    wd.""survey_weight"",
+    CASE WHEN ft.""respondent_sequence_number"" IS NOT NULL THEN 1 ELSE 0 END AS ""in_analysis"",
+    ft.""age_in_years_at_screening"",
+    ft.""gender"",
+    ft.""race_hispanic_origin"",
+    ft.""serum_uric_acid_mg_dl"",
+    ft.""months_followup_examination"",
+    ft.""all_cause_mortality""
+FROM weight_design wd
+LEFT JOIN temp_final_table ft
+  ON wd.""respondent_sequence_number"" = ft.""respondent_sequence_number"";
+  
+-- Preview the result
+SELECT * FROM temp_final_with_weights;
+","    step_num                                                                                                      step  remaining_after_step  excluded_at_step
+0          0                                                         Total unique participants pooled from all sources                101316               NaN
+1          1                                         Participants with a valid survey weight (after initial filtering)                 99977            1339.0
+2          2                                                            STEP 1.1: Include all patients age 20 or older                 54351           45626.0
+3          3  Diabetes defined as: doctor told them they have diabetes = Yes OR HbA1c >= 6.5 OR fasting glucose >= 126                  8658           45693.0
+4          4                                                   STEP 2.1: Exclude patients with positive pregnancy exam                  8634              24.0
+5          5                                                   STEP 2.2: Exclude patients with missing serum uric acid                  7911             723.0
+6          6                                                  STEP 2.3: Exclude patients with missing serum creatinine                  7909               2.0
+7          7                                                   STEP 2.4: Exclude patients with missing glycohemoglobin                  7896              13.0
+8          8                     STEP 2.5: Exclude patients who reported ever being told they had cancer or malignancy                  6842            1054.0
+9          9                                                    STEP 2.6: Exclude patients with missing mortality data                  6832              10.0
+10        10                                       STEP 2.7: Exclude patients with missing months followup examination                  6832               0.0
+11        11                                        The final temp table in the exclusion sequence becomes temp_cohort                  6832               0.0
+12        12                                                                 ========== STEP 5: Final Table ==========                  6832               0.0","(99977, 11)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""respondent_sequence_number"")
+    outcome_vars <- c(""months_followup_examination"",""all_cause_mortality"")
+    weight_vars <- c(""survey_weight"",""masked_variance_pseudo_psu"",""masked_variance_pseudo_stratum"",""in_analysis"")
+
+    cohort <- df[df$in_analysis == 1, names(df) != ""in_analysis""]
+
+
+    outcome_roles <- c()
+    outcome_roles[""months_followup_examination""] <- ""event_to_time"";outcome_roles[""all_cause_mortality""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else if (name %in% weight_vars) {
+        category <- ""weight""
+        summary_info <- ""Weight variable"" 
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    weight_vars <- report$variable[report$category == ""weight""]; cat(""Weight Variables: ""); print(weight_vars); psu_var <- weight_vars[grepl(""psu"", weight_vars, ignore.case = TRUE)][1]; cat(""PSU:"", psu_var); stratum_var <- weight_vars[grepl(""stratum"", weight_vars, ignore.case = TRUE)][1]; cat(""Stratum:"", stratum_var); weight_var <- weight_vars[grepl(""weight"", weight_vars, ignore.case = TRUE)][1]; cat(""Weight:"", weight_var); in_analysis_var <- weight_vars[grepl(""in_analysis"", weight_vars, ignore.case = TRUE)][1]; cat(""In Analysis:"", in_analysis_var)
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    event_to_time_var <- names(outcome_roles[outcome_roles == ""event_to_time""])[1]
+cat(""Event-to-Time Variable:\n""); print(event_to_time_var); cat(""\n"")
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+    library(survey)
+    options(survey.lonely.psu = ""adjust"")
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    if (!is.numeric(df[[outcome_var]])) {
+        df[[outcome_var]] <- as.numeric(df[[outcome_var]])
+    }
+
+    if (!is.numeric(df[[event_to_time_var]])) {
+        df[[event_to_time_var]] <- as.numeric(df[[event_to_time_var]])
+    }
+    formula <- as.formula(paste0(""Surv("", event_to_time_var, "", "", outcome_var, "") ~ "", paste(predictor_vars, collapse = "" + "")))
+            
+    
+    survey_design <- svydesign(
+        ids     = as.formula(paste0(""~"", psu_var)),
+        strata  = as.formula(paste0(""~"", stratum_var)),
+        weights = as.formula(paste0(""~"", weight_var)),
+        data    = df,
+        nest    = TRUE
+        )
+    survey_design <- subset(survey_design, in_analysis ==1)
+        
+    
+    model <- svycoxph(formula, design = survey_design)
+            
+    
+    result_table <- tidy(model, conf.int = TRUE, exponentiate = TRUE) %>%
+            select(term, estimate, p.value, conf.low, conf.high)
+            
+    ","[{'variable': 'respondent_sequence_number', 'category': 'identifier', 'n_unique': 6832, 'na_count': 0, 'summary': 'Total rows = 6832'}, {'variable': 'masked_variance_pseudo_psu', 'category': 'weight', 'n_unique': 3, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'masked_variance_pseudo_stratum', 'category': 'weight', 'n_unique': 148, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'survey_weight', 'category': 'weight', 'n_unique': 6275, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'age_in_years_at_screening', 'category': 'numerical', 'n_unique': 66, 'na_count': 0, 'summary': 'mean = 60.605, sd = 13.985'}, {'variable': 'gender', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'Female: 47.3%; Male: 52.7%'}, {'variable': 'race_hispanic_origin', 'category': 'categorical', 'n_unique': 4, 'na_count': 0, 'summary': 'Mexican American or Hispanic: 32.1%; Non-Hispanic Black: 26%; Non-Hispanic White: 32%; Other: 9.9%'}, {'variable': 'serum_uric_acid_mg_dl', 'category': 'categorical', 'n_unique': 5, 'na_count': 0, 'summary': 'QN1: <20%: 19.2%; QN2: >=20 and <40%: 19.7%; QN3: >=40 and <60%: 20.7%; QN4: >=60 and <80%: 18.6%; QN5: >=80%: 21.9%'}, {'variable': 'months_followup_examination', 'category': 'event_to_time', 'n_unique': 250, 'na_count': 0, 'summary': 'mean = 96.373, sd = 61.299'}, {'variable': 'all_cause_mortality', 'category': 'outcome', 'n_unique': 2, 'na_count': 0, 'summary': '0: 73.2%; 1: 26.8%'}]","[{'term': 'age_in_years_at_screening', 'estimate': 1.0732659277429015, 'p.value': 2.9143839701832723e-88, 'conf.low': 1.065824001317429, 'conf.high': 1.0807598160953464}, {'term': 'genderFemale', 'estimate': 0.7535395430392033, 'p.value': 9.228880248886829e-05, 'conf.low': 0.6538879762181781, 'conf.high': 0.8683778622261598}, {'term': 'race_hispanic_originNon-Hispanic Black', 'estimate': 1.2622770944538095, 'p.value': 0.005170004382373128, 'conf.low': 1.0721428415373864, 'conf.high': 1.4861298340601665}, {'term': 'race_hispanic_originNon-Hispanic White', 'estimate': 1.327595757136422, 'p.value': 0.00149437892591214, 'conf.low': 1.1145880379079487, 'conf.high': 1.5813111521229082}, {'term': 'race_hispanic_originOther', 'estimate': 0.9573606530129818, 'p.value': 0.7979073786533398, 'conf.low': 0.6858354804781448, 'conf.high': 1.3363837917782528}, {'term': 'serum_uric_acid_mg_dlQN2: >=20 and <40%', 'estimate': 0.9607781881833135, 'p.value': 0.7229473795749125, 'conf.low': 0.770115375159043, 'conf.high': 1.1986447182646813}, {'term': 'serum_uric_acid_mg_dlQN3: >=40 and <60%', 'estimate': 0.9609292089126166, 'p.value': 0.7168284980844526, 'conf.low': 0.7747454830757822, 'conf.high': 1.1918558606828373}, {'term': 'serum_uric_acid_mg_dlQN4: >=60 and <80%', 'estimate': 0.9470637695780829, 'p.value': 0.6223753345468745, 'conf.low': 0.7627371659903229, 'conf.high': 1.1759355956948712}, {'term': 'serum_uric_acid_mg_dlQN5: >=80%', 'estimate': 1.400127562574912, 'p.value': 0.0005833241237165723, 'conf.low': 1.1557648406661398, 'conf.high': 1.6961557598101769}]",,,,weighted cox regression (exam),1999-2018,"[[1999, 2000], [2001, 2002], [2003, 2004], [2005, 2006], [2007, 2008], [2009, 2010], [2011, 2012], [2013, 2014], [2015, 2016], [2017, 2018]]",anthropic_claude-sonnet-4-5-20250929,"**Review Required**
+
+This analysis plan is very comprehensive and well-structured. However, there are a few points that need clarification:
+
+## Missing Information:
+
+1. **Serum Creatinine Role**: You mentioned that participants with missing serum creatinine (mg/dl) values will be excluded, but serum creatinine is not listed as a covariate in the analysis. 
+   - **Question**: Should serum creatinine be included as a covariate in the Cox regression model? This would be clinically relevant given the relationship between uric acid, kidney function, and mortality.
+
+2. **Fasting Plasma Glucose**: Similarly, fasting plasma glucose is mentioned in the diabetes definition criteria but not as a covariate.
+   - **Question**: Should fasting status or glucose levels be considered as covariates, or are they only being used for inclusion criteria?
+
+## Points Needing Clarification:
+
+3. **Cancer/Malignancy Exclusion**: You're excluding anyone who ""reported ever being told they had cancer or a malignancy.""
+   - **Question**: Does this include all cancers (including non-melanoma skin cancer) and cancers in remission? This is quite broad and could significantly reduce your sample size. Do you want to specify active cancers or cancers within a certain timeframe?
+
+4. **Quintile Categorization**: You plan to categorize serum uric acid into quintiles based on the distribution in the study population.
+   - **Question**: Will these quintiles be calculated from the entire eligible cohort, or specifically from the diabetes subgroup? This could affect the cut-points significantly.
+
+## Summary of What You Have (Excellent):
+- ✓ Analysis type: Weighted Cox proportional hazards regression
+- ✓ Dataset: NHANES 1999-2018
+- ✓ Weight type: Exam weights
+- ✓ Clear inclusion criteria (age ≥20, diabetes definition)
+- ✓ Clear exclusion criteria (pregnancy, missing labs, cancer history, missing mortality data)
+- ✓ Primary predictor: Serum uric acid (quintiles)
+- ✓ Outcomes: All-cause mortality (binary) and months of follow-up (time-to-event)
+- ✓ Covariates: Age, gender, race/ethnicity
+
+Please clarify the points above so we can finalize your analysis plan.","['The selected candidate variable may not be the suitable keyword - The keyword ""serum creatinine (mg/dl)"" directly matches the column name ""creatinine_mg_dl"" across all cycles\n- The example values (ranging from 0.4 to 8.7 mg/dl) are consistent with typical serum creatinine measurements in clinical practice\n- The data spans multiple NHANES cycles from 1999-2018, providing comprehensive temporal coverage\n- All columns are from biochemistry/laboratory profile tables (biopro_*, l40_*, lab18), which are appropriate sources for serum creatinine data\n- The unit specification (mg/dl) in both the keyword and column names confirms this is the correct measurement', ""The selected candidate variable may not be the suitable keyword [\n  {'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'mortality_status'},\n  {'cycle': '2011-2012', 'table': 'nhanes.mortality_data_g', 'column': 'mortality_status'},\n  {'cycle': '2017-2018', 'table': 'nhanes.mortality_data_j', 'column': 'mortality_status'},\n  {'cycle': '2013-2014', 'table': 'nhanes.mortality_data_h', 'column': 'mortality_status'},\n  {'cycle': '2001-2002', 'table': 'nhanes.mortality_data_b', 'column': 'mortality_status'},\n  {'cycle': '2003-2004', 'table': 'nhanes.mortality_data_c', 'column': 'mortality_status'},\n  {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'mortality_status'},\n  {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'mortality_status'},\n  {'cycle': '2015-2016', 'table': 'nhanes.mortality_data_i', 'column': 'mortality_status'},\n  {'cycle': '1999-2000', 'table': 'nhanes.mortality_data', 'column': 'mortality_status'}\n]"", 'The selected candidate variable may not be the suitable keyword The picked columns are directly relevant to the keyword ""mortality data"". The columns are from mortality_data tables across multiple NHANES cycles (1999-2018) and contain the ""mortality_status"" variable, which indicates whether a participant is deceased (1.0) or alive (0.0). This is exactly what would be needed to answer questions about mortality data in the NHANES database.', ""The selected candidate variable may not be the suitable keyword [{'cycle': '2005-2006', 'table': 'nhanes.ghb_d', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2017-2018', 'table': 'nhanes.ghb_j', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}, {'cycle': '2001-2002', 'table': 'nhanes.l10_b', 'column': 'glycohemoglobin', 'example_values': ['12.4', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2003-2004', 'table': 'nhanes.l10_c', 'column': 'glycohemoglobin', 'example_values': ['13.2', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2007-2008', 'table': 'nhanes.ghb_e', 'column': 'glycohemoglobin', 'example_values': ['12.4', '14.7', '13.2', '5.8', '4.8']}, {'cycle': '2009-2010', 'table': 'nhanes.ghb_f', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2015-2016', 'table': 'nhanes.ghb_i', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '1999-2000', 'table': 'nhanes.lab10', 'column': 'glycohemoglobin', 'example_values': ['12.4', '14.7', '13.2', '5.8', '4.8']}]"", ""The selected candidate variable may not be the suitable keyword [{'cycle': '2005-2006', 'table': 'nhanes.biopro_d', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2017-2018', 'table': 'nhanes.biopro_j', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '1.6', '4.8', '6.2']}, {'cycle': '2001-2002', 'table': 'nhanes.l40_b', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2003-2004', 'table': 'nhanes.l40_c', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.biopro_e', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2009-2010', 'table': 'nhanes.biopro_f', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '1999-2000', 'table': 'nhanes.lab18', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}]""]",,714.373144,"[[{'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 890, 'output_tokens': 549, 'total_cost': 0.010904999999999998, 'formatted_total_cost': '$0.010905'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 2150, 'output_tokens': 365, 'total_cost': 0.011925, 'formatted_total_cost': '$0.011925'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 2806, 'output_tokens': 1068, 'total_cost': 0.024438, 'formatted_total_cost': '$0.024438'}], [{'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4083, 'output_tokens': 93, 'total_cost': 0.013644, 'formatted_total_cost': '$0.013644'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4083, 'output_tokens': 93, 'total_cost': 0.013644, 'formatted_total_cost': '$0.013644'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4181, 'output_tokens': 93, 'total_cost': 0.013937999999999999, 'formatted_total_cost': '$0.013938'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4181, 'output_tokens': 93, 'total_cost': 0.013937999999999999, 'formatted_total_cost': '$0.013938'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4061, 'output_tokens': 98, 'total_cost': 0.013653000000000002, 'formatted_total_cost': '$0.013653'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4061, 'output_tokens': 98, 'total_cost': 0.013653000000000002, 'formatted_total_cost': '$0.013653'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4239, 'output_tokens': 93, 'total_cost': 0.014112, 'formatted_total_cost': '$0.014112'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4239, 'output_tokens': 93, 'total_cost': 0.014112, 'formatted_total_cost': '$0.014112'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4487, 'output_tokens': 92, 'total_cost': 0.014840999999999998, 'formatted_total_cost': '$0.014841'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 481, 'output_tokens': 92, 'total_cost': 0.002823, 'formatted_total_cost': '$0.002823'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 481, 'output_tokens': 92, 'total_cost': 0.002823, 'formatted_total_cost': '$0.002823'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4117, 'output_tokens': 92, 'total_cost': 0.013731, 'formatted_total_cost': '$0.013731'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4117, 'output_tokens': 92, 'total_cost': 0.013731, 'formatted_total_cost': '$0.013731'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4122, 'output_tokens': 93, 'total_cost': 0.013760999999999999, 'formatted_total_cost': '$0.013761'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4122, 'output_tokens': 93, 'total_cost': 0.013760999999999999, 'formatted_total_cost': '$0.013761'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4113, 'output_tokens': 93, 'total_cost': 0.013734000000000001, 'formatted_total_cost': '$0.013734'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4113, 'output_tokens': 93, 'total_cost': 0.013734000000000001, 'formatted_total_cost': '$0.013734'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4134, 'output_tokens': 98, 'total_cost': 0.013871999999999999, 'formatted_total_cost': '$0.013872'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4134, 'output_tokens': 98, 'total_cost': 0.013871999999999999, 'formatted_total_cost': '$0.013872'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4061, 'output_tokens': 94, 'total_cost': 0.013593000000000001, 'formatted_total_cost': '$0.013593'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4061, 'output_tokens': 94, 'total_cost': 0.013593000000000001, 'formatted_total_cost': '$0.013593'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 891, 'output_tokens': 157, 'total_cost': 0.0050279999999999995, 'formatted_total_cost': '$0.005028'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4356, 'output_tokens': 77, 'total_cost': 0.014223, 'formatted_total_cost': '$0.014223'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4356, 'output_tokens': 77, 'total_cost': 0.014223, 'formatted_total_cost': '$0.014223'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4465, 'output_tokens': 77, 'total_cost': 0.01455, 'formatted_total_cost': '$0.014550'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4465, 'output_tokens': 77, 'total_cost': 0.01455, 'formatted_total_cost': '$0.014550'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4722, 'output_tokens': 77, 'total_cost': 0.015320999999999998, 'formatted_total_cost': '$0.015321'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4722, 'output_tokens': 77, 'total_cost': 0.015320999999999998, 'formatted_total_cost': '$0.015321'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4568, 'output_tokens': 77, 'total_cost': 0.014859, 'formatted_total_cost': '$0.014859'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4568, 'output_tokens': 77, 'total_cost': 0.014859, 'formatted_total_cost': '$0.014859'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4121, 'output_tokens': 77, 'total_cost': 0.013517999999999999, 'formatted_total_cost': '$0.013518'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4121, 'output_tokens': 77, 'total_cost': 0.013517999999999999, 'formatted_total_cost': '$0.013518'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4142, 'output_tokens': 77, 'total_cost': 0.013581, 'formatted_total_cost': '$0.013581'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4142, 'output_tokens': 77, 'total_cost': 0.013581, 'formatted_total_cost': '$0.013581'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4392, 'output_tokens': 77, 'total_cost': 0.014331, 'formatted_total_cost': '$0.014331'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4392, 'output_tokens': 77, 'total_cost': 0.014331, 'formatted_total_cost': '$0.014331'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4463, 'output_tokens': 77, 'total_cost': 0.014544, 'formatted_total_cost': '$0.014544'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4463, 'output_tokens': 77, 'total_cost': 0.014544, 'formatted_total_cost': '$0.014544'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4537, 'output_tokens': 77, 'total_cost': 0.014766000000000001, 'formatted_total_cost': '$0.014766'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4537, 'output_tokens': 77, 'total_cost': 0.014766000000000001, 'formatted_total_cost': '$0.014766'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 3975, 'output_tokens': 75, 'total_cost': 0.01305, 'formatted_total_cost': '$0.013050'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 3975, 'output_tokens': 75, 'total_cost': 0.01305, 'formatted_total_cost': '$0.013050'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 738, 'output_tokens': 380, 'total_cost': 0.007914000000000001, 'formatted_total_cost': '$0.007914'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4512, 'output_tokens': 116, 'total_cost': 0.015276000000000001, 'formatted_total_cost': '$0.015276'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4512, 'output_tokens': 116, 'total_cost': 0.015276000000000001, 'formatted_total_cost': '$0.015276'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4545, 'output_tokens': 126, 'total_cost': 0.015525, 'formatted_total_cost': '$0.015525'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4545, 'output_tokens': 126, 'total_cost': 0.015525, 'formatted_total_cost': '$0.015525'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4792, 'output_tokens': 126, 'total_cost': 0.016266, 'formatted_total_cost': '$0.016266'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4792, 'output_tokens': 126, 'total_cost': 0.016266, 'formatted_total_cost': '$0.016266'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4678, 'output_tokens': 126, 'total_cost': 0.015924, 'formatted_total_cost': '$0.015924'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4678, 'output_tokens': 126, 'total_cost': 0.015924, 'formatted_total_cost': '$0.015924'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4462, 'output_tokens': 116, 'total_cost': 0.015125999999999999, 'formatted_total_cost': '$0.015126'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4462, 'output_tokens': 116, 'total_cost': 0.015125999999999999, 'formatted_total_cost': '$0.015126'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4446, 'output_tokens': 116, 'total_cost': 0.015078000000000001, 'formatted_total_cost': '$0.015078'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4446, 'output_tokens': 116, 'total_cost': 0.015078000000000001, 'formatted_total_cost': '$0.015078'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4464, 'output_tokens': 116, 'total_cost': 0.015132000000000001, 'formatted_total_cost': '$0.015132'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4464, 'output_tokens': 116, 'total_cost': 0.015132000000000001, 'formatted_total_cost': '$0.015132'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4582, 'output_tokens': 116, 'total_cost': 0.015486000000000002, 'formatted_total_cost': '$0.015486'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4582, 'output_tokens': 116, 'total_cost': 0.015486000000000002, 'formatted_total_cost': '$0.015486'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4638, 'output_tokens': 126, 'total_cost': 0.015804, 'formatted_total_cost': '$0.015804'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4638, 'output_tokens': 126, 'total_cost': 0.015804, 'formatted_total_cost': '$0.015804'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4412, 'output_tokens': 114, 'total_cost': 0.014946000000000001, 'formatted_total_cost': '$0.014946'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4412, 'output_tokens': 114, 'total_cost': 0.014946000000000001, 'formatted_total_cost': '$0.014946'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 786, 'output_tokens': 609, 'total_cost': 0.011493, 'formatted_total_cost': '$0.011493'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4179, 'output_tokens': 90, 'total_cost': 0.013887000000000002, 'formatted_total_cost': '$0.013887'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4179, 'output_tokens': 90, 'total_cost': 0.013887000000000002, 'formatted_total_cost': '$0.013887'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4254, 'output_tokens': 103, 'total_cost': 0.014306999999999999, 'formatted_total_cost': '$0.014307'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4254, 'output_tokens': 103, 'total_cost': 0.014306999999999999, 'formatted_total_cost': '$0.014307'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4153, 'output_tokens': 103, 'total_cost': 0.014003999999999997, 'formatted_total_cost': '$0.014004'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4153, 'output_tokens': 103, 'total_cost': 0.014003999999999997, 'formatted_total_cost': '$0.014004'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4375, 'output_tokens': 103, 'total_cost': 0.01467, 'formatted_total_cost': '$0.014670'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4375, 'output_tokens': 103, 'total_cost': 0.01467, 'formatted_total_cost': '$0.014670'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4153, 'output_tokens': 90, 'total_cost': 0.013808999999999998, 'formatted_total_cost': '$0.013809'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4153, 'output_tokens': 90, 'total_cost': 0.013808999999999998, 'formatted_total_cost': '$0.013809'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4047, 'output_tokens': 90, 'total_cost': 0.013491000000000001, 'formatted_total_cost': '$0.013491'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4047, 'output_tokens': 90, 'total_cost': 0.013491000000000001, 'formatted_total_cost': '$0.013491'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4212, 'output_tokens': 103, 'total_cost': 0.014180999999999997, 'formatted_total_cost': '$0.014181'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4212, 'output_tokens': 103, 'total_cost': 0.014180999999999997, 'formatted_total_cost': '$0.014181'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4226, 'output_tokens': 103, 'total_cost': 0.014222999999999998, 'formatted_total_cost': '$0.014223'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4226, 'output_tokens': 103, 'total_cost': 0.014222999999999998, 'formatted_total_cost': '$0.014223'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4237, 'output_tokens': 103, 'total_cost': 0.014256, 'formatted_total_cost': '$0.014256'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4237, 'output_tokens': 103, 'total_cost': 0.014256, 'formatted_total_cost': '$0.014256'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 3928, 'output_tokens': 88, 'total_cost': 0.013104, 'formatted_total_cost': '$0.013104'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 3928, 'output_tokens': 88, 'total_cost': 0.013104, 'formatted_total_cost': '$0.013104'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 979, 'output_tokens': 8, 'total_cost': 0.0030570000000000003, 'formatted_total_cost': '$0.003057'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4175, 'output_tokens': 90, 'total_cost': 0.013875, 'formatted_total_cost': '$0.013875'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4175, 'output_tokens': 90, 'total_cost': 0.013875, 'formatted_total_cost': '$0.013875'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4219, 'output_tokens': 90, 'total_cost': 0.014006999999999999, 'formatted_total_cost': '$0.014007'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4219, 'output_tokens': 90, 'total_cost': 0.014006999999999999, 'formatted_total_cost': '$0.014007'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4340, 'output_tokens': 90, 'total_cost': 0.01437, 'formatted_total_cost': '$0.014370'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4340, 'output_tokens': 90, 'total_cost': 0.01437, 'formatted_total_cost': '$0.014370'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4213, 'output_tokens': 90, 'total_cost': 0.013989, 'formatted_total_cost': '$0.013989'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4213, 'output_tokens': 90, 'total_cost': 0.013989, 'formatted_total_cost': '$0.013989'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4184, 'output_tokens': 90, 'total_cost': 0.013902000000000001, 'formatted_total_cost': '$0.013902'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4184, 'output_tokens': 90, 'total_cost': 0.013902000000000001, 'formatted_total_cost': '$0.013902'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4050, 'output_tokens': 90, 'total_cost': 0.0135, 'formatted_total_cost': '$0.013500'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4050, 'output_tokens': 90, 'total_cost': 0.0135, 'formatted_total_cost': '$0.013500'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4127, 'output_tokens': 90, 'total_cost': 0.013731, 'formatted_total_cost': '$0.013731'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4127, 'output_tokens': 90, 'total_cost': 0.013731, 'formatted_total_cost': '$0.013731'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4267, 'output_tokens': 90, 'total_cost': 0.014151, 'formatted_total_cost': '$0.014151'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 793, 'output_tokens': 90, 'total_cost': 0.003729, 'formatted_total_cost': '$0.003729'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 793, 'output_tokens': 90, 'total_cost': 0.003729, 'formatted_total_cost': '$0.003729'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4146, 'output_tokens': 90, 'total_cost': 0.013788000000000002, 'formatted_total_cost': '$0.013788'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4146, 'output_tokens': 90, 'total_cost': 0.013788000000000002, 'formatted_total_cost': '$0.013788'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4166, 'output_tokens': 88, 'total_cost': 0.013818000000000002, 'formatted_total_cost': '$0.013818'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4166, 'output_tokens': 88, 'total_cost': 0.013818000000000002, 'formatted_total_cost': '$0.013818'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 939, 'output_tokens': 6, 'total_cost': 0.002907, 'formatted_total_cost': '$0.002907'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4341, 'output_tokens': 77, 'total_cost': 0.014178, 'formatted_total_cost': '$0.014178'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4341, 'output_tokens': 77, 'total_cost': 0.014178, 'formatted_total_cost': '$0.014178'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4223, 'output_tokens': 77, 'total_cost': 0.013824, 'formatted_total_cost': '$0.013824'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4223, 'output_tokens': 77, 'total_cost': 0.013824, 'formatted_total_cost': '$0.013824'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4648, 'output_tokens': 77, 'total_cost': 0.015099000000000001, 'formatted_total_cost': '$0.015099'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4648, 'output_tokens': 77, 'total_cost': 0.015099000000000001, 'formatted_total_cost': '$0.015099'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4365, 'output_tokens': 77, 'total_cost': 0.014249999999999999, 'formatted_total_cost': '$0.014250'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4365, 'output_tokens': 77, 'total_cost': 0.014249999999999999, 'formatted_total_cost': '$0.014250'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4237, 'output_tokens': 77, 'total_cost': 0.013866, 'formatted_total_cost': '$0.013866'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4237, 'output_tokens': 77, 'total_cost': 0.013866, 'formatted_total_cost': '$0.013866'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4288, 'output_tokens': 77, 'total_cost': 0.014019, 'formatted_total_cost': '$0.014019'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4288, 'output_tokens': 77, 'total_cost': 0.014019, 'formatted_total_cost': '$0.014019'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4386, 'output_tokens': 77, 'total_cost': 0.014313, 'formatted_total_cost': '$0.014313'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4386, 'output_tokens': 77, 'total_cost': 0.014313, 'formatted_total_cost': '$0.014313'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4421, 'output_tokens': 77, 'total_cost': 0.014417999999999999, 'formatted_total_cost': '$0.014418'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4421, 'output_tokens': 77, 'total_cost': 0.014417999999999999, 'formatted_total_cost': '$0.014418'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4412, 'output_tokens': 77, 'total_cost': 0.014391000000000001, 'formatted_total_cost': '$0.014391'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4412, 'output_tokens': 77, 'total_cost': 0.014391000000000001, 'formatted_total_cost': '$0.014391'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4187, 'output_tokens': 75, 'total_cost': 0.013685999999999999, 'formatted_total_cost': '$0.013686'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4187, 'output_tokens': 75, 'total_cost': 0.013685999999999999, 'formatted_total_cost': '$0.013686'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 736, 'output_tokens': 92, 'total_cost': 0.003588, 'formatted_total_cost': '$0.003588'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4149, 'output_tokens': 113, 'total_cost': 0.014142, 'formatted_total_cost': '$0.014142'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4149, 'output_tokens': 113, 'total_cost': 0.014142, 'formatted_total_cost': '$0.014142'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4146, 'output_tokens': 110, 'total_cost': 0.014088000000000002, 'formatted_total_cost': '$0.014088'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4146, 'output_tokens': 110, 'total_cost': 0.014088000000000002, 'formatted_total_cost': '$0.014088'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4359, 'output_tokens': 110, 'total_cost': 0.014727, 'formatted_total_cost': '$0.014727'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4359, 'output_tokens': 110, 'total_cost': 0.014727, 'formatted_total_cost': '$0.014727'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4130, 'output_tokens': 110, 'total_cost': 0.01404, 'formatted_total_cost': '$0.014040'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4130, 'output_tokens': 110, 'total_cost': 0.01404, 'formatted_total_cost': '$0.014040'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4204, 'output_tokens': 113, 'total_cost': 0.014307000000000002, 'formatted_total_cost': '$0.014307'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4204, 'output_tokens': 113, 'total_cost': 0.014307000000000002, 'formatted_total_cost': '$0.014307'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4214, 'output_tokens': 113, 'total_cost': 0.014337, 'formatted_total_cost': '$0.014337'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4214, 'output_tokens': 113, 'total_cost': 0.014337, 'formatted_total_cost': '$0.014337'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4149, 'output_tokens': 113, 'total_cost': 0.014142, 'formatted_total_cost': '$0.014142'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4149, 'output_tokens': 113, 'total_cost': 0.014142, 'formatted_total_cost': '$0.014142'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4203, 'output_tokens': 113, 'total_cost': 0.014304, 'formatted_total_cost': '$0.014304'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4203, 'output_tokens': 113, 'total_cost': 0.014304, 'formatted_total_cost': '$0.014304'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4140, 'output_tokens': 110, 'total_cost': 0.01407, 'formatted_total_cost': '$0.014070'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4140, 'output_tokens': 110, 'total_cost': 0.01407, 'formatted_total_cost': '$0.014070'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4141, 'output_tokens': 111, 'total_cost': 0.014088, 'formatted_total_cost': '$0.014088'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4141, 'output_tokens': 111, 'total_cost': 0.014088, 'formatted_total_cost': '$0.014088'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 890, 'output_tokens': 6, 'total_cost': 0.0027599999999999994, 'formatted_total_cost': '$0.002760'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4255, 'output_tokens': 94, 'total_cost': 0.014175, 'formatted_total_cost': '$0.014175'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4255, 'output_tokens': 94, 'total_cost': 0.014175, 'formatted_total_cost': '$0.014175'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4285, 'output_tokens': 94, 'total_cost': 0.014264999999999998, 'formatted_total_cost': '$0.014265'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4285, 'output_tokens': 94, 'total_cost': 0.014264999999999998, 'formatted_total_cost': '$0.014265'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4262, 'output_tokens': 94, 'total_cost': 0.014196, 'formatted_total_cost': '$0.014196'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4262, 'output_tokens': 94, 'total_cost': 0.014196, 'formatted_total_cost': '$0.014196'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4339, 'output_tokens': 94, 'total_cost': 0.014427, 'formatted_total_cost': '$0.014427'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4339, 'output_tokens': 94, 'total_cost': 0.014427, 'formatted_total_cost': '$0.014427'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4309, 'output_tokens': 94, 'total_cost': 0.014337, 'formatted_total_cost': '$0.014337'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 490, 'output_tokens': 100, 'total_cost': 0.00297, 'formatted_total_cost': '$0.002970'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 490, 'output_tokens': 100, 'total_cost': 0.00297, 'formatted_total_cost': '$0.002970'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4258, 'output_tokens': 94, 'total_cost': 0.014183999999999999, 'formatted_total_cost': '$0.014184'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4258, 'output_tokens': 94, 'total_cost': 0.014183999999999999, 'formatted_total_cost': '$0.014184'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4261, 'output_tokens': 94, 'total_cost': 0.014192999999999999, 'formatted_total_cost': '$0.014193'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4261, 'output_tokens': 94, 'total_cost': 0.014192999999999999, 'formatted_total_cost': '$0.014193'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4228, 'output_tokens': 94, 'total_cost': 0.014094, 'formatted_total_cost': '$0.014094'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4228, 'output_tokens': 94, 'total_cost': 0.014094, 'formatted_total_cost': '$0.014094'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4330, 'output_tokens': 94, 'total_cost': 0.014399999999999998, 'formatted_total_cost': '$0.014400'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4330, 'output_tokens': 94, 'total_cost': 0.014399999999999998, 'formatted_total_cost': '$0.014400'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4003, 'output_tokens': 84, 'total_cost': 0.013269, 'formatted_total_cost': '$0.013269'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4003, 'output_tokens': 84, 'total_cost': 0.013269, 'formatted_total_cost': '$0.013269'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 881, 'output_tokens': 699, 'total_cost': 0.013127999999999999, 'formatted_total_cost': '$0.013128'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4280, 'output_tokens': 98, 'total_cost': 0.01431, 'formatted_total_cost': '$0.014310'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4280, 'output_tokens': 98, 'total_cost': 0.01431, 'formatted_total_cost': '$0.014310'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4155, 'output_tokens': 98, 'total_cost': 0.013935, 'formatted_total_cost': '$0.013935'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4155, 'output_tokens': 98, 'total_cost': 0.013935, 'formatted_total_cost': '$0.013935'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4311, 'output_tokens': 95, 'total_cost': 0.014358, 'formatted_total_cost': '$0.014358'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4311, 'output_tokens': 95, 'total_cost': 0.014358, 'formatted_total_cost': '$0.014358'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4271, 'output_tokens': 95, 'total_cost': 0.014237999999999997, 'formatted_total_cost': '$0.014238'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4271, 'output_tokens': 95, 'total_cost': 0.014237999999999997, 'formatted_total_cost': '$0.014238'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4203, 'output_tokens': 106, 'total_cost': 0.014199, 'formatted_total_cost': '$0.014199'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4203, 'output_tokens': 106, 'total_cost': 0.014199, 'formatted_total_cost': '$0.014199'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4130, 'output_tokens': 106, 'total_cost': 0.01398, 'formatted_total_cost': '$0.013980'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4130, 'output_tokens': 106, 'total_cost': 0.01398, 'formatted_total_cost': '$0.013980'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4139, 'output_tokens': 98, 'total_cost': 0.013887, 'formatted_total_cost': '$0.013887'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4139, 'output_tokens': 98, 'total_cost': 0.013887, 'formatted_total_cost': '$0.013887'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4136, 'output_tokens': 98, 'total_cost': 0.013877999999999998, 'formatted_total_cost': '$0.013878'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4136, 'output_tokens': 98, 'total_cost': 0.013877999999999998, 'formatted_total_cost': '$0.013878'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4310, 'output_tokens': 95, 'total_cost': 0.014355, 'formatted_total_cost': '$0.014355'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4310, 'output_tokens': 95, 'total_cost': 0.014355, 'formatted_total_cost': '$0.014355'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 3986, 'output_tokens': 104, 'total_cost': 0.013518, 'formatted_total_cost': '$0.013518'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 3986, 'output_tokens': 104, 'total_cost': 0.013518, 'formatted_total_cost': '$0.013518'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 897, 'output_tokens': 8, 'total_cost': 0.0028109999999999997, 'formatted_total_cost': '$0.002811'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4736, 'output_tokens': 131, 'total_cost': 0.016173, 'formatted_total_cost': '$0.016173'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4736, 'output_tokens': 131, 'total_cost': 0.016173, 'formatted_total_cost': '$0.016173'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4778, 'output_tokens': 131, 'total_cost': 0.016299, 'formatted_total_cost': '$0.016299'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4778, 'output_tokens': 131, 'total_cost': 0.016299, 'formatted_total_cost': '$0.016299'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4823, 'output_tokens': 131, 'total_cost': 0.016434, 'formatted_total_cost': '$0.016434'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4823, 'output_tokens': 131, 'total_cost': 0.016434, 'formatted_total_cost': '$0.016434'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4842, 'output_tokens': 131, 'total_cost': 0.016491000000000002, 'formatted_total_cost': '$0.016491'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4842, 'output_tokens': 131, 'total_cost': 0.016491000000000002, 'formatted_total_cost': '$0.016491'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4345, 'output_tokens': 131, 'total_cost': 0.015, 'formatted_total_cost': '$0.015000'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4345, 'output_tokens': 131, 'total_cost': 0.015, 'formatted_total_cost': '$0.015000'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4377, 'output_tokens': 131, 'total_cost': 0.015096, 'formatted_total_cost': '$0.015096'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4377, 'output_tokens': 131, 'total_cost': 0.015096, 'formatted_total_cost': '$0.015096'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4711, 'output_tokens': 131, 'total_cost': 0.016098, 'formatted_total_cost': '$0.016098'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4711, 'output_tokens': 131, 'total_cost': 0.016098, 'formatted_total_cost': '$0.016098'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4746, 'output_tokens': 131, 'total_cost': 0.016203000000000002, 'formatted_total_cost': '$0.016203'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4746, 'output_tokens': 131, 'total_cost': 0.016203000000000002, 'formatted_total_cost': '$0.016203'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4853, 'output_tokens': 131, 'total_cost': 0.016524, 'formatted_total_cost': '$0.016524'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4853, 'output_tokens': 131, 'total_cost': 0.016524, 'formatted_total_cost': '$0.016524'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4181, 'output_tokens': 129, 'total_cost': 0.014477999999999998, 'formatted_total_cost': '$0.014478'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4181, 'output_tokens': 129, 'total_cost': 0.014477999999999998, 'formatted_total_cost': '$0.014478'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 781, 'output_tokens': 609, 'total_cost': 0.011477999999999999, 'formatted_total_cost': '$0.011478'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4088, 'output_tokens': 82, 'total_cost': 0.013493999999999999, 'formatted_total_cost': '$0.013494'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 751, 'output_tokens': 82, 'total_cost': 0.003483, 'formatted_total_cost': '$0.003483'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 751, 'output_tokens': 82, 'total_cost': 0.003483, 'formatted_total_cost': '$0.003483'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4184, 'output_tokens': 81, 'total_cost': 0.013767000000000001, 'formatted_total_cost': '$0.013767'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 754, 'output_tokens': 81, 'total_cost': 0.003477, 'formatted_total_cost': '$0.003477'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 754, 'output_tokens': 81, 'total_cost': 0.003477, 'formatted_total_cost': '$0.003477'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4210, 'output_tokens': 81, 'total_cost': 0.013845000000000001, 'formatted_total_cost': '$0.013845'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4210, 'output_tokens': 81, 'total_cost': 0.013845000000000001, 'formatted_total_cost': '$0.013845'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4207, 'output_tokens': 81, 'total_cost': 0.013836000000000001, 'formatted_total_cost': '$0.013836'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 769, 'output_tokens': 81, 'total_cost': 0.003522, 'formatted_total_cost': '$0.003522'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 769, 'output_tokens': 81, 'total_cost': 0.003522, 'formatted_total_cost': '$0.003522'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4032, 'output_tokens': 82, 'total_cost': 0.013326, 'formatted_total_cost': '$0.013326'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 680, 'output_tokens': 83, 'total_cost': 0.003285, 'formatted_total_cost': '$0.003285'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 680, 'output_tokens': 83, 'total_cost': 0.003285, 'formatted_total_cost': '$0.003285'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4217, 'output_tokens': 82, 'total_cost': 0.013881000000000001, 'formatted_total_cost': '$0.013881'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4217, 'output_tokens': 82, 'total_cost': 0.013881000000000001, 'formatted_total_cost': '$0.013881'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4094, 'output_tokens': 82, 'total_cost': 0.013512000000000001, 'formatted_total_cost': '$0.013512'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 731, 'output_tokens': 88, 'total_cost': 0.003513, 'formatted_total_cost': '$0.003513'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 731, 'output_tokens': 88, 'total_cost': 0.003513, 'formatted_total_cost': '$0.003513'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4173, 'output_tokens': 82, 'total_cost': 0.013748999999999999, 'formatted_total_cost': '$0.013749'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 759, 'output_tokens': 82, 'total_cost': 0.0035069999999999997, 'formatted_total_cost': '$0.003507'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 759, 'output_tokens': 82, 'total_cost': 0.0035069999999999997, 'formatted_total_cost': '$0.003507'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4204, 'output_tokens': 81, 'total_cost': 0.013827000000000002, 'formatted_total_cost': '$0.013827'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 752, 'output_tokens': 87, 'total_cost': 0.003561, 'formatted_total_cost': '$0.003561'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 752, 'output_tokens': 87, 'total_cost': 0.003561, 'formatted_total_cost': '$0.003561'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4227, 'output_tokens': 80, 'total_cost': 0.013881, 'formatted_total_cost': '$0.013881'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4227, 'output_tokens': 80, 'total_cost': 0.013881, 'formatted_total_cost': '$0.013881'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 626, 'output_tokens': 8, 'total_cost': 0.001998, 'formatted_total_cost': '$0.001998'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4186, 'output_tokens': 86, 'total_cost': 0.013848, 'formatted_total_cost': '$0.013848'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4186, 'output_tokens': 86, 'total_cost': 0.013848, 'formatted_total_cost': '$0.013848'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4207, 'output_tokens': 86, 'total_cost': 0.013911, 'formatted_total_cost': '$0.013911'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4207, 'output_tokens': 86, 'total_cost': 0.013911, 'formatted_total_cost': '$0.013911'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4179, 'output_tokens': 86, 'total_cost': 0.013827, 'formatted_total_cost': '$0.013827'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4179, 'output_tokens': 86, 'total_cost': 0.013827, 'formatted_total_cost': '$0.013827'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4308, 'output_tokens': 86, 'total_cost': 0.014214000000000001, 'formatted_total_cost': '$0.014214'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4308, 'output_tokens': 86, 'total_cost': 0.014214000000000001, 'formatted_total_cost': '$0.014214'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4251, 'output_tokens': 86, 'total_cost': 0.014042999999999998, 'formatted_total_cost': '$0.014043'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4251, 'output_tokens': 86, 'total_cost': 0.014042999999999998, 'formatted_total_cost': '$0.014043'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4159, 'output_tokens': 86, 'total_cost': 0.013767000000000001, 'formatted_total_cost': '$0.013767'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4159, 'output_tokens': 86, 'total_cost': 0.013767000000000001, 'formatted_total_cost': '$0.013767'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4180, 'output_tokens': 86, 'total_cost': 0.013829999999999999, 'formatted_total_cost': '$0.013830'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4180, 'output_tokens': 86, 'total_cost': 0.013829999999999999, 'formatted_total_cost': '$0.013830'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4189, 'output_tokens': 86, 'total_cost': 0.013857, 'formatted_total_cost': '$0.013857'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4189, 'output_tokens': 86, 'total_cost': 0.013857, 'formatted_total_cost': '$0.013857'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4235, 'output_tokens': 86, 'total_cost': 0.013995, 'formatted_total_cost': '$0.013995'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4235, 'output_tokens': 86, 'total_cost': 0.013995, 'formatted_total_cost': '$0.013995'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4044, 'output_tokens': 84, 'total_cost': 0.013392000000000001, 'formatted_total_cost': '$0.013392'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4044, 'output_tokens': 84, 'total_cost': 0.013392000000000001, 'formatted_total_cost': '$0.013392'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 879, 'output_tokens': 8, 'total_cost': 0.002757, 'formatted_total_cost': '$0.002757'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4213, 'output_tokens': 93, 'total_cost': 0.014034, 'formatted_total_cost': '$0.014034'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4213, 'output_tokens': 93, 'total_cost': 0.014034, 'formatted_total_cost': '$0.014034'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4252, 'output_tokens': 93, 'total_cost': 0.014151, 'formatted_total_cost': '$0.014151'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4252, 'output_tokens': 93, 'total_cost': 0.014151, 'formatted_total_cost': '$0.014151'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4262, 'output_tokens': 93, 'total_cost': 0.014181000000000001, 'formatted_total_cost': '$0.014181'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4262, 'output_tokens': 93, 'total_cost': 0.014181000000000001, 'formatted_total_cost': '$0.014181'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4315, 'output_tokens': 93, 'total_cost': 0.014340000000000002, 'formatted_total_cost': '$0.014340'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4315, 'output_tokens': 93, 'total_cost': 0.014340000000000002, 'formatted_total_cost': '$0.014340'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4388, 'output_tokens': 92, 'total_cost': 0.014544000000000001, 'formatted_total_cost': '$0.014544'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 462, 'output_tokens': 98, 'total_cost': 0.002856, 'formatted_total_cost': '$0.002856'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 462, 'output_tokens': 98, 'total_cost': 0.002856, 'formatted_total_cost': '$0.002856'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4212, 'output_tokens': 92, 'total_cost': 0.014015999999999997, 'formatted_total_cost': '$0.014016'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4212, 'output_tokens': 92, 'total_cost': 0.014015999999999997, 'formatted_total_cost': '$0.014016'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4200, 'output_tokens': 93, 'total_cost': 0.013995, 'formatted_total_cost': '$0.013995'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4200, 'output_tokens': 93, 'total_cost': 0.013995, 'formatted_total_cost': '$0.013995'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4175, 'output_tokens': 93, 'total_cost': 0.01392, 'formatted_total_cost': '$0.013920'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4175, 'output_tokens': 93, 'total_cost': 0.01392, 'formatted_total_cost': '$0.013920'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4404, 'output_tokens': 93, 'total_cost': 0.014607, 'formatted_total_cost': '$0.014607'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4404, 'output_tokens': 93, 'total_cost': 0.014607, 'formatted_total_cost': '$0.014607'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4015, 'output_tokens': 94, 'total_cost': 0.013455, 'formatted_total_cost': '$0.013455'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4015, 'output_tokens': 94, 'total_cost': 0.013455, 'formatted_total_cost': '$0.013455'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 901, 'output_tokens': 726, 'total_cost': 0.013593000000000001, 'formatted_total_cost': '$0.013593'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4238, 'output_tokens': 94, 'total_cost': 0.014124, 'formatted_total_cost': '$0.014124'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4238, 'output_tokens': 94, 'total_cost': 0.014124, 'formatted_total_cost': '$0.014124'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4194, 'output_tokens': 94, 'total_cost': 0.013992, 'formatted_total_cost': '$0.013992'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4194, 'output_tokens': 94, 'total_cost': 0.013992, 'formatted_total_cost': '$0.013992'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4168, 'output_tokens': 94, 'total_cost': 0.013914, 'formatted_total_cost': '$0.013914'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4168, 'output_tokens': 94, 'total_cost': 0.013914, 'formatted_total_cost': '$0.013914'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4554, 'output_tokens': 94, 'total_cost': 0.015072, 'formatted_total_cost': '$0.015072'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4554, 'output_tokens': 94, 'total_cost': 0.015072, 'formatted_total_cost': '$0.015072'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4198, 'output_tokens': 94, 'total_cost': 0.014004, 'formatted_total_cost': '$0.014004'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 472, 'output_tokens': 94, 'total_cost': 0.002826, 'formatted_total_cost': '$0.002826'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 472, 'output_tokens': 94, 'total_cost': 0.002826, 'formatted_total_cost': '$0.002826'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4245, 'output_tokens': 94, 'total_cost': 0.014145, 'formatted_total_cost': '$0.014145'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4245, 'output_tokens': 94, 'total_cost': 0.014145, 'formatted_total_cost': '$0.014145'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4250, 'output_tokens': 94, 'total_cost': 0.01416, 'formatted_total_cost': '$0.014160'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4250, 'output_tokens': 94, 'total_cost': 0.01416, 'formatted_total_cost': '$0.014160'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4224, 'output_tokens': 94, 'total_cost': 0.014082, 'formatted_total_cost': '$0.014082'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4224, 'output_tokens': 94, 'total_cost': 0.014082, 'formatted_total_cost': '$0.014082'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4522, 'output_tokens': 94, 'total_cost': 0.014976, 'formatted_total_cost': '$0.014976'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4522, 'output_tokens': 94, 'total_cost': 0.014976, 'formatted_total_cost': '$0.014976'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4041, 'output_tokens': 84, 'total_cost': 0.013383000000000003, 'formatted_total_cost': '$0.013383'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 4041, 'output_tokens': 84, 'total_cost': 0.013383000000000003, 'formatted_total_cost': '$0.013383'}, {'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 878, 'output_tokens': 8, 'total_cost': 0.002754, 'formatted_total_cost': '$0.002754'}], [{'model_name': 'anthropic_claude-sonnet-4-5-20250929', 'input_tokens': 8146, 'output_tokens': 2480, 'total_cost': 0.061638, 'formatted_total_cost': '$0.061638'}]]",False,0,,/home/nayoonkim/LATCH/analyses/results/fig_22_18_anthropic_claude-sonnet-4-5-20250929_result_log.csv,

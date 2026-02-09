@@ -1,0 +1,4 @@
+This study will perform a logistic regression using NHANES data from 2005-2008.
+Exclude participants whose age at screening is less than 40 years old, and without diabetes when diabetes is defined as one of the following: glycated hemoglobin equal or more than 6.5%, fasting plasma glucose >= 7 mmol/l, oral glucose tolerace test >=11 mmol/l, self reported diagnosis of diabetes, current use of insulin, or current use of diabetes medication.
+Exclude participant who are missing four level retinopathy severity, and monocyte count and lymphocyte count, and who did not have retinopathy based on the severity level.
+Main variable of interest is (monocyte count/lymphocyte count)*10 and outcome is when four level retinopathy severity is proliferative retinopathy. Covariates are gender, race/Hispanic origin, and age at screening.

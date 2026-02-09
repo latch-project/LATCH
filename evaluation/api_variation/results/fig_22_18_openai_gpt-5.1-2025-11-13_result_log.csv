@@ -1,0 +1,1124 @@
+Title,Schema,Question,Structured Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log
+65238,nhanes,"This study aims to investigate the relationship between serum uric acid levels (mg/dl) and all-cause mortality.
+We will be using NHANES data between 1999 and 2018, the analysis will employ a weighted Cox proportional hazards regression model use exam weights.
+The study cohort will be composed of participants age in years at screening 20 years and older who meet the criteria for diabetes when an individual is considered to have diabetes if they reported doctor told them they have diabetes, had a glycohemoglobin A1c (HbA1c) level >= 6.5%, or a fasting plasma glucose level (mg/dl) is 126 mg/dL or greater. 
+Individuals will be excluded from the analysis if their pregnancy exam was positive. Participants with missing laboratory values for serum uric acid (mg/dl), serum creatinine (mg/dl), or  glycohemoglobin (HbA1c) (%), will be excluded. Anyone who reported ever being told they had cancer or a malignancy will be excluded, as well as those missing mortality data or months followup examination, will be excluded.
+The primary predictor for this analysis is the serum uric acid level (mg/dl), which will be categorized into five groups based on its distribution in the study population, using quintiles as cut-offs QN1: <20%, QN2: >=20 and <40%, QN3: >=40 and <60%, QN4: >=60 and <80%, QN5: >=80%,
+The main outcome is all-cause mortality, categorized as 1 or 0, with months followup examination serving as the time-to-event variable. 
+The analysis will control factors, including age in years at screening, gender, and race/Hispanic origin, which is categorized as Non-Hispanic White, Non-Hispanic Black, Mexican American or Hispanic, and Other.","Analysis Type: weighted cox regression (exam)
+
+Dataset: NHANES
+
+Period of Interest: 1999-2018
+
+Inclusion Criteria:
+- age in years at screening >= 20
+- diabetes present, defined as meeting at least one of the following:
+  - reported doctor told them they have diabetes
+  OR
+  - glycohemoglobin A1c (HbA1c) (%) >= 6.5%
+  OR
+  - fasting plasma glucose level (mg/dl) is 126 mg/dL or greater
+
+Exclusion Criteria:
+- pregnancy exam positive
+- missing serum uric acid (mg/dl)
+- missing serum creatinine (mg/dl)
+- missing glycohemoglobin (HbA1c) (%)
+- reported ever being told they had cancer or a malignancy
+- missing mortality data
+- missing months followup examination
+
+Covariates:
+- age in years at screening
+- gender
+- race/Hispanic origin, categorized as:
+  - Non-Hispanic White
+  - Non-Hispanic Black
+  - Mexican American or Hispanic
+  - Other
+
+Predictor:
+- serum uric acid level (mg/dl), categorized into quintiles based on its distribution in the study population:
+  - Determine the 20th, 40th, 60th, and 80th percentiles of serum uric acid level (mg/dl) among included participants.
+  - Define quintile groups using these percentile cut-offs:
+    - QN1: <20% (values < 20th percentile)
+    - QN2: >=20 and <40% (values >= 20th percentile and < 40th percentile)
+    - QN3: >=40 and <60% (values >= 40th percentile and < 60th percentile)
+    - QN4: >=60 and <80% (values >= 60th percentile and < 80th percentile)
+    - QN5: >=80% (values >= 80th percentile)
+
+Outcome:
+- Time-to-event:
+  - months followup examination
+- Event indicator:
+  - all-cause mortality, coded as:
+    - 1 if participant died (all-cause mortality) during follow-up
+    - 0 if participant was alive or censored at the end of follow-up","{'dataset': 'NHANES', 'inclusion': [{'keyword': 'age in years at screening', 'derived': False, 'condition': '>= 20', 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'diabetes present', 'derived': True, 'depends_on': [{'keyword': 'reported doctor told them they have diabetes', 'derived': False, 'condition': '= yes', 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'glycohemoglobin a1c (hba1c) (%)', 'derived': False, 'condition': '>= 6.5', 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '7.7', '12.4']}, {'keyword': 'fasting plasma glucose level (mg/dl)', 'derived': False, 'condition': '>= 126', 'table': 'final_master_table', 'column': 'fasting_glucose_mg_dl', 'examples': ['61.0', '62.0', '76.0', '76.1', '79.2']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['reported doctor told them they have diabetes = yes', 'glycohemoglobin a1c (hba1c) (%) >= 6.5', 'fasting plasma glucose level (mg/dl) >= 126']}}]}], 'exclusion': [{'keyword': 'pregnancy exam positive', 'derived': False, 'condition': '= positive', 'table': 'final_master_table', 'column': 'pregnancy_test_result', 'examples': ['Invalid', 'Negative', 'Not Done', 'Not done', 'Positive']}, {'keyword': 'serum uric acid (mg/dl)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'uric_acid_mg_dl', 'examples': ['0.4', '1.6', '3.0', '4.8', '5.8']}, {'keyword': 'serum creatinine (mg/dl)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'creatinine_mg_dl', 'examples': ['0.4', '0.54', '0.58', '0.66', '0.7']}, {'keyword': 'glycohemoglobin a1c (hba1c) (%)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '7.7', '12.4']}, {'keyword': 'reported ever being told they had cancer or a malignancy', 'derived': False, 'condition': '= yes', 'table': 'final_master_table', 'column': 'ever_told_you_had_cancer_or_malignancy', 'examples': ['No', 'Yes']}, {'keyword': 'mortality data', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'mortality_status', 'examples': ['0.0', '1.0']}, {'keyword': 'months followup examination', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'months_followup_examination', 'examples': ['0.0', '3.0', '7.0', '33.0', '34.0']}], 'covariates': [{'keyword': 'age in years at screening', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'gender', 'derived': False, 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['Non-Hispanic White', 'Non-Hispanic Black', 'Mexican American or Hispanic', 'Other']}}], 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'predictor': [{'keyword': 'serum uric acid level (mg/dl)', 'derived': True, 'depends_on': [{'keyword': 'serum uric acid level (mg/dl)', 'derived': False, 'table': 'final_master_table', 'column': 'uric_acid_mg_dl', 'examples': ['0.4', '1.6', '3.0', '4.8', '5.8']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'quintiles', 'num_bins': 5, 'labels': ['QN1: <20% (values < 20th percentile)', 'QN2: >=20 and <40% (values >= 20th percentile and < 40th percentile)', 'QN3: >=40 and <60% (values >= 40th percentile and < 60th percentile)', 'QN4: >=60 and <80% (values >= 60th percentile and < 80th percentile)', 'QN5: >=80% (values >= 80th percentile)']}}], 'table': 'final_master_table', 'column': 'uric_acid_mg_dl', 'examples': ['0.4', '1.6', '3.0', '4.8', '5.8']}], 'outcome': [{'keyword': 'months followup examination', 'derived': False, 'table': 'final_master_table', 'column': 'months_followup_examination', 'examples': ['0.0', '3.0', '7.0', '33.0', '34.0']}, {'keyword': 'all-cause mortality', 'derived': True, 'depends_on': [{'keyword': 'mortality data', 'derived': False, 'table': 'final_master_table', 'column': 'mortality_status', 'examples': ['0.0', '1.0']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'description': 'all-cause mortality = 1 if participant died during follow-up; 0 if participant was alive or censored at the end of follow-up', 'labels': ['1', '0']}}]}]}","{'analysis_type': 'weighted cox regression (exam)', 'dataset': 'NHANES', 'period_of_interest': '1999-2018', 'inclusion': [{'keyword': 'age in years at screening', 'derived': False, 'condition': '>= 20', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}]}, {'keyword': 'diabetes present', 'derived': True, 'depends_on': [{'keyword': 'reported doctor told them they have diabetes', 'derived': False, 'condition': '= yes', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.diq_d', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2017-2018', 'table': 'nhanes.diq_j', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2001-2002', 'table': 'nhanes.diq_b', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2003-2004', 'table': 'nhanes.diq_c', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '1999-2000', 'table': 'nhanes.diq', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'glycohemoglobin a1c (hba1c) (%)', 'derived': False, 'condition': '>= 6.5', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.ghb_d', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2017-2018', 'table': 'nhanes.ghb_j', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}, {'cycle': '2001-2002', 'table': 'nhanes.l10_b', 'column': 'glycohemoglobin', 'example_values': ['12.4', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2003-2004', 'table': 'nhanes.l10_c', 'column': 'glycohemoglobin', 'example_values': ['13.2', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2007-2008', 'table': 'nhanes.ghb_e', 'column': 'glycohemoglobin', 'example_values': ['12.4', '14.7', '13.2', '5.8', '4.8']}, {'cycle': '2009-2010', 'table': 'nhanes.ghb_f', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2015-2016', 'table': 'nhanes.ghb_i', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '1999-2000', 'table': 'nhanes.lab10', 'column': 'glycohemoglobin', 'example_values': ['12.4', '14.7', '13.2', '5.8', '4.8']}]}, {'keyword': 'fasting plasma glucose level (mg/dl)', 'derived': False, 'condition': '>= 126', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.glu_d', 'column': 'fasting_glucose_mg_dl', 'example_values': ['62.0', '154.0', '174.0', '96.0', '76.0']}, {'cycle': '2011-2012', 'table': 'nhanes.glu_g', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '217.0', '76.0']}, {'cycle': '2017-2018', 'table': 'nhanes.glu_j', 'column': 'fasting_glucose_mg_dl', 'example_values': ['62.0', '154.0', '346.0', '174.0', '217.0']}, {'cycle': '2013-2014', 'table': 'nhanes.glu_h', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '76.0', '96.0']}, {'cycle': '2001-2002', 'table': 'nhanes.l10am_b', 'column': 'fasting_glucose_mg_dl', 'example_values': ['211.7', '79.2', '132.7', '185.2', '76.1']}, {'cycle': '2003-2004', 'table': 'nhanes.l10am_c', 'column': 'fasting_glucose_mg_dl', 'example_values': ['211.7', '79.2', '155.1', '149.2', '96.0']}, {'cycle': '2007-2008', 'table': 'nhanes.glu_e', 'column': 'fasting_glucose_mg_dl', 'example_values': ['174.0', '162.0', '76.0', '96.0', '61.0']}, {'cycle': '2009-2010', 'table': 'nhanes.glu_f', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '217.0', '76.0']}, {'cycle': '2015-2016', 'table': 'nhanes.glu_i', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '76.0', '96.0']}, {'cycle': '1999-2000', 'table': 'nhanes.lab10am', 'column': 'fasting_glucose_mg_dl', 'example_values': ['79.2', '214.9', '76.1', '96.0', '89.9']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['reported doctor told them they have diabetes = yes', 'glycohemoglobin a1c (hba1c) (%) >= 6.5', 'fasting plasma glucose level (mg/dl) >= 126']}}]}], 'exclusion': [{'keyword': 'pregnancy exam positive', 'derived': False, 'condition': '= positive', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.ucpreg_d', 'column': 'pregnancy_test_result', 'example_values': ['Positive', 'Not done', 'Negative']}, {'cycle': '2011-2012', 'table': 'nhanes.ucpreg_g', 'column': 'pregnancy_test_result', 'example_values': ['Positive', 'Not done', 'Negative']}, {'cycle': '2017-2018', 'table': 'nhanes.ucpreg_j', 'column': 'pregnancy_test_result', 'example_values': ['Positive', 'Negative', 'Not Done']}, {'cycle': '2013-2014', 'table': 'nhanes.ucpreg_h', 'column': 'pregnancy_test_result', 'example_values': ['Positive', 'Not done', 'Negative']}, {'cycle': '2001-2002', 'table': 'nhanes.uc_b', 'column': 'pregnancy_test_result', 'example_values': ['Positive', 'Not done', 'Negative']}, {'cycle': '2003-2004', 'table': 'nhanes.uc_c', 'column': 'pregnancy_test_result', 'example_values': ['Positive', 'Not done', 'Negative', 'Invalid']}, {'cycle': '2007-2008', 'table': 'nhanes.ucpreg_e', 'column': 'pregnancy_test_result', 'example_values': ['Positive', 'Not done', 'Negative']}, {'cycle': '2009-2010', 'table': 'nhanes.ucpreg_f', 'column': 'pregnancy_test_result', 'example_values': ['Positive', 'Not done', 'Negative']}, {'cycle': '2015-2016', 'table': 'nhanes.ucpreg_i', 'column': 'pregnancy_test_result', 'example_values': ['Positive', 'Not done', 'Negative']}, {'cycle': '1999-2000', 'table': 'nhanes.uc', 'column': 'pregnancy_test_result', 'example_values': ['Positive', 'Negative']}]}, {'keyword': 'serum uric acid (mg/dl)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.biopro_d', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2017-2018', 'table': 'nhanes.biopro_j', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '1.6', '4.8', '6.2']}, {'cycle': '2001-2002', 'table': 'nhanes.l40_b', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2003-2004', 'table': 'nhanes.l40_c', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.biopro_e', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2009-2010', 'table': 'nhanes.biopro_f', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '1999-2000', 'table': 'nhanes.lab18', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}]}, {'keyword': 'serum creatinine (mg/dl)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.biopro_d', 'column': 'creatinine_mg_dl', 'example_values': ['0.9', '1.6', '6.2', '0.4', '4.3']}, {'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'creatinine_mg_dl', 'example_values': ['0.66', '1.36', '1.15', '2.11', '4.27']}, {'cycle': '2017-2018', 'table': 'nhanes.biopro_j', 'column': 'creatinine_mg_dl', 'example_values': ['6.19', '0.66', '1.36', '1.15', '6.75']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'creatinine_mg_dl', 'example_values': ['1.45', '2.16', '2.06', '4.35', '0.58']}, {'cycle': '2001-2002', 'table': 'nhanes.l40_b', 'column': 'creatinine_mg_dl', 'example_values': ['0.9', '1.6', '0.4', '3.0', '3.7']}, {'cycle': '2003-2004', 'table': 'nhanes.l40_c', 'column': 'creatinine_mg_dl', 'example_values': ['0.9', '1.6', '0.4', '3.0', '1.4']}, {'cycle': '2007-2008', 'table': 'nhanes.biopro_e', 'column': 'creatinine_mg_dl', 'example_values': ['2.79', '0.54', '2.1', '2.12', '2.06']}, {'cycle': '2009-2010', 'table': 'nhanes.biopro_f', 'column': 'creatinine_mg_dl', 'example_values': ['0.54', '1.45', '2.1', '2.12', '2.06']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'creatinine_mg_dl', 'example_values': ['0.7', '0.76', '1.18', '0.94', '0.93']}, {'cycle': '1999-2000', 'table': 'nhanes.lab18', 'column': 'creatinine_mg_dl', 'example_values': ['0.9', '1.6', '7.7', '0.4', '8.7']}]}, {'keyword': 'glycohemoglobin a1c (hba1c) (%)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.ghb_d', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2017-2018', 'table': 'nhanes.ghb_j', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}, {'cycle': '2001-2002', 'table': 'nhanes.l10_b', 'column': 'glycohemoglobin', 'example_values': ['12.4', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2003-2004', 'table': 'nhanes.l10_c', 'column': 'glycohemoglobin', 'example_values': ['13.2', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2007-2008', 'table': 'nhanes.ghb_e', 'column': 'glycohemoglobin', 'example_values': ['12.4', '14.7', '13.2', '5.8', '4.8']}, {'cycle': '2009-2010', 'table': 'nhanes.ghb_f', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2015-2016', 'table': 'nhanes.ghb_i', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '1999-2000', 'table': 'nhanes.lab10', 'column': 'glycohemoglobin', 'example_values': ['12.4', '14.7', '13.2', '5.8', '4.8']}]}, {'keyword': 'reported ever being told they had cancer or a malignancy', 'derived': False, 'condition': '= yes', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mcq_d', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.mcq_g', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2017-2018', 'table': 'nhanes.mcq_j', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.mcq_h', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2001-2002', 'table': 'nhanes.mcq_b', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2003-2004', 'table': 'nhanes.mcq_c', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.mcq_e', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.mcq_f', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.mcq_i', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}, {'cycle': '1999-2000', 'table': 'nhanes.mcq', 'column': 'ever_told_you_had_cancer_or_malignancy', 'example_values': ['No', 'Yes']}]}, {'keyword': 'mortality data', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2011-2012', 'table': 'nhanes.mortality_data_g', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2017-2018', 'table': 'nhanes.mortality_data_j', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2013-2014', 'table': 'nhanes.mortality_data_h', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2001-2002', 'table': 'nhanes.mortality_data_b', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2003-2004', 'table': 'nhanes.mortality_data_c', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2015-2016', 'table': 'nhanes.mortality_data_i', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '1999-2000', 'table': 'nhanes.mortality_data', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}]}, {'keyword': 'months followup examination', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'months_followup_examination', 'example_values': ['62.0', '154.0', '174.0', '162.0', '96.0']}, {'cycle': '2011-2012', 'table': 'nhanes.mortality_data_g', 'column': 'months_followup_examination', 'example_values': ['0.0', '62.0', '76.0', '96.0', '61.0']}, {'cycle': '2017-2018', 'table': 'nhanes.mortality_data_j', 'column': 'months_followup_examination', 'example_values': ['0.0', '3.0', '7.0', '33.0', '34.0']}, {'cycle': '2013-2014', 'table': 'nhanes.mortality_data_h', 'column': 'months_followup_examination', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2001-2002', 'table': 'nhanes.mortality_data_b', 'column': 'months_followup_examination', 'example_values': ['0.0', '154.0', '174.0', '96.0', '61.0']}, {'cycle': '2003-2004', 'table': 'nhanes.mortality_data_c', 'column': 'months_followup_examination', 'example_values': ['180.0', '109.0', '40.0', '39.0', '68.0']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'months_followup_examination', 'example_values': ['40.0', '109.0', '39.0', '68.0', '0.0']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'months_followup_examination', 'example_values': ['62.0', '76.0', '96.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.mortality_data_i', 'column': 'months_followup_examination', 'example_values': ['0.0', '61.0', '3.0', '7.0', '34.0']}, {'cycle': '1999-2000', 'table': 'nhanes.mortality_data', 'column': 'months_followup_examination', 'example_values': ['154.0', '174.0', '96.0', '61.0', '248.0']}]}], 'covariates': [{'keyword': 'age in years at screening', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}]}, {'keyword': 'gender', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['Non-Hispanic White', 'Non-Hispanic Black', 'Mexican American or Hispanic', 'Other']}}], 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'predictor': [{'keyword': 'serum uric acid level (mg/dl)', 'derived': True, 'depends_on': [{'keyword': 'serum uric acid level (mg/dl)', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.biopro_d', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2017-2018', 'table': 'nhanes.biopro_j', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '1.6', '4.8', '6.2']}, {'cycle': '2001-2002', 'table': 'nhanes.l40_b', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2003-2004', 'table': 'nhanes.l40_c', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.biopro_e', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2009-2010', 'table': 'nhanes.biopro_f', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '1999-2000', 'table': 'nhanes.lab18', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'quintiles', 'num_bins': 5, 'labels': ['QN1: <20% (values < 20th percentile)', 'QN2: >=20 and <40% (values >= 20th percentile and < 40th percentile)', 'QN3: >=40 and <60% (values >= 40th percentile and < 60th percentile)', 'QN4: >=60 and <80% (values >= 60th percentile and < 80th percentile)', 'QN5: >=80% (values >= 80th percentile)']}}], 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.biopro_d', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2017-2018', 'table': 'nhanes.biopro_j', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '1.6', '4.8', '6.2']}, {'cycle': '2001-2002', 'table': 'nhanes.l40_b', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2003-2004', 'table': 'nhanes.l40_c', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.biopro_e', 'column': 'uric_acid_mg_dl', 'example_values': ['12.4', '5.8', '4.8', '6.2', '7.7']}, {'cycle': '2009-2010', 'table': 'nhanes.biopro_f', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '4.8', '6.2', '7.7', '0.4']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}, {'cycle': '1999-2000', 'table': 'nhanes.lab18', 'column': 'uric_acid_mg_dl', 'example_values': ['5.8', '1.6', '4.8', '6.2', '7.7']}]}], 'outcome': [{'keyword': 'months followup examination', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'months_followup_examination', 'example_values': ['62.0', '154.0', '174.0', '162.0', '96.0']}, {'cycle': '2011-2012', 'table': 'nhanes.mortality_data_g', 'column': 'months_followup_examination', 'example_values': ['0.0', '62.0', '76.0', '96.0', '61.0']}, {'cycle': '2017-2018', 'table': 'nhanes.mortality_data_j', 'column': 'months_followup_examination', 'example_values': ['0.0', '3.0', '7.0', '33.0', '34.0']}, {'cycle': '2013-2014', 'table': 'nhanes.mortality_data_h', 'column': 'months_followup_examination', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2001-2002', 'table': 'nhanes.mortality_data_b', 'column': 'months_followup_examination', 'example_values': ['0.0', '154.0', '174.0', '96.0', '61.0']}, {'cycle': '2003-2004', 'table': 'nhanes.mortality_data_c', 'column': 'months_followup_examination', 'example_values': ['180.0', '109.0', '40.0', '39.0', '68.0']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'months_followup_examination', 'example_values': ['40.0', '109.0', '39.0', '68.0', '0.0']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'months_followup_examination', 'example_values': ['62.0', '76.0', '96.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.mortality_data_i', 'column': 'months_followup_examination', 'example_values': ['0.0', '61.0', '3.0', '7.0', '34.0']}, {'cycle': '1999-2000', 'table': 'nhanes.mortality_data', 'column': 'months_followup_examination', 'example_values': ['154.0', '174.0', '96.0', '61.0', '248.0']}]}, {'keyword': 'all-cause mortality', 'derived': True, 'depends_on': [{'keyword': 'mortality data', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2011-2012', 'table': 'nhanes.mortality_data_g', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2017-2018', 'table': 'nhanes.mortality_data_j', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2013-2014', 'table': 'nhanes.mortality_data_h', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2001-2002', 'table': 'nhanes.mortality_data_b', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2003-2004', 'table': 'nhanes.mortality_data_c', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2015-2016', 'table': 'nhanes.mortality_data_i', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '1999-2000', 'table': 'nhanes.mortality_data', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'description': 'all-cause mortality = 1 if participant died during follow-up; 0 if participant was alive or censored at the end of follow-up', 'labels': ['1', '0']}}]}]}",exam,"-- STEP 1: Create temp_master_weight
+
+-- TEMP TABLE FOR weight
+DROP TABLE IF EXISTS temp_master_weight;
+
+CREATE TEMP TABLE temp_master_weight AS
+SELECT respondent_sequence_number, 
+       (full_sample_4_year_mec_exam_weight * 4.0 / 24.0) AS survey_weight
+FROM nhanes.demo
+WHERE full_sample_4_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_4_year_mec_exam_weight * 4.0 / 24.0) AS survey_weight
+FROM nhanes.demo_b
+WHERE full_sample_4_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_c
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_d
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_e
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_f
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_g
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_h
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_i
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 24.0) AS survey_weight
+FROM nhanes.demo_j
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL;
+
+
+-- STEP 2: Create temp_psu_stratum
+
+-- TEMP TABLE FOR PSU and Stratum
+DROP TABLE IF EXISTS temp_psu_stratum;
+CREATE TEMP TABLE temp_psu_stratum AS
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_b
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_c
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_j;
+
+
+-- STEP 3: Create final weight+design table
+DROP TABLE IF EXISTS weight_design;
+CREATE TABLE weight_design AS
+SELECT 
+    s.respondent_sequence_number,
+    s.masked_variance_pseudo_psu,
+    s.masked_variance_pseudo_stratum,
+    w.survey_weight
+FROM temp_psu_stratum s
+INNER JOIN temp_master_weight w
+  ON s.respondent_sequence_number = w.respondent_sequence_number;
+
+
+
+
+-- TEMP TABLE FOR ""age in years at screening"", ""age in years at screening""
+DROP TABLE IF EXISTS temp_master_age_in_years_at_screening;
+CREATE TEMP TABLE temp_master_age_in_years_at_screening AS
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_j
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_b
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_c
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_in_years_at_screening ON temp_master_age_in_years_at_screening (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""reported doctor told them they have diabetes""
+DROP TABLE IF EXISTS temp_master_doctor_told_you_have_diabetes;
+CREATE TEMP TABLE temp_master_doctor_told_you_have_diabetes AS
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_d
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_j
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_b
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_c
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_e
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_i
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_doctor_told_you_have_diabetes ON temp_master_doctor_told_you_have_diabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""glycohemoglobin a1c (hba1c) (%)"", ""glycohemoglobin a1c (hba1c) (%)""
+DROP TABLE IF EXISTS temp_master_glycohemoglobin;
+CREATE TEMP TABLE temp_master_glycohemoglobin AS
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_d
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_g
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_j
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_h
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.l10_b
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.l10_c
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_e
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_f
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_i
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.lab10;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_glycohemoglobin ON temp_master_glycohemoglobin (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""fasting plasma glucose level (mg/dl)""
+DROP TABLE IF EXISTS temp_master_fasting_glucose_mg_dl;
+CREATE TEMP TABLE temp_master_fasting_glucose_mg_dl AS
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_d
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_g
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_j
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_h
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.l10am_b
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.l10am_c
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_e
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_f
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_i
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.lab10am;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_fasting_glucose_mg_dl ON temp_master_fasting_glucose_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""pregnancy exam positive""
+DROP TABLE IF EXISTS temp_master_pregnancy_test_result;
+CREATE TEMP TABLE temp_master_pregnancy_test_result AS
+SELECT respondent_sequence_number, ""pregnancy_test_result"" AS ""pregnancy_test_result""
+FROM nhanes.ucpreg_d
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_test_result"" AS ""pregnancy_test_result""
+FROM nhanes.ucpreg_g
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_test_result"" AS ""pregnancy_test_result""
+FROM nhanes.ucpreg_j
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_test_result"" AS ""pregnancy_test_result""
+FROM nhanes.ucpreg_h
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_test_result"" AS ""pregnancy_test_result""
+FROM nhanes.uc_b
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_test_result"" AS ""pregnancy_test_result""
+FROM nhanes.uc_c
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_test_result"" AS ""pregnancy_test_result""
+FROM nhanes.ucpreg_e
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_test_result"" AS ""pregnancy_test_result""
+FROM nhanes.ucpreg_f
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_test_result"" AS ""pregnancy_test_result""
+FROM nhanes.ucpreg_i
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_test_result"" AS ""pregnancy_test_result""
+FROM nhanes.uc;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_pregnancy_test_result ON temp_master_pregnancy_test_result (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""serum uric acid (mg/dl)"", ""serum uric acid level (mg/dl)"", ""serum uric acid level (mg/dl)""
+DROP TABLE IF EXISTS temp_master_uric_acid_mg_dl;
+CREATE TEMP TABLE temp_master_uric_acid_mg_dl AS
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_d
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_g
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_j
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_h
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.l40_b
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.l40_c
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_e
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_f
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.biopro_i
+UNION ALL
+SELECT respondent_sequence_number, ""uric_acid_mg_dl"" AS ""uric_acid_mg_dl""
+FROM nhanes.lab18;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_uric_acid_mg_dl ON temp_master_uric_acid_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""serum creatinine (mg/dl)""
+DROP TABLE IF EXISTS temp_master_creatinine_mg_dl;
+CREATE TEMP TABLE temp_master_creatinine_mg_dl AS
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_d
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_g
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_j
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_h
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.l40_b
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.l40_c
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_e
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_f
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_i
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.lab18;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_creatinine_mg_dl ON temp_master_creatinine_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""reported ever being told they had cancer or a malignancy""
+DROP TABLE IF EXISTS temp_master_ever_told_you_had_cancer_or_malignancy;
+CREATE TEMP TABLE temp_master_ever_told_you_had_cancer_or_malignancy AS
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_d
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_g
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_j
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_h
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_b
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_c
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_e
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_f
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq_i
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_had_cancer_or_malignancy"" AS ""ever_told_you_had_cancer_or_malignancy""
+FROM nhanes.mcq;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_ever_told_you_had_cancer_or_malignancy ON temp_master_ever_told_you_had_cancer_or_malignancy (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""mortality data"", ""mortality data""
+DROP TABLE IF EXISTS temp_master_mortality_status;
+CREATE TEMP TABLE temp_master_mortality_status AS
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_d
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_g
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_j
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_h
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_b
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_c
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_e
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_f
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_i
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_mortality_status ON temp_master_mortality_status (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""months followup examination"", ""months followup examination""
+DROP TABLE IF EXISTS temp_master_months_followup_examination;
+CREATE TEMP TABLE temp_master_months_followup_examination AS
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_d
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_g
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_j
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_h
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_b
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_c
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_e
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_f
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_i
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_months_followup_examination ON temp_master_months_followup_examination (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""gender""
+DROP TABLE IF EXISTS temp_master_gender;
+CREATE TEMP TABLE temp_master_gender AS
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_j
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_b
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_c
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_gender ON temp_master_gender (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""race/hispanic origin"", ""race/hispanic origin""
+DROP TABLE IF EXISTS temp_master_race_hispanic_origin;
+CREATE TEMP TABLE temp_master_race_hispanic_origin AS
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_j
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_b
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_c
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_race_hispanic_origin ON temp_master_race_hispanic_origin (respondent_sequence_number);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT respondent_sequence_number FROM temp_master_age_in_years_at_screening
+UNION
+SELECT respondent_sequence_number FROM temp_master_doctor_told_you_have_diabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_glycohemoglobin
+UNION
+SELECT respondent_sequence_number FROM temp_master_fasting_glucose_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_pregnancy_test_result
+UNION
+SELECT respondent_sequence_number FROM temp_master_uric_acid_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_creatinine_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_ever_told_you_had_cancer_or_malignancy
+UNION
+SELECT respondent_sequence_number FROM temp_master_mortality_status
+UNION
+SELECT respondent_sequence_number FROM temp_master_months_followup_examination
+UNION
+SELECT respondent_sequence_number FROM temp_master_gender
+UNION
+SELECT respondent_sequence_number FROM temp_master_race_hispanic_origin;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_respondent_sequence_number ON temp_all_ids (respondent_sequence_number);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.respondent_sequence_number,
+    t0.""age_in_years_at_screening"",
+    t1.""doctor_told_you_have_diabetes"",
+    t2.""glycohemoglobin"",
+    t3.""fasting_glucose_mg_dl"",
+    t4.""pregnancy_test_result"",
+    t5.""uric_acid_mg_dl"",
+    t6.""creatinine_mg_dl"",
+    t7.""ever_told_you_had_cancer_or_malignancy"",
+    t8.""mortality_status"",
+    t9.""months_followup_examination"",
+    t10.""gender"",
+    t11.""race_hispanic_origin""
+FROM temp_all_ids a
+LEFT JOIN temp_master_age_in_years_at_screening t0 ON a.respondent_sequence_number = t0.respondent_sequence_number 
+LEFT JOIN temp_master_doctor_told_you_have_diabetes t1 ON a.respondent_sequence_number = t1.respondent_sequence_number 
+LEFT JOIN temp_master_glycohemoglobin t2 ON a.respondent_sequence_number = t2.respondent_sequence_number 
+LEFT JOIN temp_master_fasting_glucose_mg_dl t3 ON a.respondent_sequence_number = t3.respondent_sequence_number 
+LEFT JOIN temp_master_pregnancy_test_result t4 ON a.respondent_sequence_number = t4.respondent_sequence_number 
+LEFT JOIN temp_master_uric_acid_mg_dl t5 ON a.respondent_sequence_number = t5.respondent_sequence_number 
+LEFT JOIN temp_master_creatinine_mg_dl t6 ON a.respondent_sequence_number = t6.respondent_sequence_number 
+LEFT JOIN temp_master_ever_told_you_had_cancer_or_malignancy t7 ON a.respondent_sequence_number = t7.respondent_sequence_number 
+LEFT JOIN temp_master_mortality_status t8 ON a.respondent_sequence_number = t8.respondent_sequence_number 
+LEFT JOIN temp_master_months_followup_examination t9 ON a.respondent_sequence_number = t9.respondent_sequence_number 
+LEFT JOIN temp_master_gender t10 ON a.respondent_sequence_number = t10.respondent_sequence_number 
+LEFT JOIN temp_master_race_hispanic_origin t11 ON a.respondent_sequence_number = t11.respondent_sequence_number;
+
+CREATE INDEX idx_final_master_respondent_sequence_number    
+    ON final_master_table (respondent_sequence_number);
+
+
+-- Clean up final_master_table
+DELETE FROM final_master_table
+WHERE respondent_sequence_number NOT IN (
+    SELECT respondent_sequence_number FROM weight_design
+);
+
+
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Include participants aged 20 years or older at screening
+CREATE TEMP TABLE temp_inclusion_step1 AS
+SELECT ""respondent_sequence_number""
+FROM final_master_table
+WHERE ""age_in_years_at_screening"" >= 20;
+
+-- STEP 1.2: From those, include only participants who meet diabetes criteria
+-- Diabetes present if: doctor said they have diabetes OR HbA1c >= 6.5% OR fasting glucose >= 126 mg/dL
+CREATE TEMP TABLE temp_inclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion_step1 i
+JOIN final_master_table f
+  ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE
+      f.""doctor_told_you_have_diabetes"" = 'Yes'
+   OR f.""glycohemoglobin"" >= 6.5
+   OR f.""fasting_glucose_mg_dl"" >= 126;
+
+-- Final inclusion table with all participants meeting inclusion criteria
+CREATE TEMP TABLE temp_inclusion AS
+SELECT ""respondent_sequence_number""
+FROM temp_inclusion_step2;
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude participants with a positive pregnancy exam
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion i
+JOIN final_master_table f
+  ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""pregnancy_test_result"" IS NULL
+   OR f.""pregnancy_test_result"" NOT IN ('Positive');
+
+-- STEP 2.2: Exclude participants with missing serum uric acid (mg/dL)
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f
+  ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""uric_acid_mg_dl"" IS NOT NULL;
+
+-- STEP 2.3: Exclude participants with missing serum creatinine (mg/dL)
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f
+  ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""creatinine_mg_dl"" IS NOT NULL;
+
+-- STEP 2.4: Exclude participants with missing glycohemoglobin A1c (HbA1c) (%)
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step3 i
+JOIN final_master_table f
+  ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""glycohemoglobin"" IS NOT NULL;
+
+-- STEP 2.5: Exclude participants who reported ever being told they had cancer or a malignancy
+CREATE TEMP TABLE temp_exclusion_step5 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step4 i
+JOIN final_master_table f
+  ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""ever_told_you_had_cancer_or_malignancy"" IS NULL
+   OR f.""ever_told_you_had_cancer_or_malignancy"" <> 'Yes';
+
+-- STEP 2.6: Exclude participants with missing mortality data
+CREATE TEMP TABLE temp_exclusion_step6 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step5 i
+JOIN final_master_table f
+  ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""mortality_status"" IS NOT NULL;
+
+-- STEP 2.7: Exclude participants with missing months of follow-up examination
+CREATE TEMP TABLE temp_exclusion_step7 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step6 i
+JOIN final_master_table f
+  ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""months_followup_examination"" IS NOT NULL;
+
+-- ========== STEP 3: Cohort ==========
+
+-- Final analytic cohort after all inclusion and exclusion criteria
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""respondent_sequence_number""
+FROM temp_exclusion_step7;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Age in years at screening
+-- Extract age for all cohort members
+CREATE TEMP TABLE temp_age_in_years_at_screening AS
+SELECT c.""respondent_sequence_number"",
+       f.""age_in_years_at_screening""
+FROM temp_cohort c
+JOIN final_master_table f
+  ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.2 Gender
+-- Extract gender for all cohort members
+CREATE TEMP TABLE temp_gender AS
+SELECT c.""respondent_sequence_number"",
+       f.""gender""
+FROM temp_cohort c
+JOIN final_master_table f
+  ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.3 Race/Hispanic origin (recoded into 4 categories)
+-- Map detailed race/hispanic categories into analysis groups
+CREATE TEMP TABLE temp_race_hispanic_origin AS
+SELECT c.""respondent_sequence_number"",
+       CASE
+         WHEN f.""race_hispanic_origin"" = 'Non-Hispanic White' THEN 'Non-Hispanic White'
+         WHEN f.""race_hispanic_origin"" = 'Non-Hispanic Black' THEN 'Non-Hispanic Black'
+         WHEN f.""race_hispanic_origin"" = 'Mexican American' THEN 'Mexican American or Hispanic'
+         WHEN f.""race_hispanic_origin"" = 'Other Hispanic' THEN 'Mexican American or Hispanic'
+         WHEN f.""race_hispanic_origin"" = 'Other Race - Including Multi-Racial' THEN 'Other'
+         ELSE NULL
+       END AS ""race_hispanic_origin""
+FROM temp_cohort c
+JOIN final_master_table f
+  ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.4 Serum uric acid level (mg/dL) quintiles
+-- Extract raw serum uric acid values for cohort
+CREATE TEMP TABLE temp_uric_acid AS
+SELECT c.""respondent_sequence_number"",
+       f.""uric_acid_mg_dl""
+FROM temp_cohort c
+JOIN final_master_table f
+  ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Compute quintile cutoffs (20th, 40th, 60th, 80th percentiles) of serum uric acid within cohort
+CREATE TEMP TABLE temp_uric_acid_quintile_cutoffs AS
+SELECT
+  PERCENTILE_CONT(0.20) WITHIN GROUP (ORDER BY ""uric_acid_mg_dl"") AS q20,
+  PERCENTILE_CONT(0.40) WITHIN GROUP (ORDER BY ""uric_acid_mg_dl"") AS q40,
+  PERCENTILE_CONT(0.60) WITHIN GROUP (ORDER BY ""uric_acid_mg_dl"") AS q60,
+  PERCENTILE_CONT(0.80) WITHIN GROUP (ORDER BY ""uric_acid_mg_dl"") AS q80
+FROM temp_uric_acid;
+
+-- Assign serum uric acid quintile categories using computed cutoffs
+CREATE TEMP TABLE temp_serum_uric_acid_quintiles AS
+SELECT
+  ""respondent_sequence_number"",
+  CASE
+    WHEN ""uric_acid_mg_dl"" IS NULL THEN NULL
+    WHEN ""uric_acid_mg_dl"" <  (SELECT q20 FROM temp_uric_acid_quintile_cutoffs)
+      THEN 'QN1: <20% (values < 20th percentile)'
+    WHEN ""uric_acid_mg_dl"" <  (SELECT q40 FROM temp_uric_acid_quintile_cutoffs)
+      THEN 'QN2: >=20 and <40% (values >= 20th percentile and < 40th percentile)'
+    WHEN ""uric_acid_mg_dl"" <  (SELECT q60 FROM temp_uric_acid_quintile_cutoffs)
+      THEN 'QN3: >=40 and <60% (values >= 40th percentile and < 60th percentile)'
+    WHEN ""uric_acid_mg_dl"" <  (SELECT q80 FROM temp_uric_acid_quintile_cutoffs)
+      THEN 'QN4: >=60 and <80% (values >= 60th percentile and < 80th percentile)'
+    ELSE 'QN5: >=80% (values >= 80th percentile)'
+  END AS ""serum_uric_acid_level_mg_dl""
+FROM temp_uric_acid;
+
+-- 4.5 Months of follow-up examination (time-to-event variable)
+-- Extract months of follow-up for all cohort members
+CREATE TEMP TABLE temp_months_followup_examination AS
+SELECT c.""respondent_sequence_number"",
+       f.""months_followup_examination""
+FROM temp_cohort c
+JOIN final_master_table f
+  ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.6 All-cause mortality (1 = died during follow-up, 0 = alive/censored)
+-- Map mortality_status to all-cause mortality indicator
+CREATE TEMP TABLE temp_all_cause_mortality AS
+SELECT c.""respondent_sequence_number"",
+       CASE
+         WHEN f.""mortality_status"" = 1.0 THEN 1
+         WHEN f.""mortality_status"" = 0.0 THEN 0
+         ELSE NULL
+       END AS ""all_cause_mortality""
+FROM temp_cohort c
+JOIN final_master_table f
+  ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- ========== STEP 5: Final Table ==========
+
+-- Assemble final analysis dataset with variables in the specified order
+CREATE TEMP TABLE temp_final_table AS
+SELECT
+  c.""respondent_sequence_number"",
+  a.""age_in_years_at_screening"",
+  g.""gender"",
+  r.""race_hispanic_origin"",
+  u.""serum_uric_acid_level_mg_dl"",
+  m.""months_followup_examination"",
+  o.""all_cause_mortality""
+FROM temp_cohort c
+JOIN temp_age_in_years_at_screening      a ON c.""respondent_sequence_number"" = a.""respondent_sequence_number""
+JOIN temp_gender                         g ON c.""respondent_sequence_number"" = g.""respondent_sequence_number""
+JOIN temp_race_hispanic_origin          r ON c.""respondent_sequence_number"" = r.""respondent_sequence_number""
+JOIN temp_serum_uric_acid_quintiles     u ON c.""respondent_sequence_number"" = u.""respondent_sequence_number""
+JOIN temp_months_followup_examination   m ON c.""respondent_sequence_number"" = m.""respondent_sequence_number""
+JOIN temp_all_cause_mortality           o ON c.""respondent_sequence_number"" = o.""respondent_sequence_number"";
+
+-- ========== STEP 6: View Output ==========
+
+SELECT * FROM temp_final_table;
+
+-- STEP: Create merged final table with design variables + in_analysis flag
+DROP TABLE IF EXISTS temp_final_with_weights;
+
+CREATE TEMP TABLE temp_final_with_weights AS
+SELECT 
+    wd.""respondent_sequence_number"",
+    wd.""masked_variance_pseudo_psu"",
+    wd.""masked_variance_pseudo_stratum"",
+    wd.""survey_weight"",
+    CASE WHEN ft.""respondent_sequence_number"" IS NOT NULL THEN 1 ELSE 0 END AS ""in_analysis"",
+    ft.""age_in_years_at_screening"",
+    ft.""gender"",
+    ft.""race_hispanic_origin"",
+    ft.""serum_uric_acid_level_mg_dl"",
+    ft.""months_followup_examination"",
+    ft.""all_cause_mortality""
+FROM weight_design wd
+LEFT JOIN temp_final_table ft
+  ON wd.""respondent_sequence_number"" = ft.""respondent_sequence_number"";
+  
+-- Preview the result
+SELECT * FROM temp_final_with_weights;
+","    step_num                                                                                                  step  remaining_after_step  excluded_at_step
+0          0                                                     Total unique participants pooled from all sources                101316               NaN
+1          1                                     Participants with a valid survey weight (after initial filtering)                 99977            1339.0
+2          2                                    STEP 1.1: Include participants aged 20 years or older at screening                 54351           45626.0
+3          3  Diabetes present if: doctor said they have diabetes OR HbA1c >= 6.5% OR fasting glucose >= 126 mg/dL                  8658           45693.0
+4          4                                Final inclusion table with all participants meeting inclusion criteria                  8658               0.0
+5          5                                         STEP 2.1: Exclude participants with a positive pregnancy exam                  8636              22.0
+6          6                                   STEP 2.2: Exclude participants with missing serum uric acid (mg/dL)                  7911             725.0
+7          7                                  STEP 2.3: Exclude participants with missing serum creatinine (mg/dL)                  7909               2.0
+8          8                           STEP 2.4: Exclude participants with missing glycohemoglobin A1c (HbA1c) (%)                  7896              13.0
+9          9           STEP 2.5: Exclude participants who reported ever being told they had cancer or a malignancy                  6842            1054.0
+10        10                                            STEP 2.6: Exclude participants with missing mortality data                  6832              10.0
+11        11                           STEP 2.7: Exclude participants with missing months of follow-up examination                  6832               0.0
+12        12                                      Final analytic cohort after all inclusion and exclusion criteria                  6832               0.0
+13        13                                 Assemble final analysis dataset with variables in the specified order                  6832               0.0","(99977, 11)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""respondent_sequence_number"")
+    outcome_vars <- c(""months_followup_examination"",""all_cause_mortality"")
+    weight_vars <- c(""survey_weight"",""masked_variance_pseudo_psu"",""masked_variance_pseudo_stratum"",""in_analysis"")
+
+    cohort <- df[df$in_analysis == 1, names(df) != ""in_analysis""]
+
+
+    outcome_roles <- c()
+    outcome_roles[""months_followup_examination""] <- ""event_to_time"";outcome_roles[""all_cause_mortality""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else if (name %in% weight_vars) {
+        category <- ""weight""
+        summary_info <- ""Weight variable"" 
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    weight_vars <- report$variable[report$category == ""weight""]; cat(""Weight Variables: ""); print(weight_vars); psu_var <- weight_vars[grepl(""psu"", weight_vars, ignore.case = TRUE)][1]; cat(""PSU:"", psu_var); stratum_var <- weight_vars[grepl(""stratum"", weight_vars, ignore.case = TRUE)][1]; cat(""Stratum:"", stratum_var); weight_var <- weight_vars[grepl(""weight"", weight_vars, ignore.case = TRUE)][1]; cat(""Weight:"", weight_var); in_analysis_var <- weight_vars[grepl(""in_analysis"", weight_vars, ignore.case = TRUE)][1]; cat(""In Analysis:"", in_analysis_var)
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    event_to_time_var <- names(outcome_roles[outcome_roles == ""event_to_time""])[1]
+cat(""Event-to-Time Variable:\n""); print(event_to_time_var); cat(""\n"")
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+    library(survey)
+    options(survey.lonely.psu = ""adjust"")
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    if (!is.numeric(df[[outcome_var]])) {
+        df[[outcome_var]] <- as.numeric(df[[outcome_var]])
+    }
+
+    if (!is.numeric(df[[event_to_time_var]])) {
+        df[[event_to_time_var]] <- as.numeric(df[[event_to_time_var]])
+    }
+    formula <- as.formula(paste0(""Surv("", event_to_time_var, "", "", outcome_var, "") ~ "", paste(predictor_vars, collapse = "" + "")))
+            
+    
+    survey_design <- svydesign(
+        ids     = as.formula(paste0(""~"", psu_var)),
+        strata  = as.formula(paste0(""~"", stratum_var)),
+        weights = as.formula(paste0(""~"", weight_var)),
+        data    = df,
+        nest    = TRUE
+        )
+    survey_design <- subset(survey_design, in_analysis ==1)
+        
+    
+    model <- svycoxph(formula, design = survey_design)
+            
+    
+    result_table <- tidy(model, conf.int = TRUE, exponentiate = TRUE) %>%
+            select(term, estimate, p.value, conf.low, conf.high)
+            
+    ","[{'variable': 'respondent_sequence_number', 'category': 'identifier', 'n_unique': 6832, 'na_count': 0, 'summary': 'Total rows = 6832'}, {'variable': 'masked_variance_pseudo_psu', 'category': 'weight', 'n_unique': 3, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'masked_variance_pseudo_stratum', 'category': 'weight', 'n_unique': 148, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'survey_weight', 'category': 'weight', 'n_unique': 6275, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'age_in_years_at_screening', 'category': 'numerical', 'n_unique': 66, 'na_count': 0, 'summary': 'mean = 60.605, sd = 13.985'}, {'variable': 'gender', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'Female: 47.3%; Male: 52.7%'}, {'variable': 'race_hispanic_origin', 'category': 'categorical', 'n_unique': 4, 'na_count': 0, 'summary': 'Mexican American or Hispanic: 32.1%; Non-Hispanic Black: 26%; Non-Hispanic White: 32%; Other: 9.9%'}, {'variable': 'serum_uric_acid_level_mg_dl', 'category': 'categorical', 'n_unique': 5, 'na_count': 0, 'summary': 'QN1: <20% (values < 20th percentile): 19.2%; QN2: >=20 and <40% (values >= 20th percentile and < 40th percentile): 19.7%; QN3: >=40 and <60% (values >= 40th percentile and < 60th percentile): 20.7%; QN4: >=60 and <80% (values >= 60th percentile and < 80th percentile): 18.6%; QN5: >=80% (values >= 80th percentile): 21.9%'}, {'variable': 'months_followup_examination', 'category': 'event_to_time', 'n_unique': 250, 'na_count': 0, 'summary': 'mean = 96.373, sd = 61.299'}, {'variable': 'all_cause_mortality', 'category': 'outcome', 'n_unique': 2, 'na_count': 0, 'summary': '0: 73.2%; 1: 26.8%'}]","[{'term': 'age_in_years_at_screening', 'estimate': 1.0732659277429015, 'p.value': 2.9143839701832723e-88, 'conf.low': 1.065824001317429, 'conf.high': 1.0807598160953464}, {'term': 'genderFemale', 'estimate': 0.7535395430392033, 'p.value': 9.228880248886829e-05, 'conf.low': 0.6538879762181781, 'conf.high': 0.8683778622261598}, {'term': 'race_hispanic_originNon-Hispanic Black', 'estimate': 1.2622770944538095, 'p.value': 0.005170004382373128, 'conf.low': 1.0721428415373864, 'conf.high': 1.4861298340601665}, {'term': 'race_hispanic_originNon-Hispanic White', 'estimate': 1.327595757136422, 'p.value': 0.00149437892591214, 'conf.low': 1.1145880379079487, 'conf.high': 1.5813111521229082}, {'term': 'race_hispanic_originOther', 'estimate': 0.9573606530129818, 'p.value': 0.7979073786533398, 'conf.low': 0.6858354804781448, 'conf.high': 1.3363837917782528}, {'term': 'serum_uric_acid_level_mg_dlQN2: >=20 and <40% (values >= 20th percentile and < 40th percentile)', 'estimate': 0.9607781881833135, 'p.value': 0.7229473795749125, 'conf.low': 0.770115375159043, 'conf.high': 1.1986447182646813}, {'term': 'serum_uric_acid_level_mg_dlQN3: >=40 and <60% (values >= 40th percentile and < 60th percentile)', 'estimate': 0.9609292089126166, 'p.value': 0.7168284980844526, 'conf.low': 0.7747454830757822, 'conf.high': 1.1918558606828373}, {'term': 'serum_uric_acid_level_mg_dlQN4: >=60 and <80% (values >= 60th percentile and < 80th percentile)', 'estimate': 0.9470637695780829, 'p.value': 0.6223753345468745, 'conf.low': 0.7627371659903229, 'conf.high': 1.1759355956948712}, {'term': 'serum_uric_acid_level_mg_dlQN5: >=80% (values >= 80th percentile)', 'estimate': 1.400127562574912, 'p.value': 0.0005833241237165723, 'conf.low': 1.1557648406661398, 'conf.high': 1.6961557598101769}]",,,,weighted cox regression (exam),1999-2018,"[[1999, 2000], [2001, 2002], [2003, 2004], [2005, 2006], [2007, 2008], [2009, 2010], [2011, 2012], [2013, 2014], [2015, 2016], [2017, 2018]]",openai_gpt-5.1-2025-11-13,Pass,"[""Multiple variables candidates detected for 'pregnancy exam positive' across cycles: ['pregnancy_status_at_exam', 'pregnancy_test_result']"", '\nSearching for a candidate available in all cycles...', ""Found a candidate that is available from all cycles: 'pregnancy_test_result'"", ""   (From: 'Pregnancy Test - Urine' - ucpreg_d)"", '   If you prefer to use other candidates, consider adjusting your time period and replace pregnancy exam positive with other candidate\n', ""   Rebuilding results for 'pregnancy exam positive' using 'pregnancy_test_result'.""]",,1171.699563,"[[{'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 807, 'output_tokens': 189, 'total_cost': 0.0028987500000000003, 'formatted_total_cost': '$0.002899'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 1898, 'output_tokens': 1052, 'total_cost': 0.0128925, 'formatted_total_cost': '$0.012892'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 2552, 'output_tokens': 4886, 'total_cost': 0.05205, 'formatted_total_cost': '$0.052050'}], [{'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3400, 'output_tokens': 193, 'total_cost': 0.00618, 'formatted_total_cost': '$0.006180'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3400, 'output_tokens': 193, 'total_cost': 0.00618, 'formatted_total_cost': '$0.006180'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3432, 'output_tokens': 171, 'total_cost': 0.006, 'formatted_total_cost': '$0.006000'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3432, 'output_tokens': 171, 'total_cost': 0.006, 'formatted_total_cost': '$0.006000'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3438, 'output_tokens': 163, 'total_cost': 0.0059275000000000005, 'formatted_total_cost': '$0.005928'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3438, 'output_tokens': 163, 'total_cost': 0.0059275000000000005, 'formatted_total_cost': '$0.005928'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3496, 'output_tokens': 165, 'total_cost': 0.006019999999999999, 'formatted_total_cost': '$0.006020'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3496, 'output_tokens': 165, 'total_cost': 0.006019999999999999, 'formatted_total_cost': '$0.006020'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3537, 'output_tokens': 203, 'total_cost': 0.00645125, 'formatted_total_cost': '$0.006451'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 361, 'output_tokens': 140, 'total_cost': 0.0018512499999999998, 'formatted_total_cost': '$0.001851'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 361, 'output_tokens': 140, 'total_cost': 0.0018512499999999998, 'formatted_total_cost': '$0.001851'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3411, 'output_tokens': 192, 'total_cost': 0.00618375, 'formatted_total_cost': '$0.006184'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3411, 'output_tokens': 192, 'total_cost': 0.00618375, 'formatted_total_cost': '$0.006184'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3387, 'output_tokens': 163, 'total_cost': 0.005863749999999999, 'formatted_total_cost': '$0.005864'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3387, 'output_tokens': 163, 'total_cost': 0.005863749999999999, 'formatted_total_cost': '$0.005864'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3358, 'output_tokens': 203, 'total_cost': 0.0062275, 'formatted_total_cost': '$0.006228'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3358, 'output_tokens': 203, 'total_cost': 0.0062275, 'formatted_total_cost': '$0.006228'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3567, 'output_tokens': 144, 'total_cost': 0.00589875, 'formatted_total_cost': '$0.005899'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3567, 'output_tokens': 144, 'total_cost': 0.00589875, 'formatted_total_cost': '$0.005899'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3270, 'output_tokens': 178, 'total_cost': 0.0058674999999999995, 'formatted_total_cost': '$0.005867'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3270, 'output_tokens': 178, 'total_cost': 0.0058674999999999995, 'formatted_total_cost': '$0.005867'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 795, 'output_tokens': 171, 'total_cost': 0.0027037500000000004, 'formatted_total_cost': '$0.002704'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3449, 'output_tokens': 144, 'total_cost': 0.00575125, 'formatted_total_cost': '$0.005751'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3449, 'output_tokens': 144, 'total_cost': 0.00575125, 'formatted_total_cost': '$0.005751'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3495, 'output_tokens': 147, 'total_cost': 0.005838749999999999, 'formatted_total_cost': '$0.005839'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3495, 'output_tokens': 147, 'total_cost': 0.005838749999999999, 'formatted_total_cost': '$0.005839'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3654, 'output_tokens': 174, 'total_cost': 0.006307500000000001, 'formatted_total_cost': '$0.006308'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3654, 'output_tokens': 174, 'total_cost': 0.006307500000000001, 'formatted_total_cost': '$0.006308'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3485, 'output_tokens': 151, 'total_cost': 0.00586625, 'formatted_total_cost': '$0.005866'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3485, 'output_tokens': 151, 'total_cost': 0.00586625, 'formatted_total_cost': '$0.005866'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3460, 'output_tokens': 147, 'total_cost': 0.005795, 'formatted_total_cost': '$0.005795'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3460, 'output_tokens': 147, 'total_cost': 0.005795, 'formatted_total_cost': '$0.005795'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3367, 'output_tokens': 128, 'total_cost': 0.005488750000000001, 'formatted_total_cost': '$0.005489'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3367, 'output_tokens': 128, 'total_cost': 0.005488750000000001, 'formatted_total_cost': '$0.005489'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3420, 'output_tokens': 148, 'total_cost': 0.005755, 'formatted_total_cost': '$0.005755'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3420, 'output_tokens': 148, 'total_cost': 0.005755, 'formatted_total_cost': '$0.005755'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3555, 'output_tokens': 220, 'total_cost': 0.00664375, 'formatted_total_cost': '$0.006644'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 649, 'output_tokens': 156, 'total_cost': 0.00237125, 'formatted_total_cost': '$0.002371'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 649, 'output_tokens': 156, 'total_cost': 0.00237125, 'formatted_total_cost': '$0.002371'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3416, 'output_tokens': 185, 'total_cost': 0.0061200000000000004, 'formatted_total_cost': '$0.006120'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3416, 'output_tokens': 185, 'total_cost': 0.0061200000000000004, 'formatted_total_cost': '$0.006120'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3500, 'output_tokens': 125, 'total_cost': 0.005625000000000001, 'formatted_total_cost': '$0.005625'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3500, 'output_tokens': 125, 'total_cost': 0.005625000000000001, 'formatted_total_cost': '$0.005625'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 832, 'output_tokens': 120, 'total_cost': 0.00224, 'formatted_total_cost': '$0.002240'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3641, 'output_tokens': 147, 'total_cost': 0.00602125, 'formatted_total_cost': '$0.006021'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3641, 'output_tokens': 147, 'total_cost': 0.00602125, 'formatted_total_cost': '$0.006021'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3759, 'output_tokens': 170, 'total_cost': 0.00639875, 'formatted_total_cost': '$0.006399'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3759, 'output_tokens': 170, 'total_cost': 0.00639875, 'formatted_total_cost': '$0.006399'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3932, 'output_tokens': 160, 'total_cost': 0.006514999999999999, 'formatted_total_cost': '$0.006515'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3932, 'output_tokens': 160, 'total_cost': 0.006514999999999999, 'formatted_total_cost': '$0.006515'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3812, 'output_tokens': 170, 'total_cost': 0.006465, 'formatted_total_cost': '$0.006465'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3812, 'output_tokens': 170, 'total_cost': 0.006465, 'formatted_total_cost': '$0.006465'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3633, 'output_tokens': 193, 'total_cost': 0.0064712500000000004, 'formatted_total_cost': '$0.006471'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3633, 'output_tokens': 193, 'total_cost': 0.0064712500000000004, 'formatted_total_cost': '$0.006471'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3576, 'output_tokens': 160, 'total_cost': 0.00607, 'formatted_total_cost': '$0.006070'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3576, 'output_tokens': 160, 'total_cost': 0.00607, 'formatted_total_cost': '$0.006070'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3682, 'output_tokens': 159, 'total_cost': 0.0061925, 'formatted_total_cost': '$0.006193'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3682, 'output_tokens': 159, 'total_cost': 0.0061925, 'formatted_total_cost': '$0.006193'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3747, 'output_tokens': 169, 'total_cost': 0.006373749999999999, 'formatted_total_cost': '$0.006374'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3747, 'output_tokens': 169, 'total_cost': 0.006373749999999999, 'formatted_total_cost': '$0.006374'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3762, 'output_tokens': 173, 'total_cost': 0.0064325, 'formatted_total_cost': '$0.006432'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3762, 'output_tokens': 173, 'total_cost': 0.0064325, 'formatted_total_cost': '$0.006432'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3577, 'output_tokens': 166, 'total_cost': 0.0061312499999999995, 'formatted_total_cost': '$0.006131'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3577, 'output_tokens': 166, 'total_cost': 0.0061312499999999995, 'formatted_total_cost': '$0.006131'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 658, 'output_tokens': 175, 'total_cost': 0.0025725, 'formatted_total_cost': '$0.002573'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3301, 'output_tokens': 210, 'total_cost': 0.00622625, 'formatted_total_cost': '$0.006226'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3301, 'output_tokens': 210, 'total_cost': 0.00622625, 'formatted_total_cost': '$0.006226'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3355, 'output_tokens': 207, 'total_cost': 0.006263749999999999, 'formatted_total_cost': '$0.006264'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3355, 'output_tokens': 207, 'total_cost': 0.006263749999999999, 'formatted_total_cost': '$0.006264'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3299, 'output_tokens': 179, 'total_cost': 0.00591375, 'formatted_total_cost': '$0.005914'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3299, 'output_tokens': 179, 'total_cost': 0.00591375, 'formatted_total_cost': '$0.005914'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3403, 'output_tokens': 180, 'total_cost': 0.006053750000000001, 'formatted_total_cost': '$0.006054'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3403, 'output_tokens': 180, 'total_cost': 0.006053750000000001, 'formatted_total_cost': '$0.006054'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3639, 'output_tokens': 197, 'total_cost': 0.00651875, 'formatted_total_cost': '$0.006519'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 365, 'output_tokens': 133, 'total_cost': 0.00178625, 'formatted_total_cost': '$0.001786'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 365, 'output_tokens': 133, 'total_cost': 0.00178625, 'formatted_total_cost': '$0.001786'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3343, 'output_tokens': 177, 'total_cost': 0.00594875, 'formatted_total_cost': '$0.005949'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3343, 'output_tokens': 177, 'total_cost': 0.00594875, 'formatted_total_cost': '$0.005949'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3342, 'output_tokens': 171, 'total_cost': 0.0058875, 'formatted_total_cost': '$0.005888'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3342, 'output_tokens': 171, 'total_cost': 0.0058875, 'formatted_total_cost': '$0.005888'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3323, 'output_tokens': 184, 'total_cost': 0.005993750000000001, 'formatted_total_cost': '$0.005994'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3323, 'output_tokens': 184, 'total_cost': 0.005993750000000001, 'formatted_total_cost': '$0.005994'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3344, 'output_tokens': 194, 'total_cost': 0.0061200000000000004, 'formatted_total_cost': '$0.006120'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3344, 'output_tokens': 194, 'total_cost': 0.0061200000000000004, 'formatted_total_cost': '$0.006120'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3335, 'output_tokens': 203, 'total_cost': 0.006198749999999999, 'formatted_total_cost': '$0.006199'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3335, 'output_tokens': 203, 'total_cost': 0.006198749999999999, 'formatted_total_cost': '$0.006199'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 784, 'output_tokens': 107, 'total_cost': 0.0020499999999999997, 'formatted_total_cost': '$0.002050'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3408, 'output_tokens': 191, 'total_cost': 0.00617, 'formatted_total_cost': '$0.006170'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3408, 'output_tokens': 191, 'total_cost': 0.00617, 'formatted_total_cost': '$0.006170'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3417, 'output_tokens': 183, 'total_cost': 0.00610125, 'formatted_total_cost': '$0.006101'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3417, 'output_tokens': 183, 'total_cost': 0.00610125, 'formatted_total_cost': '$0.006101'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3454, 'output_tokens': 187, 'total_cost': 0.0061875, 'formatted_total_cost': '$0.006188'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3454, 'output_tokens': 187, 'total_cost': 0.0061875, 'formatted_total_cost': '$0.006188'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3516, 'output_tokens': 180, 'total_cost': 0.006195, 'formatted_total_cost': '$0.006195'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3516, 'output_tokens': 180, 'total_cost': 0.006195, 'formatted_total_cost': '$0.006195'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3525, 'output_tokens': 263, 'total_cost': 0.007036249999999999, 'formatted_total_cost': '$0.007036'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 372, 'output_tokens': 130, 'total_cost': 0.0017649999999999999, 'formatted_total_cost': '$0.001765'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 372, 'output_tokens': 130, 'total_cost': 0.0017649999999999999, 'formatted_total_cost': '$0.001765'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3419, 'output_tokens': 183, 'total_cost': 0.00610375, 'formatted_total_cost': '$0.006104'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3419, 'output_tokens': 183, 'total_cost': 0.00610375, 'formatted_total_cost': '$0.006104'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3387, 'output_tokens': 169, 'total_cost': 0.005923749999999999, 'formatted_total_cost': '$0.005924'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3387, 'output_tokens': 169, 'total_cost': 0.005923749999999999, 'formatted_total_cost': '$0.005924'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3324, 'output_tokens': 211, 'total_cost': 0.006265, 'formatted_total_cost': '$0.006265'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3324, 'output_tokens': 211, 'total_cost': 0.006265, 'formatted_total_cost': '$0.006265'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3532, 'output_tokens': 146, 'total_cost': 0.005875, 'formatted_total_cost': '$0.005875'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3532, 'output_tokens': 146, 'total_cost': 0.005875, 'formatted_total_cost': '$0.005875'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3276, 'output_tokens': 171, 'total_cost': 0.005804999999999999, 'formatted_total_cost': '$0.005805'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3276, 'output_tokens': 171, 'total_cost': 0.005804999999999999, 'formatted_total_cost': '$0.005805'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 796, 'output_tokens': 92, 'total_cost': 0.001915, 'formatted_total_cost': '$0.001915'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3441, 'output_tokens': 166, 'total_cost': 0.00596125, 'formatted_total_cost': '$0.005961'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3441, 'output_tokens': 166, 'total_cost': 0.00596125, 'formatted_total_cost': '$0.005961'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3445, 'output_tokens': 136, 'total_cost': 0.00566625, 'formatted_total_cost': '$0.005666'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3445, 'output_tokens': 136, 'total_cost': 0.00566625, 'formatted_total_cost': '$0.005666'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3606, 'output_tokens': 151, 'total_cost': 0.006017499999999999, 'formatted_total_cost': '$0.006017'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3606, 'output_tokens': 151, 'total_cost': 0.006017499999999999, 'formatted_total_cost': '$0.006017'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3427, 'output_tokens': 152, 'total_cost': 0.00580375, 'formatted_total_cost': '$0.005804'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3427, 'output_tokens': 152, 'total_cost': 0.00580375, 'formatted_total_cost': '$0.005804'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3489, 'output_tokens': 147, 'total_cost': 0.00583125, 'formatted_total_cost': '$0.005831'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3489, 'output_tokens': 147, 'total_cost': 0.00583125, 'formatted_total_cost': '$0.005831'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3506, 'output_tokens': 135, 'total_cost': 0.0057325, 'formatted_total_cost': '$0.005732'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3506, 'output_tokens': 135, 'total_cost': 0.0057325, 'formatted_total_cost': '$0.005732'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3442, 'output_tokens': 135, 'total_cost': 0.0056524999999999995, 'formatted_total_cost': '$0.005652'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3442, 'output_tokens': 135, 'total_cost': 0.0056524999999999995, 'formatted_total_cost': '$0.005652'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3496, 'output_tokens': 160, 'total_cost': 0.00597, 'formatted_total_cost': '$0.005970'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3496, 'output_tokens': 160, 'total_cost': 0.00597, 'formatted_total_cost': '$0.005970'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3432, 'output_tokens': 157, 'total_cost': 0.005860000000000001, 'formatted_total_cost': '$0.005860'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3432, 'output_tokens': 157, 'total_cost': 0.005860000000000001, 'formatted_total_cost': '$0.005860'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3473, 'output_tokens': 142, 'total_cost': 0.00576125, 'formatted_total_cost': '$0.005761'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3473, 'output_tokens': 142, 'total_cost': 0.00576125, 'formatted_total_cost': '$0.005761'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 782, 'output_tokens': 72, 'total_cost': 0.0016975000000000002, 'formatted_total_cost': '$0.001698'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3460, 'output_tokens': 117, 'total_cost': 0.005495, 'formatted_total_cost': '$0.005495'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3460, 'output_tokens': 117, 'total_cost': 0.005495, 'formatted_total_cost': '$0.005495'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3502, 'output_tokens': 118, 'total_cost': 0.0055575, 'formatted_total_cost': '$0.005557'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3502, 'output_tokens': 118, 'total_cost': 0.0055575, 'formatted_total_cost': '$0.005557'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3466, 'output_tokens': 123, 'total_cost': 0.0055625, 'formatted_total_cost': '$0.005562'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3466, 'output_tokens': 123, 'total_cost': 0.0055625, 'formatted_total_cost': '$0.005562'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3590, 'output_tokens': 130, 'total_cost': 0.0057875, 'formatted_total_cost': '$0.005788'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3590, 'output_tokens': 130, 'total_cost': 0.0057875, 'formatted_total_cost': '$0.005788'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3522, 'output_tokens': 135, 'total_cost': 0.005752500000000001, 'formatted_total_cost': '$0.005753'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3522, 'output_tokens': 135, 'total_cost': 0.005752500000000001, 'formatted_total_cost': '$0.005753'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3443, 'output_tokens': 126, 'total_cost': 0.00556375, 'formatted_total_cost': '$0.005564'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3443, 'output_tokens': 126, 'total_cost': 0.00556375, 'formatted_total_cost': '$0.005564'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3477, 'output_tokens': 125, 'total_cost': 0.0055962500000000005, 'formatted_total_cost': '$0.005596'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3477, 'output_tokens': 125, 'total_cost': 0.0055962500000000005, 'formatted_total_cost': '$0.005596'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3484, 'output_tokens': 118, 'total_cost': 0.005535, 'formatted_total_cost': '$0.005535'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3484, 'output_tokens': 118, 'total_cost': 0.005535, 'formatted_total_cost': '$0.005535'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3518, 'output_tokens': 130, 'total_cost': 0.0056974999999999994, 'formatted_total_cost': '$0.005697'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3518, 'output_tokens': 130, 'total_cost': 0.0056974999999999994, 'formatted_total_cost': '$0.005697'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3361, 'output_tokens': 125, 'total_cost': 0.00545125, 'formatted_total_cost': '$0.005451'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3361, 'output_tokens': 125, 'total_cost': 0.00545125, 'formatted_total_cost': '$0.005451'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 791, 'output_tokens': 72, 'total_cost': 0.0017087500000000002, 'formatted_total_cost': '$0.001709'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3607, 'output_tokens': 268, 'total_cost': 0.00718875, 'formatted_total_cost': '$0.007189'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3607, 'output_tokens': 268, 'total_cost': 0.00718875, 'formatted_total_cost': '$0.007189'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3507, 'output_tokens': 322, 'total_cost': 0.007603750000000001, 'formatted_total_cost': '$0.007604'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3507, 'output_tokens': 322, 'total_cost': 0.007603750000000001, 'formatted_total_cost': '$0.007604'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3920, 'output_tokens': 272, 'total_cost': 0.00762, 'formatted_total_cost': '$0.007620'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3920, 'output_tokens': 272, 'total_cost': 0.00762, 'formatted_total_cost': '$0.007620'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3638, 'output_tokens': 215, 'total_cost': 0.0066975, 'formatted_total_cost': '$0.006698'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3638, 'output_tokens': 215, 'total_cost': 0.0066975, 'formatted_total_cost': '$0.006698'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3512, 'output_tokens': 266, 'total_cost': 0.00705, 'formatted_total_cost': '$0.007050'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3512, 'output_tokens': 266, 'total_cost': 0.00705, 'formatted_total_cost': '$0.007050'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3561, 'output_tokens': 265, 'total_cost': 0.00710125, 'formatted_total_cost': '$0.007101'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3561, 'output_tokens': 265, 'total_cost': 0.00710125, 'formatted_total_cost': '$0.007101'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3648, 'output_tokens': 230, 'total_cost': 0.00686, 'formatted_total_cost': '$0.006860'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3648, 'output_tokens': 230, 'total_cost': 0.00686, 'formatted_total_cost': '$0.006860'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3695, 'output_tokens': 197, 'total_cost': 0.006588749999999999, 'formatted_total_cost': '$0.006589'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3695, 'output_tokens': 197, 'total_cost': 0.006588749999999999, 'formatted_total_cost': '$0.006589'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3678, 'output_tokens': 256, 'total_cost': 0.0071575, 'formatted_total_cost': '$0.007157'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3678, 'output_tokens': 256, 'total_cost': 0.0071575, 'formatted_total_cost': '$0.007157'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3489, 'output_tokens': 327, 'total_cost': 0.007631249999999999, 'formatted_total_cost': '$0.007631'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3489, 'output_tokens': 327, 'total_cost': 0.007631249999999999, 'formatted_total_cost': '$0.007631'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 659, 'output_tokens': 140, 'total_cost': 0.0022237499999999996, 'formatted_total_cost': '$0.002224'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3884, 'output_tokens': 182, 'total_cost': 0.006675, 'formatted_total_cost': '$0.006675'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3884, 'output_tokens': 182, 'total_cost': 0.006675, 'formatted_total_cost': '$0.006675'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 4043, 'output_tokens': 200, 'total_cost': 0.007053749999999999, 'formatted_total_cost': '$0.007054'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 4043, 'output_tokens': 200, 'total_cost': 0.007053749999999999, 'formatted_total_cost': '$0.007054'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 4040, 'output_tokens': 181, 'total_cost': 0.006860000000000001, 'formatted_total_cost': '$0.006860'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 4040, 'output_tokens': 181, 'total_cost': 0.006860000000000001, 'formatted_total_cost': '$0.006860'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 4083, 'output_tokens': 191, 'total_cost': 0.00701375, 'formatted_total_cost': '$0.007014'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 4083, 'output_tokens': 191, 'total_cost': 0.00701375, 'formatted_total_cost': '$0.007014'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3548, 'output_tokens': 198, 'total_cost': 0.006415, 'formatted_total_cost': '$0.006415'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3548, 'output_tokens': 198, 'total_cost': 0.006415, 'formatted_total_cost': '$0.006415'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3579, 'output_tokens': 168, 'total_cost': 0.00615375, 'formatted_total_cost': '$0.006154'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3579, 'output_tokens': 168, 'total_cost': 0.00615375, 'formatted_total_cost': '$0.006154'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3914, 'output_tokens': 187, 'total_cost': 0.0067625, 'formatted_total_cost': '$0.006763'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3914, 'output_tokens': 187, 'total_cost': 0.0067625, 'formatted_total_cost': '$0.006763'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3939, 'output_tokens': 217, 'total_cost': 0.007093749999999999, 'formatted_total_cost': '$0.007094'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3939, 'output_tokens': 217, 'total_cost': 0.007093749999999999, 'formatted_total_cost': '$0.007094'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 4075, 'output_tokens': 188, 'total_cost': 0.006973749999999999, 'formatted_total_cost': '$0.006974'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 4075, 'output_tokens': 188, 'total_cost': 0.006973749999999999, 'formatted_total_cost': '$0.006974'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3460, 'output_tokens': 182, 'total_cost': 0.006144999999999999, 'formatted_total_cost': '$0.006145'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3460, 'output_tokens': 182, 'total_cost': 0.006144999999999999, 'formatted_total_cost': '$0.006145'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 644, 'output_tokens': 70, 'total_cost': 0.0015049999999999998, 'formatted_total_cost': '$0.001505'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3418, 'output_tokens': 130, 'total_cost': 0.0055725, 'formatted_total_cost': '$0.005573'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3418, 'output_tokens': 130, 'total_cost': 0.0055725, 'formatted_total_cost': '$0.005573'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3483, 'output_tokens': 202, 'total_cost': 0.00637375, 'formatted_total_cost': '$0.006374'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3483, 'output_tokens': 202, 'total_cost': 0.00637375, 'formatted_total_cost': '$0.006374'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3447, 'output_tokens': 171, 'total_cost': 0.00601875, 'formatted_total_cost': '$0.006019'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3447, 'output_tokens': 171, 'total_cost': 0.00601875, 'formatted_total_cost': '$0.006019'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3520, 'output_tokens': 146, 'total_cost': 0.005860000000000001, 'formatted_total_cost': '$0.005860'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3520, 'output_tokens': 146, 'total_cost': 0.005860000000000001, 'formatted_total_cost': '$0.005860'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3449, 'output_tokens': 175, 'total_cost': 0.00606125, 'formatted_total_cost': '$0.006061'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 356, 'output_tokens': 110, 'total_cost': 0.001545, 'formatted_total_cost': '$0.001545'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 356, 'output_tokens': 110, 'total_cost': 0.001545, 'formatted_total_cost': '$0.001545'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3422, 'output_tokens': 149, 'total_cost': 0.0057675, 'formatted_total_cost': '$0.005768'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3422, 'output_tokens': 149, 'total_cost': 0.0057675, 'formatted_total_cost': '$0.005768'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3442, 'output_tokens': 219, 'total_cost': 0.0064925, 'formatted_total_cost': '$0.006493'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3442, 'output_tokens': 219, 'total_cost': 0.0064925, 'formatted_total_cost': '$0.006493'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3426, 'output_tokens': 134, 'total_cost': 0.0056225, 'formatted_total_cost': '$0.005622'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3426, 'output_tokens': 134, 'total_cost': 0.0056225, 'formatted_total_cost': '$0.005622'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3512, 'output_tokens': 166, 'total_cost': 0.00605, 'formatted_total_cost': '$0.006050'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3512, 'output_tokens': 166, 'total_cost': 0.00605, 'formatted_total_cost': '$0.006050'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3256, 'output_tokens': 125, 'total_cost': 0.005320000000000001, 'formatted_total_cost': '$0.005320'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3256, 'output_tokens': 125, 'total_cost': 0.005320000000000001, 'formatted_total_cost': '$0.005320'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 778, 'output_tokens': 94, 'total_cost': 0.0019125000000000001, 'formatted_total_cost': '$0.001913'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3609, 'output_tokens': 347, 'total_cost': 0.007981249999999999, 'formatted_total_cost': '$0.007981'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3609, 'output_tokens': 347, 'total_cost': 0.007981249999999999, 'formatted_total_cost': '$0.007981'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3590, 'output_tokens': 244, 'total_cost': 0.0069275, 'formatted_total_cost': '$0.006927'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3590, 'output_tokens': 244, 'total_cost': 0.0069275, 'formatted_total_cost': '$0.006927'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3541, 'output_tokens': 277, 'total_cost': 0.0071962499999999995, 'formatted_total_cost': '$0.007196'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3541, 'output_tokens': 277, 'total_cost': 0.0071962499999999995, 'formatted_total_cost': '$0.007196'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3749, 'output_tokens': 407, 'total_cost': 0.00875625, 'formatted_total_cost': '$0.008756'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3749, 'output_tokens': 407, 'total_cost': 0.00875625, 'formatted_total_cost': '$0.008756'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3407, 'output_tokens': 440, 'total_cost': 0.00865875, 'formatted_total_cost': '$0.008659'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3407, 'output_tokens': 440, 'total_cost': 0.00865875, 'formatted_total_cost': '$0.008659'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3357, 'output_tokens': 240, 'total_cost': 0.0065962500000000006, 'formatted_total_cost': '$0.006596'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3357, 'output_tokens': 240, 'total_cost': 0.0065962500000000006, 'formatted_total_cost': '$0.006596'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3533, 'output_tokens': 454, 'total_cost': 0.008956249999999999, 'formatted_total_cost': '$0.008956'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3533, 'output_tokens': 454, 'total_cost': 0.008956249999999999, 'formatted_total_cost': '$0.008956'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3554, 'output_tokens': 173, 'total_cost': 0.0061725, 'formatted_total_cost': '$0.006173'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3554, 'output_tokens': 173, 'total_cost': 0.0061725, 'formatted_total_cost': '$0.006173'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3670, 'output_tokens': 285, 'total_cost': 0.0074375000000000005, 'formatted_total_cost': '$0.007438'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3670, 'output_tokens': 285, 'total_cost': 0.0074375000000000005, 'formatted_total_cost': '$0.007438'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3232, 'output_tokens': 188, 'total_cost': 0.00592, 'formatted_total_cost': '$0.005920'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3232, 'output_tokens': 188, 'total_cost': 0.00592, 'formatted_total_cost': '$0.005920'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 518, 'output_tokens': 171, 'total_cost': 0.0023575000000000002, 'formatted_total_cost': '$0.002358'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 76, 'output_tokens': 73, 'total_cost': 0.000825, 'formatted_total_cost': '$0.000825'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 606, 'output_tokens': 79, 'total_cost': 0.0015474999999999998, 'formatted_total_cost': '$0.001547'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3551, 'output_tokens': 185, 'total_cost': 0.00628875, 'formatted_total_cost': '$0.006289'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3551, 'output_tokens': 185, 'total_cost': 0.00628875, 'formatted_total_cost': '$0.006289'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3430, 'output_tokens': 144, 'total_cost': 0.0057275, 'formatted_total_cost': '$0.005727'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3430, 'output_tokens': 144, 'total_cost': 0.0057275, 'formatted_total_cost': '$0.005727'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3531, 'output_tokens': 148, 'total_cost': 0.00589375, 'formatted_total_cost': '$0.005894'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3531, 'output_tokens': 148, 'total_cost': 0.00589375, 'formatted_total_cost': '$0.005894'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3523, 'output_tokens': 148, 'total_cost': 0.00588375, 'formatted_total_cost': '$0.005884'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3523, 'output_tokens': 148, 'total_cost': 0.00588375, 'formatted_total_cost': '$0.005884'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3435, 'output_tokens': 250, 'total_cost': 0.0067937499999999994, 'formatted_total_cost': '$0.006794'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3435, 'output_tokens': 250, 'total_cost': 0.0067937499999999994, 'formatted_total_cost': '$0.006794'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3389, 'output_tokens': 200, 'total_cost': 0.0062362500000000005, 'formatted_total_cost': '$0.006236'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3389, 'output_tokens': 200, 'total_cost': 0.0062362500000000005, 'formatted_total_cost': '$0.006236'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3408, 'output_tokens': 147, 'total_cost': 0.00573, 'formatted_total_cost': '$0.005730'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3408, 'output_tokens': 147, 'total_cost': 0.00573, 'formatted_total_cost': '$0.005730'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3402, 'output_tokens': 187, 'total_cost': 0.0061225, 'formatted_total_cost': '$0.006123'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3402, 'output_tokens': 187, 'total_cost': 0.0061225, 'formatted_total_cost': '$0.006123'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3553, 'output_tokens': 161, 'total_cost': 0.00605125, 'formatted_total_cost': '$0.006051'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3553, 'output_tokens': 161, 'total_cost': 0.00605125, 'formatted_total_cost': '$0.006051'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3281, 'output_tokens': 196, 'total_cost': 0.00606125, 'formatted_total_cost': '$0.006061'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3281, 'output_tokens': 196, 'total_cost': 0.00606125, 'formatted_total_cost': '$0.006061'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 798, 'output_tokens': 117, 'total_cost': 0.0021675, 'formatted_total_cost': '$0.002168'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3334, 'output_tokens': 157, 'total_cost': 0.0057375, 'formatted_total_cost': '$0.005738'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 590, 'output_tokens': 138, 'total_cost': 0.0021175, 'formatted_total_cost': '$0.002118'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 590, 'output_tokens': 138, 'total_cost': 0.0021175, 'formatted_total_cost': '$0.002118'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3425, 'output_tokens': 213, 'total_cost': 0.00641125, 'formatted_total_cost': '$0.006411'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 566, 'output_tokens': 148, 'total_cost': 0.0021875, 'formatted_total_cost': '$0.002188'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 566, 'output_tokens': 148, 'total_cost': 0.0021875, 'formatted_total_cost': '$0.002188'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3475, 'output_tokens': 136, 'total_cost': 0.00570375, 'formatted_total_cost': '$0.005704'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3475, 'output_tokens': 136, 'total_cost': 0.00570375, 'formatted_total_cost': '$0.005704'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3444, 'output_tokens': 156, 'total_cost': 0.0058649999999999996, 'formatted_total_cost': '$0.005865'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 587, 'output_tokens': 119, 'total_cost': 0.0019237500000000001, 'formatted_total_cost': '$0.001924'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 587, 'output_tokens': 119, 'total_cost': 0.0019237500000000001, 'formatted_total_cost': '$0.001924'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3289, 'output_tokens': 204, 'total_cost': 0.00615125, 'formatted_total_cost': '$0.006151'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 542, 'output_tokens': 146, 'total_cost': 0.0021374999999999996, 'formatted_total_cost': '$0.002137'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 542, 'output_tokens': 146, 'total_cost': 0.0021374999999999996, 'formatted_total_cost': '$0.002137'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3476, 'output_tokens': 116, 'total_cost': 0.0055049999999999995, 'formatted_total_cost': '$0.005505'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3476, 'output_tokens': 116, 'total_cost': 0.0055049999999999995, 'formatted_total_cost': '$0.005505'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3339, 'output_tokens': 195, 'total_cost': 0.006123750000000001, 'formatted_total_cost': '$0.006124'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 580, 'output_tokens': 167, 'total_cost': 0.002395, 'formatted_total_cost': '$0.002395'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 580, 'output_tokens': 167, 'total_cost': 0.002395, 'formatted_total_cost': '$0.002395'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3415, 'output_tokens': 183, 'total_cost': 0.00609875, 'formatted_total_cost': '$0.006099'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 578, 'output_tokens': 149, 'total_cost': 0.0022125, 'formatted_total_cost': '$0.002213'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 578, 'output_tokens': 149, 'total_cost': 0.0022125, 'formatted_total_cost': '$0.002213'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3445, 'output_tokens': 144, 'total_cost': 0.0057462500000000005, 'formatted_total_cost': '$0.005746'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 578, 'output_tokens': 170, 'total_cost': 0.0024225, 'formatted_total_cost': '$0.002423'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 578, 'output_tokens': 170, 'total_cost': 0.0024225, 'formatted_total_cost': '$0.002423'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3507, 'output_tokens': 129, 'total_cost': 0.00567375, 'formatted_total_cost': '$0.005674'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 3507, 'output_tokens': 129, 'total_cost': 0.00567375, 'formatted_total_cost': '$0.005674'}, {'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 528, 'output_tokens': 66, 'total_cost': 0.00132, 'formatted_total_cost': '$0.001320'}], [{'model_name': 'openai_gpt-5.1-2025-11-13', 'input_tokens': 6839, 'output_tokens': 5014, 'total_cost': 0.058688750000000005, 'formatted_total_cost': '$0.058689'}]]",False,0,,/home/nayoonkim/LATCH/analyses/results/fig_22_18_openai_gpt-5.1-2025-11-13_result_log.csv,

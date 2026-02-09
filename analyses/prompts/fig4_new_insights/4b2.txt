@@ -1,0 +1,3 @@
+We will be performing a linear regression using AIREADI data from 2023-2025. We will exclude participants with missing study group, missing values in the following variables: photopic log contrast sensitivity od, photopic log contrast sensitivity os, glaucoma diagnosis, cataract diagnosis, diabetic retinopathy diagnosis, AMD diagnosis, retinal vascular occlusion diagnosis. 
+The main predictor will be a study group and covariates are age, diagnosed with glaucoma, diagnosed with cataract, diagnosed with diabetic retinopathy, diagnosed with AMD, retinal vascular occlusion stroke in the eye
+The outcome will be photopic contrast sensitivy defined as higher one among  photopic od log contrast sensitivity or  photopic os log contrast sensitivity.

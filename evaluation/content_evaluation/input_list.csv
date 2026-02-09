@@ -1,0 +1,972 @@
+Question
+"
+We plan to conduct a machine learning analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older and mostly healthy.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"We will use 2011-2014 NHANES data. The study will include people who are young adults, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score <10 was defined as clinically relevant depression and else was not. 
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score was categorized as binary to determine clinically relevant depression and else was not. 
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and eye problems using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and eye problems.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or eye problems.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of eye problems, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is an estimated glomerular filtration rate (eGFR)
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score was categorized in 3 classes, 0-5, 6-10, and 10 or more.
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status. 
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. They will be excluded if they have ever been told they have diabetes, determined by the question 'Has a doctor ever told you that you have diabetes?'.
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as not meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire. The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression.
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"
+We plan to conduct a popular regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants who seem to have bad health and are insane.
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin os Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will diabetic retinopathy, based on severity score ranging from 0 to 10.
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants whose age in years at screening is equal or more than 20, participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"
+We plan to examine serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+Serum albumin (g/dL) will be categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The presence or absence of diabetic retinopathy will be based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will also consider gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who are likely to have diabetes,
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin os Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from couple years in the past. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin os Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was a long time ago, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+" 
+We will plan to do a weighted linear regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do clustering analysis where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"
+We plan to conduct a clustering analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). We will exclude all participants with an eGFR below 90.
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We want to study weight-adjusted-waist (wwi) ratio and kidney disease in NHANES data from 2007-2018.
+We will include participants with diabetes based on standard markers or clinical history.
+The weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The variables include food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do an analysis where variable includes depression, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to perform a statistical analysis that is appropriate from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin os Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do a very popular logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+" 
+We will plan to use NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+Variables in this analysis include weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+Another variable include the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to do a special regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 2 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin os Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"We will use 2011-2014 NHANES data. Include people who are generally healthy.
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"We will use NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"
+We plan to conduct an analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+We will categorize serum albumin (g/dL), into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We plan to conduct a logistic regression analysis to study serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+Serum albumin (g/dL) will be categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and calculate the total score as the outcome.
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as full food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and no food security for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). We will exclude participants who have recorded values for waist circumference (cm).
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin os Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening, categorized as older and younger.
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the three questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"We will use 2100-2200 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"We will use 2011-2014 a special diabetes dataset. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases, mainly  based on gender and race/hispanic origin.
+1. 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2050-2070. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin os Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for things that are necessary to consider.
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if they have complete serum albumin (g/dL) data.
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized in the way that makes sense.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin os Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to do a LASSO regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. Include participants who have missing values of weight (kg), waist circumference (cm).
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl) and fasting plasma glucose (FPG, mmol/L) <7.0 mmol/
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"
+We plan to conduct an analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2200.
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with any signs of diabetes and missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"
+We plan to conduct a linear regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. They will be excluded if ther age when first told the patient had diabets was after 30.
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+Analysis variable include food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from the National Diabetes Data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized properly.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into different groups.
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (3), Several days (2), More than half the days (1), Nearly every day (0), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, while excluding all male participants and any individual who identifies as female, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, they have kidney disease if the related labs are bad and no disease if the labs are good.
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender and other health related things.
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using the Health Census data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We plan to conduct a logistic regression analysis to study the effect of serum albumin (g/dL) using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) but in binary fashion. 
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin os Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated based on common knowledge so that the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if they are really sick and missing a lot of information.
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening where we exclude everyone without missing value, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depressed people based on all the questionaires.
+"
+"
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants whose age at screenining is less than 20 and who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is a continuous variable, the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+" 
+We will plan to do a weighted logistic regression using NHANES data from 2007-2018. We will include adult participants who are medically diagnosed with diabetes or show elevated blood sugar levels. We will exclude younger individuals, those who are pregnant, and anyone with missing physical measurements.
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+Urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"
+We plan to conduct a regression analysis to examine serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will perform a machine learning based method where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+" 
+We will plan to do an analysis using dietary weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status or serum albumini (g/dL) seems a little off.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+Exclude participants who are severely ill as they can skew the results.
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and reported answers to all depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"We will use 2011-2014 NHANES data. The study will include adults with diabetes, who have mental health issues and food security data.
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is clinical depression.
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with did not provide enough information.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"We will use 2011-2014 NHANES data.
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with not enough information in their surverys.
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"
+We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported yes when asked about self-reported doctor diagnosis of diabetes, or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or the use of diabetes medication. 
+We will exclude participants whose age at screening is less than 20, pregnant at the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing sex, race/ethnicity, urine albumin mg/L, or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/hispanic origin information for 4 different cases: 
+1. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is female and race/hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/ethnicity (white and non white), gender, and age at screening (<60 and >=60).
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as extremely high blood sugar.
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who don't have diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do exam weighted logistic regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"We will use 2011-2014 NHANES data. The study will include age at screening >=20, who has diabetes, defined as meeting any of the following: who said ""yes"" or ""borderline"" to self-reported diabetes questionaire, reported taking diabetes medication, fasting plasma glucose (mg/dl) >126
+Exclude participants with missing values in adult food security questionaire and missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is food insecurity level defined baesd on the answer to the adult food security question, categorized as severe food insecurity for participants who reported very low food security or low food security, mild food insecurity for participants who reported marginal food security, and food secure for who reported full food security.
+we will do a rainbow regression where outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for any answers.
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is more than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, categorized as old and young, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We plan to conduct a sensitivity analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into 4 groups abased on how people usually divide things.  
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"
+"
+We plan to conduct a logistic regression analysis to examine the relationship between serum albumin (g/dL) and diabetic retinopathy using NHANES data from the years 2011 to 2020. 
+The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
+Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
+Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as ""borderline"" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
+We will also exclude anyone with non missing data on serum albumin or retinopathy status.
+The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles(%) Q1: <25, Q2: ≥25 and <50, Q3: ≥50 and <75, Q4: ≥75. 
+The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for ""Yes"" and 0 for ""No"".
+We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/hispanic origin, which will be categorized as White, Black, Mexican American, or Other.
+"

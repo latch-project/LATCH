@@ -1,0 +1,5 @@
+We will perform a Cox regression. Include participants who reported yes to a self-reported diabetes question.
+1999-2010 NHANES data will be used. Exclude participants with no self reported diabetes, <18 year old, and months followup examination missing, red cell distribution missing, mortality information missing.
+Predictor is red cell distribution, categorized in quartiles (Q1: <= 25%, Q2: <25 and <=50%, Q3: <50 and <=75%, Q4: >75%) 
+The main outcome is all-cause mortality, with months followup examination serving as the time-to-event variable. 
+Adjust for age at screening, gender, race/Hispanic origin. and hemoglobin.

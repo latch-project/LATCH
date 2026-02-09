@@ -1,0 +1,9 @@
+We will plan to get a weighted prevalence using exam weights from NHANES data from 2001-2008. Include participants who meet any of the diabetes criteria: self-reported diabetes diagnosis is yes, glycohemoglobin (HbA1C) >= 6.5%, or fasting glucoes (mg/dl)>=126. 
+We will exclude participates whose age at screening are equal or less than 20 years old. We will exclude participants who are missing gender, race/Hispanic origin, urine albumin (mg/L), or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+We will get a prevalence of ALB-CKD which is defined as havinig both an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 and urine albumin-to-creatinine ratio (UACR) of 30 mg/g or greater.
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/Hispanic origin information for 4 different cases: 
+1. if gender is female and race/Hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/Hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/Hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/Hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).

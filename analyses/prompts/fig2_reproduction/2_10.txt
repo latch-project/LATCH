@@ -1,0 +1,12 @@
+We will plan to perform a weighted logistic regression using exam weights using NHANES data from 1999-2020.
+Exclude age at screening < 20 years, participants with missing urine albumin (mg/L), or urine creatinine (mg/dL), gender, race/Hispanic origin, age at screening, serum creatinine (mg/dl), neutrophil count, lymphocyte count. Also exclude who had cancer, who were pregnant at the time of the exam.
+Exclude people who don't have diabetes, where diabetes is defined as meeting any of the following: yes to having self-reported diabetes, the use of insulin, use of other diabetes drugs, fasting glucose (mmol/l) ≥ 7.0, glycosylated hemoglobin A1c (HbA1c) (%) > 6.5 
+Our predictor is neutrophil count / lymphocyte count, categorized in tertiles(%) T1: <=33, T2: >33 and <=66, T3: >66
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/Hispanic origin information for 4 different cases: 
+1. if gender is female and race/Hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/Hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/Hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/Hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+adjust the analysis for age, race/Hispanic origin, and gender.

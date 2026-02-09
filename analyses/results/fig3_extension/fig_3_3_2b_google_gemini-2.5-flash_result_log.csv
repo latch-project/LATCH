@@ -1,0 +1,428 @@
+Title,Schema,Question,Structured Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log
+75813,aireadi,"We want to do a logistic regression analysis to study the association between hemoglobin (g/dl) and diabetic retinopathy using AIREADI data.
+Hemoglobin (g/dl) will be categegorized as tertiles(%) T1: <=33, T2: >33 and <=66, T3: >66 and the outcome will be diabetic retinopathy categorized as 0 for no retinopathy and 1 for any retinopathy.
+We will use 2023-2025 data and exclude people with missing data on hemoglobin (g/dl) and missing diabetic retinopathy status and who didn't say ""Yes"" to a question on being diagnosed with diabetes.
+We will adjust the analysis for other factors like age.","Analysis Type: logistic regression
+
+Dataset: AIREADI
+
+Period of Interest: 2023-2025
+
+Inclusion Criteria:
+- diagnosed with diabetes = Yes
+
+Exclusion Criteria:
+- missing hemoglobin (g/dl)
+- missing diabetic retinopathy status
+
+Covariates:
+- age
+
+Predictor:
+- hemoglobin (g/dl) categorized as tertiles:
+  T1: <=33
+  T2: >33 and <=66
+  T3: >66
+
+Outcome:
+- diabetic retinopathy mapped as:
+  0: no retinopathy
+  1: any retinopathy","{'dataset': 'aireadi', 'inclusion': [{'keyword': 'diagnosed with diabetes', 'derived': False, 'condition': '=Yes', 'table': 'final_master_table', 'column': 'type_ii_diabetes', 'examples': ['No', 'Yes']}], 'exclusion': [{'keyword': 'hemoglobin (g/dl)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'hemoglobin_g_dl', 'examples': ['7.8', '9.5', '9.6', '9.8', '10.5']}, {'keyword': 'diabetic retinopathy status', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'examples': ['No', 'Yes']}], 'covariates': [{'keyword': 'age', 'derived': False, 'table': 'final_master_table', 'column': 'age', 'examples': ['40', '42', '43', '44', '51']}], 'predictor': [{'keyword': 'hemoglobin (g/dl)', 'derived': True, 'depends_on': [{'keyword': 'hemoglobin (g/dl)', 'derived': False, 'table': 'final_master_table', 'column': 'hemoglobin_g_dl', 'examples': ['7.8', '9.5', '9.6', '9.8', '10.5']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'tertiles', 'num_bins': 3, 'labels': ['T1: <=33', 'T2: >33 and <=66', 'T3: >66']}}], 'table': 'final_master_table', 'column': 'hemoglobin_g_dl', 'examples': ['7.8', '9.5', '9.6', '9.8', '10.5']}], 'outcome': [{'keyword': 'diabetic retinopathy', 'derived': True, 'depends_on': [{'keyword': 'diabetic retinopathy status', 'derived': False, 'table': 'final_master_table', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'examples': ['No', 'Yes']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['no retinopathy', 'any retinopathy']}}]}]}","{'analysis_type': 'logistic regression', 'dataset': 'aireadi', 'period_of_interest': '2023-2025', 'inclusion': [{'keyword': 'diagnosed with diabetes', 'derived': False, 'condition': '=Yes', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'type_ii_diabetes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}], 'exclusion': [{'keyword': 'hemoglobin (g/dl)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'hemoglobin_g_dl', 'example_values': ['16.7', '12.4', '14.7', '13.2', '16.3', '13.4', '10.6', '15.5', '9.5', '7.8', '13.9', '12.5', '9.8', '14.8', '12.8', '16.0', '18.0', '12.7', '10.5', '9.6']}]}, {'keyword': 'diabetic retinopathy status', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}], 'covariates': [{'keyword': 'age', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.participants', 'column': 'age', 'example_values': ['87', '71', '68', '51', '70', '80', '52', '84', '92', '69', '60', '59', '65', '73', '44', '42', '88', '82', '40', '43']}]}], 'predictor': [{'keyword': 'hemoglobin (g/dl)', 'derived': True, 'depends_on': [{'keyword': 'hemoglobin (g/dl)', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'hemoglobin_g_dl', 'example_values': ['16.7', '12.4', '14.7', '13.2', '16.3', '13.4', '10.6', '15.5', '9.5', '7.8', '13.9', '12.5', '9.8', '14.8', '12.8', '16.0', '18.0', '12.7', '10.5', '9.6']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'tertiles', 'num_bins': 3, 'labels': ['T1: <=33', 'T2: >33 and <=66', 'T3: >66']}}], 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'hemoglobin_g_dl', 'example_values': ['16.7', '12.4', '14.7', '13.2', '16.3', '13.4', '10.6', '15.5', '9.5', '7.8', '13.9', '12.5', '9.8', '14.8', '12.8', '16.0', '18.0', '12.7', '10.5', '9.6']}]}], 'outcome': [{'keyword': 'diabetic retinopathy', 'derived': True, 'depends_on': [{'keyword': 'diabetic retinopathy status', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['no retinopathy', 'any retinopathy']}}]}]}",,"-- TEMP TABLE FOR ""diagnosed with diabetes""
+DROP TABLE IF EXISTS temp_master_type_ii_diabetes;
+CREATE TEMP TABLE temp_master_type_ii_diabetes AS
+SELECT person_id, ""type_ii_diabetes"" AS ""type_ii_diabetes""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_type_ii_diabetes ON temp_master_type_ii_diabetes (person_id);
+
+-- TEMP TABLE FOR ""hemoglobin (g/dl)"", ""hemoglobin (g/dl)"", ""hemoglobin (g/dl)""
+DROP TABLE IF EXISTS temp_master_hemoglobin_g_dl;
+CREATE TEMP TABLE temp_master_hemoglobin_g_dl AS
+SELECT person_id, ""hemoglobin_g_dl"" AS ""hemoglobin_g_dl""
+FROM aireadi.measurement;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_hemoglobin_g_dl ON temp_master_hemoglobin_g_dl (person_id);
+
+-- TEMP TABLE FOR ""diabetic retinopathy status"", ""diabetic retinopathy status""
+DROP TABLE IF EXISTS temp_master_diabetic_retinopathy_in_one_or_both_eyes;
+CREATE TEMP TABLE temp_master_diabetic_retinopathy_in_one_or_both_eyes AS
+SELECT person_id, ""diabetic_retinopathy_in_one_or_both_eyes"" AS ""diabetic_retinopathy_in_one_or_both_eyes""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_diabetic_retinopathy_in_one_or_both_eyes ON temp_master_diabetic_retinopathy_in_one_or_both_eyes (person_id);
+
+-- TEMP TABLE FOR ""age""
+DROP TABLE IF EXISTS temp_master_age;
+CREATE TEMP TABLE temp_master_age AS
+SELECT person_id, ""age"" AS ""age""
+FROM aireadi.participants;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age ON temp_master_age (person_id);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT person_id FROM temp_master_type_ii_diabetes
+UNION
+SELECT person_id FROM temp_master_hemoglobin_g_dl
+UNION
+SELECT person_id FROM temp_master_diabetic_retinopathy_in_one_or_both_eyes
+UNION
+SELECT person_id FROM temp_master_age;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_person_id ON temp_all_ids (person_id);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.person_id,
+    t0.""type_ii_diabetes"",
+    t1.""hemoglobin_g_dl"",
+    t2.""diabetic_retinopathy_in_one_or_both_eyes"",
+    t3.""age""
+FROM temp_all_ids a
+LEFT JOIN temp_master_type_ii_diabetes t0 ON a.person_id = t0.person_id 
+LEFT JOIN temp_master_hemoglobin_g_dl t1 ON a.person_id = t1.person_id 
+LEFT JOIN temp_master_diabetic_retinopathy_in_one_or_both_eyes t2 ON a.person_id = t2.person_id 
+LEFT JOIN temp_master_age t3 ON a.person_id = t3.person_id;
+
+CREATE INDEX idx_final_master_person_id    
+    ON final_master_table (person_id);
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Includes all patients diagnosed with diabetes (type_ii_diabetes = 'Yes')
+CREATE TEMP TABLE temp_inclusion AS
+SELECT ""person_id""
+FROM final_master_table
+WHERE ""type_ii_diabetes"" = 'Yes';
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude patients with missing hemoglobin (g/dl)
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""person_id""
+FROM temp_inclusion i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""hemoglobin_g_dl"" IS NOT NULL;
+
+-- STEP 2.2: Exclude patients with missing diabetic retinopathy status
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""diabetic_retinopathy_in_one_or_both_eyes"" IS NOT NULL;
+
+-- ========== STEP 3: Cohort ==========
+
+-- The final temp table in the exclusion sequence becomes temp_cohort.
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""person_id""
+FROM temp_exclusion_step2;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Age
+-- Extract age for the cohort
+CREATE TEMP TABLE temp_age AS
+SELECT c.""person_id"", f.""age""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.2 Hemoglobin (g/dl)
+-- Extract raw hemoglobin values for the cohort
+CREATE TEMP TABLE temp_hemoglobin_raw AS
+SELECT c.""person_id"", f.""hemoglobin_g_dl""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- Compute tertile cutoffs for hemoglobin within the cohort
+CREATE TEMP TABLE temp_hemoglobin_cutoffs AS
+SELECT
+  PERCENTILE_CONT(0.333333) WITHIN GROUP (ORDER BY ""hemoglobin_g_dl"") AS tertile1,
+  PERCENTILE_CONT(0.666667) WITHIN GROUP (ORDER BY ""hemoglobin_g_dl"") AS tertile2
+FROM temp_hemoglobin_raw;
+
+-- Assign hemoglobin tertile groups
+CREATE TEMP TABLE temp_hemoglobin_tertiles AS
+SELECT ""person_id"",
+  CASE
+    WHEN ""hemoglobin_g_dl"" IS NULL THEN NULL
+    WHEN ""hemoglobin_g_dl"" <= (SELECT tertile1 FROM temp_hemoglobin_cutoffs) THEN 'T1: <=33'
+    WHEN ""hemoglobin_g_dl"" <= (SELECT tertile2 FROM temp_hemoglobin_cutoffs) THEN 'T2: >33 and <=66'
+    ELSE 'T3: >66'
+  END AS ""hemoglobin_g_dl""
+FROM temp_hemoglobin_raw;
+
+-- 4.3 Diabetic Retinopathy
+-- Map diabetic retinopathy status to binary outcome
+CREATE TEMP TABLE temp_diabetic_retinopathy AS
+SELECT c.""person_id"",
+  CASE f.""diabetic_retinopathy_in_one_or_both_eyes""
+    WHEN 'No' THEN 0
+    WHEN 'Yes' THEN 1
+    ELSE NULL
+  END AS ""diabetic_retinopathy""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- ========== STEP 5: Final Table ==========
+CREATE TEMP TABLE temp_final_table AS
+SELECT
+  c.""person_id"",
+  age_var.""age"",
+  hemo_var.""hemoglobin_g_dl"",
+  dr_var.""diabetic_retinopathy""
+FROM temp_cohort c
+JOIN temp_age age_var ON c.""person_id"" = age_var.""person_id""
+JOIN temp_hemoglobin_tertiles hemo_var ON c.""person_id"" = hemo_var.""person_id""
+JOIN temp_diabetic_retinopathy dr_var ON c.""person_id"" = dr_var.""person_id"";
+
+-- ========== STEP 6: View Output ==========
+SELECT * FROM temp_final_table;","   step_num                                                                                step  remaining_after_step  excluded_at_step
+0         0  STEP 1.1: Includes all patients diagnosed with diabetes (type_ii_diabetes = 'Yes')                   899               NaN
+1         1                           STEP 2.1: Exclude patients with missing hemoglobin (g/dl)                   872              27.0
+2         2                 STEP 2.2: Exclude patients with missing diabetic retinopathy status                   861              11.0
+3         3                 The final temp table in the exclusion sequence becomes temp_cohort.                   861               0.0
+4         4                                                          Extract age for the cohort                   861               0.0
+5         5                                        Extract raw hemoglobin values for the cohort                   861               0.0
+6         6                            Compute tertile cutoffs for hemoglobin within the cohort                     1             860.0
+7         7                                                    Assign hemoglobin tertile groups                   861            -860.0
+8         8                                   Map diabetic retinopathy status to binary outcome                   861               0.0
+9         9                                           ========== STEP 5: Final Table ==========                   861               0.0","(861, 4)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""person_id"")
+    outcome_vars <- c(""diabetic_retinopathy"")
+    
+    cohort <- df
+
+
+    outcome_roles <- c()
+    outcome_roles[""diabetic_retinopathy""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    x_raw <- df[[outcome_var]]
+    x_chr <- trimws(tolower(as.character(x_raw)))
+
+    none_tokens <- c(""none"", ""nan"", ""na"", """", ""null"", ""nil"", ""missing"")
+    x_chr[x_chr %in% none_tokens] <- NA_character_
+
+    y <- rep(NA_integer_, length(x_chr))
+
+    y[x_chr %in% c(""yes"", ""y"", ""true"", ""t"")]  <- 1L
+    y[x_chr %in% c(""no"",  ""n"", ""false"", ""f"")] <- 0L
+
+    x_num <- suppressWarnings(as.numeric(x_chr))
+    y[is.na(y) & !is.na(x_num) & x_num == 1] <- 1L
+    y[is.na(y) & !is.na(x_num) & x_num == 0] <- 0L
+
+    idx <- is.na(y) & !is.na(x_chr)
+    if (any(idx)) {
+    vals <- sort(unique(x_chr[idx]))
+
+    if (length(vals) != 2) {
+        stop(sprintf(
+        ""Outcome '%s' must have exactly 2 non-missing classes after excluding none. Found: %s"",
+        outcome_var, paste(vals, collapse = "", "")
+        ))
+    }
+
+    tab <- table(x_chr[idx])
+    minority <- names(tab)[which.min(tab)]
+    majority <- setdiff(vals, minority)
+
+    cat(sprintf(
+        ""Outcome '%s' recoding: 1 = %s (minority)  0 = %s (majority)"",
+        outcome_var, minority, majority
+    ))
+
+    y[idx] <- as.integer(x_chr[idx] == minority)
+    }
+
+    df[[outcome_var]] <- y
+
+    # Must contain both 0 and 1 somewhere (plus NA allowed)
+    u <- sort(unique(df[[outcome_var]][!is.na(df[[outcome_var]])]))
+    if (!(length(u) == 2 && all(u == c(0, 1)))) {
+    stop(sprintf(
+        ""After recoding, '%s' must contain both 0 and 1 (plus NA for none). Found: %s"",
+        outcome_var,
+        ifelse(length(u) == 0, ""<no non-missing values>"", paste(u, collapse = "", ""))
+    ))
+    }
+
+    formula <- as.formula(paste0(outcome_var, "" ~ "", paste(predictor_vars, collapse = "" + "")))
+                
+    
+        
+    
+    model <- glm(formula,
+                data = df,
+                family =  binomial(link = ""logit""))
+            
+    
+    result_table <- tidy(model, conf.int = TRUE, exponentiate = TRUE) %>%
+        select(term, estimate, p.value, conf.low, conf.high)
+
+            
+    ","[{'variable': 'person_id', 'category': 'identifier', 'n_unique': 861, 'na_count': 0, 'summary': 'Total rows = 861'}, {'variable': 'age', 'category': 'numerical', 'n_unique': 52, 'na_count': 0, 'summary': 'mean = 61.914, sd = 10.887'}, {'variable': 'hemoglobin_g_dl', 'category': 'categorical', 'n_unique': 3, 'na_count': 0, 'summary': 'T1: <=33: 34.4%; T2: >33 and <=66: 33.7%; T3: >66: 31.9%'}, {'variable': 'diabetic_retinopathy', 'category': 'outcome', 'n_unique': 2, 'na_count': 0, 'summary': '0: 89.1%; 1: 10.9%'}]","[{'term': '(Intercept)', 'estimate': 0.08064546264857247, 'p.value': 0.0001480938655779385, 'conf.low': 0.02139780943766638, 'conf.high': 0.2896602009145371}, {'term': 'age', 'estimate': 1.0115053286452966, 'p.value': 0.25974181587929296, 'conf.low': 0.991657903092812, 'conf.high': 1.0319813724294025}, {'term': 'hemoglobin_g_dlT2: >33 and <=66', 'estimate': 0.4769112194475932, 'p.value': 0.008538089791219297, 'conf.low': 0.270138080126853, 'conf.high': 0.8189454730042561}, {'term': 'hemoglobin_g_dlT3: >66', 'estimate': 0.769126359814443, 'p.value': 0.3002385069102221, 'conf.low': 0.4650348559242877, 'conf.high': 1.2600476280918327}]",,,,logistic regression,2023-2025,"[[2023, 2025]]",google_gemini-2.5-flash,"Review Required
+
+The analysis plan is mostly clear, but there is an ambiguity in the inclusion/exclusion criteria regarding diabetes diagnosis.
+
+Please clarify the following:
+*   **Inclusion/Exclusion Criteria:** You stated ""exclude people... who didn't say 'Yes' to a question on being diagnosed with diabetes."" This phrasing is a bit indirect. Could you please confirm if you intend to **include only participants who have been diagnosed with diabetes**?",[],,51.47102,"[[{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 578, 'output_tokens': 92, 'total_cost': 0.0004034, 'formatted_total_cost': '$0.000403'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 1785, 'output_tokens': 137, 'total_cost': 0.0008779999999999999, 'formatted_total_cost': '$0.000878'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 2532, 'output_tokens': 507, 'total_cost': 0.0020271, 'formatted_total_cost': '$0.002027'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4831, 'output_tokens': 159, 'total_cost': 0.0018468, 'formatted_total_cost': '$0.001847'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4831, 'output_tokens': 159, 'total_cost': 0.0018468, 'formatted_total_cost': '$0.001847'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 283, 'output_tokens': 3, 'total_cost': 9.24e-05, 'formatted_total_cost': '$0.000092'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5846, 'output_tokens': 90, 'total_cost': 0.0019787999999999997, 'formatted_total_cost': '$0.001979'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5846, 'output_tokens': 90, 'total_cost': 0.0019787999999999997, 'formatted_total_cost': '$0.001979'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 237, 'output_tokens': 3, 'total_cost': 7.86e-05, 'formatted_total_cost': '$0.000079'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6313, 'output_tokens': 158, 'total_cost': 0.0022889, 'formatted_total_cost': '$0.002289'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6313, 'output_tokens': 158, 'total_cost': 0.0022889, 'formatted_total_cost': '$0.002289'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 328, 'output_tokens': 3, 'total_cost': 0.0001059, 'formatted_total_cost': '$0.000106'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3448, 'output_tokens': 59, 'total_cost': 0.0011819, 'formatted_total_cost': '$0.001182'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3448, 'output_tokens': 59, 'total_cost': 0.0011819, 'formatted_total_cost': '$0.001182'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 226, 'output_tokens': 3, 'total_cost': 7.53e-05, 'formatted_total_cost': '$0.000075'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6319, 'output_tokens': 1002, 'total_cost': 0.0044007000000000004, 'formatted_total_cost': '$0.004401'}]]",False,0,,,

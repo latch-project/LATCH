@@ -1,0 +1,8 @@
+This study aims to investigate the association between the Weight-Adjusted Waist Index (WWI) and all-cause mortality using a weighted Cox proportional hazards regression model we will be using exam weights.
+The analysis will utilize NHANES data collected between 2007-2008.
+The study population will include participants whose age in years at screening is 20 years and older who have either diabetes or prediabetes. 
+Diabetes is defined as meeting any of the following conditions: doctor told them they have diabetes, taking insulin now, take diabetic pills to lower blood sugar, a fasting blood glucose (FBG) (mg/dL) of 126 mg/dL or higher, or a glycohemoglobin (HbA1c) (%) of 6.5 or greater. 
+Prediabetes is defined as meeting all of the following criteria: ever told have prediabetes, an fasting blood glucose (FBG) (mg/dL) level between 100 and 126 mg/dL, and glycohemoglobin (HbA1c) (%) equal or more than 5.7 and less than 6.5%. 
+Individuals will be excluded if they are missing the necessary data to calculate the WWI, which are waist circumference (cm) and  weight (kg) or mortality status or  months followup examination
+The primary predictor for this analysis is the Weight-Adjusted Waist Index (WWI), calculated as waist circumference (cm) divided by the square root of weight (kg). This index will be categorized into quartiles  Q1: <=25%, Q2: >25 and <=50, Q3: >50 and <=75%, Q4: >75%.
+The outcome months followup examination and mortality data. The model will be adjusted for several covariates, including age in years at screening, gender, and race/Hispanic origin (categorized as Mexican American, Other Hispanic, Non-Hispanic White, Non-Hispanic Black, and Other race).

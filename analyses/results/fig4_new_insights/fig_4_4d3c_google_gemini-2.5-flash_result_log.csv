@@ -1,0 +1,625 @@
+Title,Schema,Question,Structured Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log
+84084,aireadi,"Perform a mediation analysis on AIREADI data from 2023-2025. Exclude participants who have missing study group, and missing the following vision metrics: photopic logmar od, photopic logmar os, retinal nerve fiber layer average, glaucoma diagnosis, cataract diagnosis, diabetic retinopathy diagnosis, AMD diagnosis, retinal vascular occlusion diagnosis.
+The mediator is retinal nerve fiber layer average and outcome will be day vision defined as lower one among photopic logmar od or photopic logmar os, and then do reverse of this by adding minus sign. The predictor is study group. Consider other variables including age, diagnosed with glaucoma, diagnosed with cataract, diagnosed with diabetic retinopathy, diagnosed with AMD, retinal_vascular_occlusion_stroke_in_the_eye.","Analysis Type: mediation analysis
+
+Dataset: AIREADI
+
+Period of Interest: 2023-2025
+
+Inclusion Criteria:
+None
+
+Exclusion Criteria:
+- missing study group
+- missing photopic logmar od
+- missing photopic logmar os
+- missing retinal nerve fiber layer average
+- missing glaucoma diagnosis
+- missing cataract diagnosis
+- missing diabetic retinopathy diagnosis
+- missing AMD diagnosis
+- missing retinal vascular occlusion diagnosis
+
+Covariates:
+- age
+- diagnosed with glaucoma
+- diagnosed with cataract
+- diagnosed with diabetic retinopathy
+- diagnosed with AMD
+- retinal_vascular_occlusion_stroke_in_the_eye
+
+Predictor:
+- study group
+
+Mediator:
+- retinal nerve fiber layer average
+
+Outcome:
+- day vision calculated as:
+  -min(photopic logmar od, photopic logmar os)","{'dataset': 'AIREADI', 'inclusion': [], 'exclusion': [{'keyword': 'study group', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'study_group', 'examples': ['healthy', 'insulin_dependent', 'oral_medication_and_or_non_insulin_injectable_medication_controlled', 'pre_diabetes_lifestyle_controlled']}, {'keyword': 'photopic logmar od', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'photopic_logmar_od_score', 'examples': ['-0.24', '-0.18', '-0.16', '-0.08', '0.0']}, {'keyword': 'photopic logmar os', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'photopic_logmar_os_score', 'examples': ['-0.24', '-0.18', '-0.16', '-0.08', '0.0']}, {'keyword': 'retinal nerve fiber layer average', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'retinal_nerve_fiber_layer_rnfl_average_micrometer', 'examples': ['26.5024938583374', '27.76221227645874', '29.203872871398925', '30.08820337157457', '30.55916690826416']}, {'keyword': 'glaucoma diagnosis', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'glaucoma_in_one_or_both_eyes', 'examples': ['No', 'Yes']}, {'keyword': 'cataract diagnosis', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cataracts_in_one_or_both_eyes', 'examples': ['No', 'Yes']}, {'keyword': 'diabetic retinopathy diagnosis', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'examples': ['No', 'Yes']}, {'keyword': 'amd diagnosis', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'age_related_macular_degeneration_amd_in_one_or_both', 'examples': ['No', 'Yes']}, {'keyword': 'retinal vascular occlusion diagnosis', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'retinal_vascular_occlusion_stroke_in_the_eye', 'examples': ['No', 'Yes']}], 'covariates': [{'keyword': 'age', 'derived': False, 'table': 'final_master_table', 'column': 'age', 'examples': ['40', '42', '43', '44', '51']}, {'keyword': 'diagnosed with glaucoma', 'derived': False, 'table': 'final_master_table', 'column': 'glaucoma_in_one_or_both_eyes', 'examples': ['No', 'Yes']}, {'keyword': 'diagnosed with cataract', 'derived': False, 'table': 'final_master_table', 'column': 'cataracts_in_one_or_both_eyes', 'examples': ['No', 'Yes']}, {'keyword': 'diagnosed with diabetic retinopathy', 'derived': False, 'table': 'final_master_table', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'examples': ['No', 'Yes']}, {'keyword': 'diagnosed with amd', 'derived': False, 'table': 'final_master_table', 'column': 'age_related_macular_degeneration_amd_in_one_or_both', 'examples': ['No', 'Yes']}, {'keyword': 'retinal_vascular_occlusion_stroke_in_the_eye', 'derived': False, 'table': 'final_master_table', 'column': 'retinal_vascular_occlusion_stroke_in_the_eye', 'examples': ['No', 'Yes']}], 'predictor': [{'keyword': 'study group', 'derived': False, 'table': 'final_master_table', 'column': 'study_group', 'examples': ['healthy', 'insulin_dependent', 'oral_medication_and_or_non_insulin_injectable_medication_controlled', 'pre_diabetes_lifestyle_controlled']}], 'mediator': [{'keyword': 'retinal nerve fiber layer average', 'derived': False, 'table': 'final_master_table', 'column': 'retinal_nerve_fiber_layer_rnfl_average_micrometer', 'examples': ['26.5024938583374', '27.76221227645874', '29.203872871398925', '30.08820337157457', '30.55916690826416']}], 'outcome': [{'keyword': 'day vision', 'derived': True, 'depends_on': [{'keyword': 'photopic logmar od', 'derived': False, 'table': 'final_master_table', 'column': 'photopic_logmar_od_score', 'examples': ['-0.24', '-0.18', '-0.16', '-0.08', '0.0']}, {'keyword': 'photopic logmar os', 'derived': False, 'table': 'final_master_table', 'column': 'photopic_logmar_os_score', 'examples': ['-0.24', '-0.18', '-0.16', '-0.08', '0.0']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'day vision = -min(photopic logmar od, photopic logmar os)', 'output': 'day vision'}}]}]}","{'analysis_type': 'mediation analysis', 'dataset': 'AIREADI', 'period_of_interest': '2023-2025', 'inclusion': [], 'exclusion': [{'keyword': 'study group', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.participants', 'column': 'study_group', 'example_values': ['healthy', 'pre_diabetes_lifestyle_controlled', 'insulin_dependent', 'oral_medication_and_or_non_insulin_injectable_medication_controlled', '', '', '', '', '', '']}]}, {'keyword': 'photopic logmar od', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'photopic_logmar_od_score', 'example_values': ['0.0', '-0.16', '0.62', '1.26', '0.24', '0.4', '0.26', '-0.24', '-0.18', '1.4', '0.18', '0.14', '0.36', '0.78', '0.08', '0.88', '-0.08', '0.5', '0.6', '1.7']}]}, {'keyword': 'photopic logmar os', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'photopic_logmar_os_score', 'example_values': ['0.0', '0.9', '-0.16', '1.28', '0.62', '0.24', '0.4', '1.32', '0.26', '-0.24', '-0.18', '1.4', '0.14', '0.18', '0.36', '0.64', '0.78', '0.08', '-0.08', '0.5']}]}, {'keyword': 'retinal nerve fiber layer average', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.retinal_layer_thickness', 'column': 'retinal_nerve_fiber_layer_rnfl_average_micrometer', 'example_values': ['32.69729928970337', '41.075900582717146', '34.16330541914061', '32.26702985763549', '34.68316850662232', '30.55916690826416', '42.36691961288452', '33.44075117111206', '36.22478981018066', '34.050487212391154', '41.8274134423555', '35.68912820816039', '27.76221227645874', '26.5024938583374', '39.990172032122864', '32.055215263366705', '34.29167226334365', '30.08820337157457', '29.203872871398925', '38.757586479187005']}]}, {'keyword': 'glaucoma diagnosis', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'glaucoma_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'cataract diagnosis', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'cataracts_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'diabetic retinopathy diagnosis', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'amd diagnosis', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'age_related_macular_degeneration_amd_in_one_or_both', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'retinal vascular occlusion diagnosis', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'retinal_vascular_occlusion_stroke_in_the_eye', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}], 'covariates': [{'keyword': 'age', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.participants', 'column': 'age', 'example_values': ['87', '71', '68', '51', '70', '80', '52', '84', '92', '69', '60', '59', '65', '73', '44', '42', '88', '82', '40', '43']}]}, {'keyword': 'diagnosed with glaucoma', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'glaucoma_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'diagnosed with cataract', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'cataracts_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'diagnosed with diabetic retinopathy', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'diagnosed with amd', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'age_related_macular_degeneration_amd_in_one_or_both', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'retinal_vascular_occlusion_stroke_in_the_eye', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'retinal_vascular_occlusion_stroke_in_the_eye', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}], 'predictor': [{'keyword': 'study group', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.participants', 'column': 'study_group', 'example_values': ['healthy', 'pre_diabetes_lifestyle_controlled', 'insulin_dependent', 'oral_medication_and_or_non_insulin_injectable_medication_controlled', '', '', '', '', '', '']}]}], 'mediator': [{'keyword': 'retinal nerve fiber layer average', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.retinal_layer_thickness', 'column': 'retinal_nerve_fiber_layer_rnfl_average_micrometer', 'example_values': ['32.69729928970337', '41.075900582717146', '34.16330541914061', '32.26702985763549', '34.68316850662232', '30.55916690826416', '42.36691961288452', '33.44075117111206', '36.22478981018066', '34.050487212391154', '41.8274134423555', '35.68912820816039', '27.76221227645874', '26.5024938583374', '39.990172032122864', '32.055215263366705', '34.29167226334365', '30.08820337157457', '29.203872871398925', '38.757586479187005']}]}], 'outcome': [{'keyword': 'day vision', 'derived': True, 'depends_on': [{'keyword': 'photopic logmar od', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'photopic_logmar_od_score', 'example_values': ['0.0', '-0.16', '0.62', '1.26', '0.24', '0.4', '0.26', '-0.24', '-0.18', '1.4', '0.18', '0.14', '0.36', '0.78', '0.08', '0.88', '-0.08', '0.5', '0.6', '1.7']}]}, {'keyword': 'photopic logmar os', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'photopic_logmar_os_score', 'example_values': ['0.0', '0.9', '-0.16', '1.28', '0.62', '0.24', '0.4', '1.32', '0.26', '-0.24', '-0.18', '1.4', '0.14', '0.18', '0.36', '0.64', '0.78', '0.08', '-0.08', '0.5']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'day vision = -min(photopic logmar od, photopic logmar os)', 'output': 'day vision'}}]}]}",,"-- TEMP TABLE FOR ""study group"", ""study group""
+DROP TABLE IF EXISTS temp_master_study_group;
+CREATE TEMP TABLE temp_master_study_group AS
+SELECT person_id, ""study_group"" AS ""study_group""
+FROM aireadi.participants;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_study_group ON temp_master_study_group (person_id);
+
+-- TEMP TABLE FOR ""photopic logmar od"", ""photopic logmar od""
+DROP TABLE IF EXISTS temp_master_photopic_logmar_od_score;
+CREATE TEMP TABLE temp_master_photopic_logmar_od_score AS
+SELECT person_id, ""photopic_logmar_od_score"" AS ""photopic_logmar_od_score""
+FROM aireadi.measurement;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_photopic_logmar_od_score ON temp_master_photopic_logmar_od_score (person_id);
+
+-- TEMP TABLE FOR ""photopic logmar os"", ""photopic logmar os""
+DROP TABLE IF EXISTS temp_master_photopic_logmar_os_score;
+CREATE TEMP TABLE temp_master_photopic_logmar_os_score AS
+SELECT person_id, ""photopic_logmar_os_score"" AS ""photopic_logmar_os_score""
+FROM aireadi.measurement;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_photopic_logmar_os_score ON temp_master_photopic_logmar_os_score (person_id);
+
+-- TEMP TABLE FOR ""retinal nerve fiber layer average"", ""retinal nerve fiber layer average""
+DROP TABLE IF EXISTS temp_master_retinal_nerve_fiber_layer_rnfl_average_micrometer;
+CREATE TEMP TABLE temp_master_retinal_nerve_fiber_layer_rnfl_average_micrometer AS
+SELECT person_id, ""retinal_nerve_fiber_layer_rnfl_average_micrometer"" AS ""retinal_nerve_fiber_layer_rnfl_average_micrometer""
+FROM aireadi.retinal_layer_thickness;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_retinal_nerve_fiber_layer_rnfl_average_micrometer ON temp_master_retinal_nerve_fiber_layer_rnfl_average_micrometer (person_id);
+
+-- TEMP TABLE FOR ""diagnosed with glaucoma"", ""glaucoma diagnosis""
+DROP TABLE IF EXISTS temp_master_glaucoma_in_one_or_both_eyes;
+CREATE TEMP TABLE temp_master_glaucoma_in_one_or_both_eyes AS
+SELECT person_id, ""glaucoma_in_one_or_both_eyes"" AS ""glaucoma_in_one_or_both_eyes""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_glaucoma_in_one_or_both_eyes ON temp_master_glaucoma_in_one_or_both_eyes (person_id);
+
+-- TEMP TABLE FOR ""cataract diagnosis"", ""diagnosed with cataract""
+DROP TABLE IF EXISTS temp_master_cataracts_in_one_or_both_eyes;
+CREATE TEMP TABLE temp_master_cataracts_in_one_or_both_eyes AS
+SELECT person_id, ""cataracts_in_one_or_both_eyes"" AS ""cataracts_in_one_or_both_eyes""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cataracts_in_one_or_both_eyes ON temp_master_cataracts_in_one_or_both_eyes (person_id);
+
+-- TEMP TABLE FOR ""diabetic retinopathy diagnosis"", ""diagnosed with diabetic retinopathy""
+DROP TABLE IF EXISTS temp_master_diabetic_retinopathy_in_one_or_both_eyes;
+CREATE TEMP TABLE temp_master_diabetic_retinopathy_in_one_or_both_eyes AS
+SELECT person_id, ""diabetic_retinopathy_in_one_or_both_eyes"" AS ""diabetic_retinopathy_in_one_or_both_eyes""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_diabetic_retinopathy_in_one_or_both_eyes ON temp_master_diabetic_retinopathy_in_one_or_both_eyes (person_id);
+
+-- TEMP TABLE FOR ""amd diagnosis"", ""diagnosed with amd""
+DROP TABLE IF EXISTS temp_master_age_related_macular_degeneration_amd_in_one_or_both;
+CREATE TEMP TABLE temp_master_age_related_macular_degeneration_amd_in_one_or_both AS
+SELECT person_id, ""age_related_macular_degeneration_amd_in_one_or_both"" AS ""age_related_macular_degeneration_amd_in_one_or_both""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_related_macular_degeneration_amd_in_one_or_both ON temp_master_age_related_macular_degeneration_amd_in_one_or_both (person_id);
+
+-- TEMP TABLE FOR ""retinal vascular occlusion diagnosis"", ""retinal_vascular_occlusion_stroke_in_the_eye""
+DROP TABLE IF EXISTS temp_master_retinal_vascular_occlusion_stroke_in_the_eye;
+CREATE TEMP TABLE temp_master_retinal_vascular_occlusion_stroke_in_the_eye AS
+SELECT person_id, ""retinal_vascular_occlusion_stroke_in_the_eye"" AS ""retinal_vascular_occlusion_stroke_in_the_eye""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_retinal_vascular_occlusion_stroke_in_the_eye ON temp_master_retinal_vascular_occlusion_stroke_in_the_eye (person_id);
+
+-- TEMP TABLE FOR ""age""
+DROP TABLE IF EXISTS temp_master_age;
+CREATE TEMP TABLE temp_master_age AS
+SELECT person_id, ""age"" AS ""age""
+FROM aireadi.participants;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age ON temp_master_age (person_id);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT person_id FROM temp_master_study_group
+UNION
+SELECT person_id FROM temp_master_photopic_logmar_od_score
+UNION
+SELECT person_id FROM temp_master_photopic_logmar_os_score
+UNION
+SELECT person_id FROM temp_master_retinal_nerve_fiber_layer_rnfl_average_micrometer
+UNION
+SELECT person_id FROM temp_master_glaucoma_in_one_or_both_eyes
+UNION
+SELECT person_id FROM temp_master_cataracts_in_one_or_both_eyes
+UNION
+SELECT person_id FROM temp_master_diabetic_retinopathy_in_one_or_both_eyes
+UNION
+SELECT person_id FROM temp_master_age_related_macular_degeneration_amd_in_one_or_both
+UNION
+SELECT person_id FROM temp_master_retinal_vascular_occlusion_stroke_in_the_eye
+UNION
+SELECT person_id FROM temp_master_age;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_person_id ON temp_all_ids (person_id);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.person_id,
+    t0.""study_group"",
+    t1.""photopic_logmar_od_score"",
+    t2.""photopic_logmar_os_score"",
+    t3.""retinal_nerve_fiber_layer_rnfl_average_micrometer"",
+    t4.""glaucoma_in_one_or_both_eyes"",
+    t5.""cataracts_in_one_or_both_eyes"",
+    t6.""diabetic_retinopathy_in_one_or_both_eyes"",
+    t7.""age_related_macular_degeneration_amd_in_one_or_both"",
+    t8.""retinal_vascular_occlusion_stroke_in_the_eye"",
+    t9.""age""
+FROM temp_all_ids a
+LEFT JOIN temp_master_study_group t0 ON a.person_id = t0.person_id 
+LEFT JOIN temp_master_photopic_logmar_od_score t1 ON a.person_id = t1.person_id 
+LEFT JOIN temp_master_photopic_logmar_os_score t2 ON a.person_id = t2.person_id 
+LEFT JOIN temp_master_retinal_nerve_fiber_layer_rnfl_average_micrometer t3 ON a.person_id = t3.person_id 
+LEFT JOIN temp_master_glaucoma_in_one_or_both_eyes t4 ON a.person_id = t4.person_id 
+LEFT JOIN temp_master_cataracts_in_one_or_both_eyes t5 ON a.person_id = t5.person_id 
+LEFT JOIN temp_master_diabetic_retinopathy_in_one_or_both_eyes t6 ON a.person_id = t6.person_id 
+LEFT JOIN temp_master_age_related_macular_degeneration_amd_in_one_or_both t7 ON a.person_id = t7.person_id 
+LEFT JOIN temp_master_retinal_vascular_occlusion_stroke_in_the_eye t8 ON a.person_id = t8.person_id 
+LEFT JOIN temp_master_age t9 ON a.person_id = t9.person_id;
+
+CREATE INDEX idx_final_master_person_id    
+    ON final_master_table (person_id);
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Includes all patients from final_master_table as no specific inclusion criteria were provided.
+CREATE TEMP TABLE temp_inclusion AS
+SELECT ""person_id""
+FROM final_master_table;
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude patients with missing study group
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""person_id""
+FROM temp_inclusion i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""study_group"" IS NOT NULL;
+
+-- STEP 2.2: Exclude patients with missing photopic logmar od score
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""photopic_logmar_od_score"" IS NOT NULL;
+
+-- STEP 2.3: Exclude patients with missing photopic logmar os score
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""photopic_logmar_os_score"" IS NOT NULL;
+
+-- STEP 2.4: Exclude patients with missing retinal nerve fiber layer average
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step3 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""retinal_nerve_fiber_layer_rnfl_average_micrometer"" IS NOT NULL;
+
+-- STEP 2.5: Exclude patients with missing glaucoma diagnosis
+CREATE TEMP TABLE temp_exclusion_step5 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step4 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""glaucoma_in_one_or_both_eyes"" IS NOT NULL;
+
+-- STEP 2.6: Exclude patients with missing cataract diagnosis
+CREATE TEMP TABLE temp_exclusion_step6 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step5 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""cataracts_in_one_or_both_eyes"" IS NOT NULL;
+
+-- STEP 2.7: Exclude patients with missing diabetic retinopathy diagnosis
+CREATE TEMP TABLE temp_exclusion_step7 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step6 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""diabetic_retinopathy_in_one_or_both_eyes"" IS NOT NULL;
+
+-- STEP 2.8: Exclude patients with missing AMD diagnosis
+CREATE TEMP TABLE temp_exclusion_step8 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step7 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""age_related_macular_degeneration_amd_in_one_or_both"" IS NOT NULL;
+
+-- STEP 2.9: Exclude patients with missing retinal vascular occlusion diagnosis
+CREATE TEMP TABLE temp_exclusion_step9 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step8 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""retinal_vascular_occlusion_stroke_in_the_eye"" IS NOT NULL;
+
+-- ========== STEP 3: Cohort ==========
+
+-- The final temp table in the exclusion sequence becomes temp_cohort.
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""person_id""
+FROM temp_exclusion_step9;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Age
+-- Extract age for the cohort
+CREATE TEMP TABLE temp_age AS
+SELECT c.""person_id"", f.""age""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.2 Diagnosed with glaucoma
+-- Extract glaucoma diagnosis for the cohort
+CREATE TEMP TABLE temp_diagnosed_with_glaucoma AS
+SELECT c.""person_id"", f.""glaucoma_in_one_or_both_eyes"" AS ""diagnosed_with_glaucoma""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.3 Diagnosed with cataract
+-- Extract cataract diagnosis for the cohort
+CREATE TEMP TABLE temp_diagnosed_with_cataract AS
+SELECT c.""person_id"", f.""cataracts_in_one_or_both_eyes"" AS ""diagnosed_with_cataract""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.4 Diagnosed with diabetic retinopathy
+-- Extract diabetic retinopathy diagnosis for the cohort
+CREATE TEMP TABLE temp_diagnosed_with_diabetic_retinopathy AS
+SELECT c.""person_id"", f.""diabetic_retinopathy_in_one_or_both_eyes"" AS ""diagnosed_with_diabetic_retinopathy""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.5 Diagnosed with AMD
+-- Extract AMD diagnosis for the cohort
+CREATE TEMP TABLE temp_diagnosed_with_amd AS
+SELECT c.""person_id"", f.""age_related_macular_degeneration_amd_in_one_or_both"" AS ""diagnosed_with_amd""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.6 Retinal vascular occlusion stroke in the eye
+-- Extract retinal vascular occlusion diagnosis for the cohort
+CREATE TEMP TABLE temp_retinal_vascular_occlusion_stroke_in_the_eye AS
+SELECT c.""person_id"", f.""retinal_vascular_occlusion_stroke_in_the_eye""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.7 Study group (Predictor)
+-- Extract study group for the cohort
+CREATE TEMP TABLE temp_study_group AS
+SELECT c.""person_id"", f.""study_group""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.8 Retinal nerve fiber layer average (Mediator)
+-- Extract retinal nerve fiber layer average for the cohort
+CREATE TEMP TABLE temp_retinal_nerve_fiber_layer_average AS
+SELECT c.""person_id"", f.""retinal_nerve_fiber_layer_rnfl_average_micrometer"" AS ""retinal_nerve_fiber_layer_average""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.9 Day vision (Outcome)
+-- Calculate day vision = -min(photopic logmar od, photopic logmar os)
+CREATE TEMP TABLE temp_day_vision AS
+SELECT c.""person_id"",
+       -LEAST(f.""photopic_logmar_od_score"", f.""photopic_logmar_os_score"") AS ""day_vision""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- ========== STEP 5: Final Table ==========
+CREATE TEMP TABLE temp_final_table AS
+SELECT
+  c.""person_id"",
+  t_age.""age"",
+  t_glaucoma.""diagnosed_with_glaucoma"",
+  t_cataract.""diagnosed_with_cataract"",
+  t_dr.""diagnosed_with_diabetic_retinopathy"",
+  t_amd.""diagnosed_with_amd"",
+  t_rvo.""retinal_vascular_occlusion_stroke_in_the_eye"",
+  t_sg.""study_group"",
+  t_rnfl.""retinal_nerve_fiber_layer_average"",
+  t_dv.""day_vision""
+FROM temp_cohort c
+JOIN temp_age t_age ON c.""person_id"" = t_age.""person_id""
+JOIN temp_diagnosed_with_glaucoma t_glaucoma ON c.""person_id"" = t_glaucoma.""person_id""
+JOIN temp_diagnosed_with_cataract t_cataract ON c.""person_id"" = t_cataract.""person_id""
+JOIN temp_diagnosed_with_diabetic_retinopathy t_dr ON c.""person_id"" = t_dr.""person_id""
+JOIN temp_diagnosed_with_amd t_amd ON c.""person_id"" = t_amd.""person_id""
+JOIN temp_retinal_vascular_occlusion_stroke_in_the_eye t_rvo ON c.""person_id"" = t_rvo.""person_id""
+JOIN temp_study_group t_sg ON c.""person_id"" = t_sg.""person_id""
+JOIN temp_retinal_nerve_fiber_layer_average t_rnfl ON c.""person_id"" = t_rnfl.""person_id""
+JOIN temp_day_vision t_dv ON c.""person_id"" = t_dv.""person_id"";
+
+-- ========== STEP 6: Final Output ==========
+SELECT * FROM temp_final_table;","    step_num                                                                                                      step  remaining_after_step  excluded_at_step
+0          0  STEP 1.1: Includes all patients from final_master_table as no specific inclusion criteria were provided.                  2280               NaN
+1          1                                                       STEP 2.1: Exclude patients with missing study group                  2280               0.0
+2          2                                          STEP 2.2: Exclude patients with missing photopic logmar od score                  2257              23.0
+3          3                                          STEP 2.3: Exclude patients with missing photopic logmar os score                  2247              10.0
+4          4                                 STEP 2.4: Exclude patients with missing retinal nerve fiber layer average                  1913             334.0
+5          5                                                STEP 2.5: Exclude patients with missing glaucoma diagnosis                  1898              15.0
+6          6                                                STEP 2.6: Exclude patients with missing cataract diagnosis                  1893               5.0
+7          7                                    STEP 2.7: Exclude patients with missing diabetic retinopathy diagnosis                  1887               6.0
+8          8                                                     STEP 2.8: Exclude patients with missing AMD diagnosis                  1875              12.0
+9          9                              STEP 2.9: Exclude patients with missing retinal vascular occlusion diagnosis                  1874               1.0
+10        10                                       The final temp table in the exclusion sequence becomes temp_cohort.                  1874               0.0
+11        11                                                                                Extract age for the cohort                  1874               0.0
+12        12                                                                 Extract glaucoma diagnosis for the cohort                  1874               0.0
+13        13                                                                 Extract cataract diagnosis for the cohort                  1874               0.0
+14        14                                                     Extract diabetic retinopathy diagnosis for the cohort                  1874               0.0
+15        15                                                                      Extract AMD diagnosis for the cohort                  1874               0.0
+16        16                                               Extract retinal vascular occlusion diagnosis for the cohort                  1874               0.0
+17        17                                                                        Extract study group for the cohort                  1874               0.0
+18        18                                                  Extract retinal nerve fiber layer average for the cohort                  1874               0.0
+19        19                                       Calculate day vision = -min(photopic logmar od, photopic logmar os)                  1874               0.0
+20        20                                                                 ========== STEP 5: Final Table ==========                  1874               0.0","(1874, 10)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""person_id"")
+    outcome_vars <- c(""study_group"",""retinal_nerve_fiber_layer_average"",""day_vision"")
+    
+    cohort <- df
+
+
+    outcome_roles <- c()
+    outcome_roles[""study_group""] <- ""independent"";outcome_roles[""retinal_nerve_fiber_layer_average""] <- ""mediator"";outcome_roles[""day_vision""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    mediator_var <- names(outcome_roles[outcome_roles == ""mediator""])[1]
+cat(""Mediator Variable:\n""); print(mediator_var); cat(""\n"")
+independent_var <- names(outcome_roles[outcome_roles == ""independent""])[1]
+cat(""Independent Variable:\n""); print(independent_var); cat(""\n"")
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+    suppressPackageStartupMessages(library(mediation))
+    suppressPackageStartupMessages(library(stats))
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(stringr))
+        
+    
+    all_predictors <- c(categorical_vars, binary_vars, numerical_vars)
+
+    # drop IV, mediator, outcome from covariates
+    covariates <- setdiff(all_predictors, c(independent_var, mediator_var, outcome_var))
+
+
+    # ----------------------------
+    # 1) Factor IV + choose reference group
+    # ----------------------------
+    df[[independent_var]] <- trimws(as.character(df[[independent_var]]))
+    df[[independent_var]] <- factor(df[[independent_var]])
+
+    iv_levels <- levels(df[[independent_var]])
+    preferred_refs <- grep(""healthy|control|0"", iv_levels, ignore.case = TRUE, value = TRUE)
+    reference_group <- preferred_refs[1]
+    if (is.na(reference_group)) reference_group <- iv_levels[1]
+
+    df[[independent_var]] <- relevel(df[[independent_var]], ref = reference_group)
+    cat(paste0(""Reference group for '"", independent_var, ""' set to: "", reference_group, ""
+""))
+
+    # Other factor vars (optional but consistent)
+    for (col in c(categorical_vars, binary_vars)) {
+    if (col %in% names(df) && !is.factor(df[[col]])) {
+        df[[col]] <- factor(trimws(as.character(df[[col]])))
+    }
+    }
+    # ----------------------------
+    # 2) Drop NAs for required columns
+    # ----------------------------
+    required_cols <- c(independent_var, mediator_var, outcome_var, covariates)
+    required_cols <- required_cols[required_cols %in% names(df)]
+    df2 <- df %>% tidyr::drop_na(dplyr::all_of(required_cols))
+        
+    
+    # ----------------------------
+    # 3) Build formulas + fit models
+    # ----------------------------
+    cov_str <- if (length(covariates) > 0) paste(covariates, collapse = "" + "") else """"
+
+    mediator_formula <- as.formula(
+    if (cov_str != """")
+        paste(mediator_var, ""~"", independent_var, ""+"", cov_str)
+    else
+        paste(mediator_var, ""~"", independent_var)
+    )
+
+    outcome_formula <- as.formula(
+    if (cov_str != """")
+        paste(outcome_var, ""~"", independent_var, ""+"", mediator_var, ""+"", cov_str)
+    else
+        paste(outcome_var, ""~"", independent_var, ""+"", mediator_var)
+    )
+
+    cat("" Mediator Model Formula:
+""); print(mediator_formula)
+    cat("" Outcome Model Formula:
+"");  print(outcome_formula)
+                
+    
+        
+    
+    med_fit <- lm(mediator_formula, data = df2)
+    out_fit <- lm(outcome_formula, data = df2)
+
+    # coefficient tables
+    med_coef <- summary(med_fit)$coefficients
+    out_coef <- summary(out_fit)$coefficients
+
+    # ----------------------------
+    # 4) Run mediate for each non-reference level vs reference
+    # ----------------------------
+    set.seed(123)
+
+    treat_levels <- setdiff(levels(df2[[independent_var]]), reference_group)
+
+    results_df <- do.call(rbind, lapply(treat_levels, function(g) {
+    cat(paste0(""Running mediation: Comparing '"", g, ""' (Treat) vs '"", reference_group, ""' (Control)
+""))
+
+    m <- mediate(
+        model.m = med_fit,
+        model.y = out_fit,
+        treat = independent_var,
+        mediator = mediator_var,
+        control.value = reference_group,
+        treat.value = g,
+        boot = TRUE,
+        sims = 100
+    )
+    s <- summary(m)
+
+    # Find rows for g in lm coefficient tables (robust to naming like varLevel / var_level)
+    a_row <- grep(g, rownames(med_coef), value = TRUE)[1]
+    cprime_row <- grep(g, rownames(out_coef), value = TRUE)[1]
+
+    # a path: group -> mediator
+    a_beta <- if (!is.na(a_row)) med_coef[a_row, ""Estimate""] else NA
+    a_p    <- if (!is.na(a_row)) med_coef[a_row, ""Pr(>|t|)""] else NA
+
+    # b path: mediator -> outcome
+    b_beta <- out_coef[mediator_var, ""Estimate""]
+    b_p    <- out_coef[mediator_var, ""Pr(>|t|)""]
+
+    # c' path: group -> outcome (direct)
+    cprime_beta <- if (!is.na(cprime_row)) out_coef[cprime_row, ""Estimate""] else NA
+    cprime_p    <- if (!is.na(cprime_row)) out_coef[cprime_row, ""Pr(>|t|)""] else NA
+
+
+    data.frame(
+    Group_Comparison = g,
+
+    Total_Effect_Tau_Estimate = s$tau.coef,
+    Total_Effect_95CI_Lower   = s$tau.ci[1],
+    Total_Effect_95CI_Upper   = s$tau.ci[2],
+    Total_Effect_P_Value      = s$tau.p,
+
+    Indirect_Effect_ACME_Estimate = s$d0,
+    Indirect_Effect_95CI_Lower   = s$d0.ci[1],
+    Indirect_Effect_95CI_Upper   = s$d0.ci[2],
+    Indirect_Effect_P_Value     = s$d0.p,
+
+    a_Path_Independent_Var_to_Mediator_Beta = a_beta,
+    a_Path_Independent_Var_to_Mediator_P    = a_p,
+
+    b_Path_Mediator_to_Outcome_Beta = b_beta,
+    b_Path_Mediator_to_Outcome_P    = b_p,
+
+    cprime_Path_Independent_Var_to_Outcome_Direct_Beta = cprime_beta,
+    cprime_Path_Independent_Var_to_Outcome_Direct_P    = cprime_p,
+
+    stringsAsFactors = FALSE
+    )
+    }))
+        
+    
+    result_table <- results_df %>%
+    mutate(Group_Comparison = gsub(""_"", "" "", Group_Comparison)) 
+        
+    ","[{'variable': 'person_id', 'category': 'identifier', 'n_unique': 1874, 'na_count': 0, 'summary': 'Total rows = 1874'}, {'variable': 'age', 'category': 'numerical', 'n_unique': 52, 'na_count': 0, 'summary': 'mean = 60.348, sd = 11.09'}, {'variable': 'diagnosed_with_glaucoma', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'No: 92.5%; Yes: 7.5%'}, {'variable': 'diagnosed_with_cataract', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'No: 72%; Yes: 28%'}, {'variable': 'diagnosed_with_diabetic_retinopathy', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'No: 96.5%; Yes: 3.5%'}, {'variable': 'diagnosed_with_amd', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'No: 95.9%; Yes: 4.1%'}, {'variable': 'retinal_vascular_occlusion_stroke_in_the_eye', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'No: 99.1%; Yes: 0.9%'}, {'variable': 'study_group', 'category': 'independent', 'n_unique': 4, 'na_count': 0, 'summary': 'healthy: 35.1%; insulin_dependent: 11%; oral_medication_and_or_non_insulin_injectable_medication_controlled: 29.2%; pre_diabetes_lifestyle_controlled: 24.7%'}, {'variable': 'retinal_nerve_fiber_layer_average', 'category': 'mediator', 'n_unique': 1873, 'na_count': 0, 'summary': 'mean = 33.874, sd = 4.227'}, {'variable': 'day_vision', 'category': 'outcome', 'n_unique': 46, 'na_count': 0, 'summary': 'mean = 0.027, sd = 0.125'}]","[{'Group_Comparison': 'insulin dependent', 'Total_Effect_Tau_Estimate': -0.028048641333596004, 'Total_Effect_95CI_Lower': -0.049850638837390646, 'Total_Effect_95CI_Upper': -0.007477242466028686, 'Total_Effect_P_Value': 0.0, 'Indirect_Effect_ACME_Estimate': -0.0012496970128851093, 'Indirect_Effect_95CI_Lower': -0.0036992012856470464, 'Indirect_Effect_95CI_Upper': -9.790499530829982e-05, 'Indirect_Effect_P_Value': 0.04, 'a_Path_Independent_Var_to_Mediator_Beta': -1.0226953697630305, 'a_Path_Independent_Var_to_Mediator_P': 0.003208878156465612, 'b_Path_Mediator_to_Outcome_Beta': 0.0012219640861136207, 'b_Path_Mediator_to_Outcome_P': 0.06401354720130227, 'cprime_Path_Independent_Var_to_Outcome_Direct_Beta': -0.026798944320710897, 'cprime_Path_Independent_Var_to_Outcome_Direct_P': 0.006793759150021302}, {'Group_Comparison': 'oral medication and or non insulin injectable medication controlled', 'Total_Effect_Tau_Estimate': -0.0030647271532075583, 'Total_Effect_95CI_Lower': -0.013652313297377074, 'Total_Effect_95CI_Upper': 0.006441272316266794, 'Total_Effect_P_Value': 0.58, 'Indirect_Effect_ACME_Estimate': -0.0008583053825262479, 'Indirect_Effect_95CI_Lower': -0.0020528231356949783, 'Indirect_Effect_95CI_Upper': 4.4515605452915535e-05, 'Indirect_Effect_P_Value': 0.06, 'a_Path_Independent_Var_to_Mediator_Beta': -0.7023982065267002, 'a_Path_Independent_Var_to_Mediator_P': 0.003633383930902611, 'b_Path_Mediator_to_Outcome_Beta': 0.0012219640861136207, 'b_Path_Mediator_to_Outcome_P': 0.06401354720130227, 'cprime_Path_Independent_Var_to_Outcome_Direct_Beta': -0.002206421770681324, 'cprime_Path_Independent_Var_to_Outcome_Direct_P': 0.7485538725270164}, {'Group_Comparison': 'pre diabetes lifestyle controlled', 'Total_Effect_Tau_Estimate': -0.008565072584125573, 'Total_Effect_95CI_Lower': -0.020309934786214925, 'Total_Effect_95CI_Upper': 0.005238680450267193, 'Total_Effect_P_Value': 0.24, 'Indirect_Effect_ACME_Estimate': -0.0007599850623233712, 'Indirect_Effect_95CI_Lower': -0.0019482233277268008, 'Indirect_Effect_95CI_Upper': 3.314357022039895e-05, 'Indirect_Effect_P_Value': 0.1, 'a_Path_Independent_Var_to_Mediator_Beta': -0.6219373146558342, 'a_Path_Independent_Var_to_Mediator_P': 0.013388090019675522, 'b_Path_Mediator_to_Outcome_Beta': 0.0012219640861136207, 'b_Path_Mediator_to_Outcome_P': 0.06401354720130227, 'cprime_Path_Independent_Var_to_Outcome_Direct_Beta': -0.0078050875218022096, 'cprime_Path_Independent_Var_to_Outcome_Direct_P': 0.2760564035104274}]",,,,mediation analysis,2023-2025,"[[2023, 2025]]",google_gemini-2.5-flash,Pass,[],,104.132939,"[[{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 583, 'output_tokens': 1, 'total_cost': 0.0001774, 'formatted_total_cost': '$0.000177'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 1790, 'output_tokens': 190, 'total_cost': 0.0010119999999999999, 'formatted_total_cost': '$0.001012'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 2585, 'output_tokens': 760, 'total_cost': 0.0026755000000000004, 'formatted_total_cost': '$0.002676'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 12400, 'output_tokens': 442, 'total_cost': 0.004824999999999999, 'formatted_total_cost': '$0.004825'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 12400, 'output_tokens': 442, 'total_cost': 0.004824999999999999, 'formatted_total_cost': '$0.004825'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 612, 'output_tokens': 3, 'total_cost': 0.00019109999999999998, 'formatted_total_cost': '$0.000191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6096, 'output_tokens': 93, 'total_cost': 0.0020613, 'formatted_total_cost': '$0.002061'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6096, 'output_tokens': 93, 'total_cost': 0.0020613, 'formatted_total_cost': '$0.002061'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 240, 'output_tokens': 3, 'total_cost': 7.950000000000001e-05, 'formatted_total_cost': '$0.000080'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 9284, 'output_tokens': 93, 'total_cost': 0.0030177000000000003, 'formatted_total_cost': '$0.003018'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 9284, 'output_tokens': 93, 'total_cost': 0.0030177000000000003, 'formatted_total_cost': '$0.003018'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 239, 'output_tokens': 3, 'total_cost': 7.92e-05, 'formatted_total_cost': '$0.000079'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6278, 'output_tokens': 90, 'total_cost': 0.0021084, 'formatted_total_cost': '$0.002108'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6278, 'output_tokens': 90, 'total_cost': 0.0021084, 'formatted_total_cost': '$0.002108'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 237, 'output_tokens': 3, 'total_cost': 7.86e-05, 'formatted_total_cost': '$0.000079'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6199, 'output_tokens': 68, 'total_cost': 0.0020296999999999997, 'formatted_total_cost': '$0.002030'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6199, 'output_tokens': 68, 'total_cost': 0.0020296999999999997, 'formatted_total_cost': '$0.002030'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 247, 'output_tokens': 3, 'total_cost': 8.16e-05, 'formatted_total_cost': '$0.000082'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5535, 'output_tokens': 90, 'total_cost': 0.0018854999999999998, 'formatted_total_cost': '$0.001885'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5535, 'output_tokens': 90, 'total_cost': 0.0018854999999999998, 'formatted_total_cost': '$0.001885'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 238, 'output_tokens': 3, 'total_cost': 7.890000000000001e-05, 'formatted_total_cost': '$0.000079'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5737, 'output_tokens': 85, 'total_cost': 0.0019336, 'formatted_total_cost': '$0.001934'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5737, 'output_tokens': 85, 'total_cost': 0.0019336, 'formatted_total_cost': '$0.001934'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 252, 'output_tokens': 3, 'total_cost': 8.31e-05, 'formatted_total_cost': '$0.000083'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4831, 'output_tokens': 159, 'total_cost': 0.0018468, 'formatted_total_cost': '$0.001847'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4831, 'output_tokens': 159, 'total_cost': 0.0018468, 'formatted_total_cost': '$0.001847'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 283, 'output_tokens': 3, 'total_cost': 9.24e-05, 'formatted_total_cost': '$0.000092'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7129, 'output_tokens': 66, 'total_cost': 0.0023036999999999997, 'formatted_total_cost': '$0.002304'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7129, 'output_tokens': 66, 'total_cost': 0.0023036999999999997, 'formatted_total_cost': '$0.002304'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 233, 'output_tokens': 3, 'total_cost': 7.74e-05, 'formatted_total_cost': '$0.000077'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 8018, 'output_tokens': 160, 'total_cost': 0.0028054000000000004, 'formatted_total_cost': '$0.002805'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 8018, 'output_tokens': 160, 'total_cost': 0.0028054000000000004, 'formatted_total_cost': '$0.002805'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 330, 'output_tokens': 3, 'total_cost': 0.0001065, 'formatted_total_cost': '$0.000107'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6772, 'output_tokens': 87, 'total_cost': 0.0022491, 'formatted_total_cost': '$0.002249'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6772, 'output_tokens': 87, 'total_cost': 0.0022491, 'formatted_total_cost': '$0.002249'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 234, 'output_tokens': 3, 'total_cost': 7.77e-05, 'formatted_total_cost': '$0.000078'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 9157, 'output_tokens': 159, 'total_cost': 0.0031446, 'formatted_total_cost': '$0.003145'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 9157, 'output_tokens': 159, 'total_cost': 0.0031446, 'formatted_total_cost': '$0.003145'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 329, 'output_tokens': 3, 'total_cost': 0.00010619999999999999, 'formatted_total_cost': '$0.000106'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6307, 'output_tokens': 66, 'total_cost': 0.0020571, 'formatted_total_cost': '$0.002057'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6307, 'output_tokens': 66, 'total_cost': 0.0020571, 'formatted_total_cost': '$0.002057'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 234, 'output_tokens': 3, 'total_cost': 7.77e-05, 'formatted_total_cost': '$0.000078'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7927, 'output_tokens': 66, 'total_cost': 0.0025430999999999995, 'formatted_total_cost': '$0.002543'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7927, 'output_tokens': 66, 'total_cost': 0.0025430999999999995, 'formatted_total_cost': '$0.002543'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 233, 'output_tokens': 3, 'total_cost': 7.74e-05, 'formatted_total_cost': '$0.000077'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 8715, 'output_tokens': 68, 'total_cost': 0.0027845, 'formatted_total_cost': '$0.002785'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 8715, 'output_tokens': 68, 'total_cost': 0.0027845, 'formatted_total_cost': '$0.002785'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 237, 'output_tokens': 3, 'total_cost': 7.86e-05, 'formatted_total_cost': '$0.000079'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7303, 'output_tokens': 2256, 'total_cost': 0.007830900000000002, 'formatted_total_cost': '$0.007831'}]]",False,0,,,

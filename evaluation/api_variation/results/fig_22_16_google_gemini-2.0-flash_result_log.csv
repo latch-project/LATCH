@@ -1,0 +1,859 @@
+Title,Schema,Question,Structured Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log
+16758,nhanes,"We will perform a logistic regression using NHANES data from 2009-2016.
+Include participants whose age at screening 18 years or more and who have diabetes, defined as meeting any of these: who said yes to self-reported diaetes or takes diabetic medication or takes insulin
+Exclude who are missing neutrophil counts or lymphocyte counts.
+Exclude participants missing any of the depression questions: ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+The main predictor is neutrophil count / lymphocyte count, categorize in quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75 and adjust for age at screening, gender, and race/Hispanic origin.
+Outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. ","Analysis Type: logistic regression
+
+Dataset: NHANES
+
+Period of Interest: 2009-2016
+
+Inclusion Criteria:
+- age at screening >= 18
+- diabetes, defined as meeting any of these:
+    self-reported diabetes = Yes OR takes diabetic medication = Yes OR takes insulin = Yes
+
+Exclusion Criteria:
+- missing neutrophil counts
+- missing lymphocyte counts
+- missing ""have little interest in doing things""
+- missing ""feeling down, depressed, or hopeless""
+- missing ""trouble sleeping or sleeping too much""
+- missing ""feeling tired or having little energy""
+- missing ""poor appetite or overeating""
+- missing ""feeling bad about yourself""
+- missing ""trouble concentrating on things""
+- missing ""moving or speaking slowly or too fast""
+- missing ""thought you would be better off dead""
+
+Covariates:
+- age at screening
+- gender
+- race/Hispanic origin
+
+Predictor:
+- neutrophil count / lymphocyte count, categorized in quartiles(%):
+    Q1: <=25, Q2: >25 and <=50, Q3: >50 and <=75, Q4: >75
+
+Outcome:
+- depression outcome = 1 if total score >=10; 0 otherwise
+  total score calculated as the sum of the nine depression questions:
+    ""have little interest in doing things"" (Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0))
+    ""feeling down, depressed, or hopeless"" (Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0))
+    ""trouble sleeping or sleeping too much"" (Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0))
+    ""feeling tired or having little energy"" (Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0))
+    ""poor appetite or overeating"" (Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0))
+    ""feeling bad about yourself"" (Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0))
+    ""trouble concentrating on things"" (Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0))
+    ""moving or speaking slowly or too fast"" (Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0))
+    ""thought you would be better off dead"" (Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0))","{'dataset': 'NHANES', 'inclusion': [{'keyword': 'age at screening', 'derived': False, 'condition': '>= 18', 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}, {'keyword': 'diabetes', 'derived': True, 'depends_on': [{'keyword': 'self-reported diabetes', 'derived': False, 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'takes diabetic medication', 'derived': False, 'table': 'final_master_table', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'examples': ['No', 'Yes']}, {'keyword': 'takes insulin', 'derived': False, 'table': 'final_master_table', 'column': 'taking_insulin_now', 'examples': ['No', 'Yes']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['self-reported diabetes = Yes', 'takes diabetic medication = Yes', 'takes insulin = Yes']}}]}], 'exclusion': [{'keyword': 'neutrophil counts', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'segmented_neutrophils_num_1000_cell_ul', 'examples': ['0.9', '1.6', '4.8', '5.8', '12.4']}, {'keyword': 'lymphocyte counts', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'lymphocyte_number_1000_cells_ul', 'examples': ['0.9', '1.6', '4.8', '5.8', '6.2']}, {'keyword': 'have little interest in doing things', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'have_little_interest_in_doing_things', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'feeling down, depressed, or hopeless', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'feeling_down_depressed_or_hopeless', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'trouble sleeping or sleeping too much', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'trouble_sleeping_or_sleeping_too_much', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'feeling tired or having little energy', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'feeling_tired_or_having_little_energy', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'poor appetite or overeating', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'poor_appetite_or_overeating', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'feeling bad about yourself', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'feeling_bad_about_yourself', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'trouble concentrating on things', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'trouble_concentrating_on_things', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'moving or speaking slowly or too fast', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'moving_or_speaking_slowly_or_too_fast', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'thought you would be better off dead', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'thought_you_would_be_better_off_dead', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}], 'covariates': [{'keyword': 'age at screening', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}, {'keyword': 'gender', 'derived': False, 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/hispanic origin', 'derived': False, 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'predictor': [{'keyword': 'neutrophil count / lymphocyte count', 'derived': True, 'depends_on': [{'keyword': 'neutrophil counts', 'derived': False, 'table': 'final_master_table', 'column': 'segmented_neutrophils_num_1000_cell_ul', 'examples': ['0.9', '1.6', '4.8', '5.8', '12.4']}, {'keyword': 'lymphocyte counts', 'derived': False, 'table': 'final_master_table', 'column': 'lymphocyte_number_1000_cells_ul', 'examples': ['0.9', '1.6', '4.8', '5.8', '6.2']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'neutrophil count / lymphocyte count = neutrophil counts / lymphocyte counts'}}, {'step': 2, 'derivation_method': {'type': 'binning', 'strategy': 'quantiles', 'num_bins': 4, 'labels': ['Q1: <=25', 'Q2: >25 and <=50', 'Q3: >50 and <=75', 'Q4: >75']}}]}], 'outcome': [{'keyword': 'depression outcome', 'derived': True, 'depends_on': [{'keyword': 'have little interest in doing things', 'derived': False, 'table': 'final_master_table', 'column': 'have_little_interest_in_doing_things', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'feeling down, depressed, or hopeless', 'derived': False, 'table': 'final_master_table', 'column': 'feeling_down_depressed_or_hopeless', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'trouble sleeping or sleeping too much', 'derived': False, 'table': 'final_master_table', 'column': 'trouble_sleeping_or_sleeping_too_much', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'feeling tired or having little energy', 'derived': False, 'table': 'final_master_table', 'column': 'feeling_tired_or_having_little_energy', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'poor appetite or overeating', 'derived': False, 'table': 'final_master_table', 'column': 'poor_appetite_or_overeating', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'feeling bad about yourself', 'derived': False, 'table': 'final_master_table', 'column': 'feeling_bad_about_yourself', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'trouble concentrating on things', 'derived': False, 'table': 'final_master_table', 'column': 'trouble_concentrating_on_things', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'moving or speaking slowly or too fast', 'derived': False, 'table': 'final_master_table', 'column': 'moving_or_speaking_slowly_or_too_fast', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'thought you would be better off dead', 'derived': False, 'table': 'final_master_table', 'column': 'thought_you_would_be_better_off_dead', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'sum', 'components': ['have little interest in doing things', 'feeling down, depressed, or hopeless', 'trouble sleeping or sleeping too much', 'feeling tired or having little energy', 'poor appetite or overeating', 'feeling bad about yourself', 'trouble concentrating on things', 'moving or speaking slowly or too fast', 'thought you would be better off dead'], 'missing_value_logic': 'if value is null assign (0)', 'output': 'total score'}}, {'step': 2, 'derivation_method': {'type': 'mapping', 'labels': ['1', '0'], 'condition': 'total score >=10'}}]}]}","{'analysis_type': 'logistic regression', 'dataset': 'NHANES', 'period_of_interest': '2009-2016', 'inclusion': [{'keyword': 'age at screening', 'derived': False, 'condition': '>= 18', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'diabetes', 'derived': True, 'depends_on': [{'keyword': 'self-reported diabetes', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'takes diabetic medication', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}]}, {'keyword': 'takes insulin', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['self-reported diabetes = Yes', 'takes diabetic medication = Yes', 'takes insulin = Yes']}}]}], 'exclusion': [{'keyword': 'neutrophil counts', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cbc_g', 'column': 'segmented_neutrophils_num_1000_cell_ul', 'example_values': ['12.4', '0.9', '5.8', '1.6', '4.8']}, {'cycle': '2009-2010', 'table': 'nhanes.cbc_f', 'column': 'segmented_neutrophils_num_1000_cell_ul', 'example_values': ['12.4', '0.9', '13.2', '5.8', '1.6']}, {'cycle': '2013-2014', 'table': 'nhanes.cbc_h', 'column': 'segmented_neutrophils_num_1000_cell_ul', 'example_values': ['0.9', '13.2', '14.7', '5.8', '25.6']}, {'cycle': '2015-2016', 'table': 'nhanes.cbc_i', 'column': 'segmented_neutrophils_num_1000_cell_ul', 'example_values': ['12.4', '0.9', '13.2', '5.8', '1.6']}]}, {'keyword': 'lymphocyte counts', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cbc_g', 'column': 'lymphocyte_number_1000_cells_ul', 'example_values': ['0.9', '5.8', '1.6', '4.8', '6.2']}, {'cycle': '2009-2010', 'table': 'nhanes.cbc_f', 'column': 'lymphocyte_number_1000_cells_ul', 'example_values': ['0.9', '5.8', '1.6', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.cbc_h', 'column': 'lymphocyte_number_1000_cells_ul', 'example_values': ['0.9', '5.8', '1.6', '4.8', '6.2']}, {'cycle': '2015-2016', 'table': 'nhanes.cbc_i', 'column': 'lymphocyte_number_1000_cells_ul', 'example_values': ['12.4', '0.9', '5.8', '1.6', '4.8']}]}, {'keyword': 'have little interest in doing things', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'feeling down, depressed, or hopeless', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'trouble sleeping or sleeping too much', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'feeling tired or having little energy', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'poor appetite or overeating', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'feeling bad about yourself', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'trouble concentrating on things', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'moving or speaking slowly or too fast', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'thought you would be better off dead', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}], 'covariates': [{'keyword': 'age at screening', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'gender', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/hispanic origin', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'predictor': [{'keyword': 'neutrophil count / lymphocyte count', 'derived': True, 'depends_on': [{'keyword': 'neutrophil counts', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cbc_g', 'column': 'segmented_neutrophils_num_1000_cell_ul', 'example_values': ['12.4', '0.9', '5.8', '1.6', '4.8']}, {'cycle': '2009-2010', 'table': 'nhanes.cbc_f', 'column': 'segmented_neutrophils_num_1000_cell_ul', 'example_values': ['12.4', '0.9', '13.2', '5.8', '1.6']}, {'cycle': '2013-2014', 'table': 'nhanes.cbc_h', 'column': 'segmented_neutrophils_num_1000_cell_ul', 'example_values': ['0.9', '13.2', '14.7', '5.8', '25.6']}, {'cycle': '2015-2016', 'table': 'nhanes.cbc_i', 'column': 'segmented_neutrophils_num_1000_cell_ul', 'example_values': ['12.4', '0.9', '13.2', '5.8', '1.6']}]}, {'keyword': 'lymphocyte counts', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cbc_g', 'column': 'lymphocyte_number_1000_cells_ul', 'example_values': ['0.9', '5.8', '1.6', '4.8', '6.2']}, {'cycle': '2009-2010', 'table': 'nhanes.cbc_f', 'column': 'lymphocyte_number_1000_cells_ul', 'example_values': ['0.9', '5.8', '1.6', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.cbc_h', 'column': 'lymphocyte_number_1000_cells_ul', 'example_values': ['0.9', '5.8', '1.6', '4.8', '6.2']}, {'cycle': '2015-2016', 'table': 'nhanes.cbc_i', 'column': 'lymphocyte_number_1000_cells_ul', 'example_values': ['12.4', '0.9', '5.8', '1.6', '4.8']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'neutrophil count / lymphocyte count = neutrophil counts / lymphocyte counts'}}, {'step': 2, 'derivation_method': {'type': 'binning', 'strategy': 'quantiles', 'num_bins': 4, 'labels': ['Q1: <=25', 'Q2: >25 and <=50', 'Q3: >50 and <=75', 'Q4: >75']}}]}], 'outcome': [{'keyword': 'depression outcome', 'derived': True, 'depends_on': [{'keyword': 'have little interest in doing things', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'feeling down, depressed, or hopeless', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'trouble sleeping or sleeping too much', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'feeling tired or having little energy', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'poor appetite or overeating', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'feeling bad about yourself', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'trouble concentrating on things', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'moving or speaking slowly or too fast', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'thought you would be better off dead', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2009-2010', 'table': 'nhanes.dpq_f', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'sum', 'components': ['have little interest in doing things', 'feeling down, depressed, or hopeless', 'trouble sleeping or sleeping too much', 'feeling tired or having little energy', 'poor appetite or overeating', 'feeling bad about yourself', 'trouble concentrating on things', 'moving or speaking slowly or too fast', 'thought you would be better off dead'], 'missing_value_logic': 'if value is null assign (0)', 'output': 'total score'}}, {'step': 2, 'derivation_method': {'type': 'mapping', 'labels': ['1', '0'], 'condition': 'total score >=10'}}]}]}",,"-- TEMP TABLE FOR ""age at screening"", ""age at screening""
+DROP TABLE IF EXISTS temp_master_age_in_years_at_screening;
+CREATE TEMP TABLE temp_master_age_in_years_at_screening AS
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_in_years_at_screening ON temp_master_age_in_years_at_screening (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""self-reported diabetes""
+DROP TABLE IF EXISTS temp_master_doctor_told_you_have_diabetes;
+CREATE TEMP TABLE temp_master_doctor_told_you_have_diabetes AS
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_doctor_told_you_have_diabetes ON temp_master_doctor_told_you_have_diabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""takes diabetic medication""
+DROP TABLE IF EXISTS temp_master_take_diabetic_pills_to_lower_blood_sugar;
+CREATE TEMP TABLE temp_master_take_diabetic_pills_to_lower_blood_sugar AS
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_take_diabetic_pills_to_lower_blood_sugar ON temp_master_take_diabetic_pills_to_lower_blood_sugar (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""takes insulin""
+DROP TABLE IF EXISTS temp_master_taking_insulin_now;
+CREATE TEMP TABLE temp_master_taking_insulin_now AS
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_taking_insulin_now ON temp_master_taking_insulin_now (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""neutrophil counts"", ""neutrophil counts""
+DROP TABLE IF EXISTS temp_master_segmented_neutrophils_num_1000_cell_ul;
+CREATE TEMP TABLE temp_master_segmented_neutrophils_num_1000_cell_ul AS
+SELECT respondent_sequence_number, ""segmented_neutrophils_num_1000_cell_ul"" AS ""segmented_neutrophils_num_1000_cell_ul""
+FROM nhanes.cbc_g
+UNION ALL
+SELECT respondent_sequence_number, ""segmented_neutrophils_num_1000_cell_ul"" AS ""segmented_neutrophils_num_1000_cell_ul""
+FROM nhanes.cbc_f
+UNION ALL
+SELECT respondent_sequence_number, ""segmented_neutrophils_num_1000_cell_ul"" AS ""segmented_neutrophils_num_1000_cell_ul""
+FROM nhanes.cbc_h
+UNION ALL
+SELECT respondent_sequence_number, ""segmented_neutrophils_num_1000_cell_ul"" AS ""segmented_neutrophils_num_1000_cell_ul""
+FROM nhanes.cbc_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_segmented_neutrophils_num_1000_cell_ul ON temp_master_segmented_neutrophils_num_1000_cell_ul (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""lymphocyte counts"", ""lymphocyte counts""
+DROP TABLE IF EXISTS temp_master_lymphocyte_number_1000_cells_ul;
+CREATE TEMP TABLE temp_master_lymphocyte_number_1000_cells_ul AS
+SELECT respondent_sequence_number, ""lymphocyte_number_1000_cells_ul"" AS ""lymphocyte_number_1000_cells_ul""
+FROM nhanes.cbc_g
+UNION ALL
+SELECT respondent_sequence_number, ""lymphocyte_number_1000_cells_ul"" AS ""lymphocyte_number_1000_cells_ul""
+FROM nhanes.cbc_f
+UNION ALL
+SELECT respondent_sequence_number, ""lymphocyte_number_1000_cells_ul"" AS ""lymphocyte_number_1000_cells_ul""
+FROM nhanes.cbc_h
+UNION ALL
+SELECT respondent_sequence_number, ""lymphocyte_number_1000_cells_ul"" AS ""lymphocyte_number_1000_cells_ul""
+FROM nhanes.cbc_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_lymphocyte_number_1000_cells_ul ON temp_master_lymphocyte_number_1000_cells_ul (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""have little interest in doing things"", ""have little interest in doing things""
+DROP TABLE IF EXISTS temp_master_have_little_interest_in_doing_things;
+CREATE TEMP TABLE temp_master_have_little_interest_in_doing_things AS
+SELECT respondent_sequence_number, ""have_little_interest_in_doing_things"" AS ""have_little_interest_in_doing_things""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""have_little_interest_in_doing_things"" AS ""have_little_interest_in_doing_things""
+FROM nhanes.dpq_f
+UNION ALL
+SELECT respondent_sequence_number, ""have_little_interest_in_doing_things"" AS ""have_little_interest_in_doing_things""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""have_little_interest_in_doing_things"" AS ""have_little_interest_in_doing_things""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_have_little_interest_in_doing_things ON temp_master_have_little_interest_in_doing_things (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""feeling down, depressed, or hopeless"", ""feeling down, depressed, or hopeless""
+DROP TABLE IF EXISTS temp_master_feeling_down_depressed_or_hopeless;
+CREATE TEMP TABLE temp_master_feeling_down_depressed_or_hopeless AS
+SELECT respondent_sequence_number, ""feeling_down_depressed_or_hopeless"" AS ""feeling_down_depressed_or_hopeless""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_down_depressed_or_hopeless"" AS ""feeling_down_depressed_or_hopeless""
+FROM nhanes.dpq_f
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_down_depressed_or_hopeless"" AS ""feeling_down_depressed_or_hopeless""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_down_depressed_or_hopeless"" AS ""feeling_down_depressed_or_hopeless""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_feeling_down_depressed_or_hopeless ON temp_master_feeling_down_depressed_or_hopeless (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""trouble sleeping or sleeping too much"", ""trouble sleeping or sleeping too much""
+DROP TABLE IF EXISTS temp_master_trouble_sleeping_or_sleeping_too_much;
+CREATE TEMP TABLE temp_master_trouble_sleeping_or_sleeping_too_much AS
+SELECT respondent_sequence_number, ""trouble_sleeping_or_sleeping_too_much"" AS ""trouble_sleeping_or_sleeping_too_much""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""trouble_sleeping_or_sleeping_too_much"" AS ""trouble_sleeping_or_sleeping_too_much""
+FROM nhanes.dpq_f
+UNION ALL
+SELECT respondent_sequence_number, ""trouble_sleeping_or_sleeping_too_much"" AS ""trouble_sleeping_or_sleeping_too_much""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""trouble_sleeping_or_sleeping_too_much"" AS ""trouble_sleeping_or_sleeping_too_much""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_trouble_sleeping_or_sleeping_too_much ON temp_master_trouble_sleeping_or_sleeping_too_much (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""feeling tired or having little energy"", ""feeling tired or having little energy""
+DROP TABLE IF EXISTS temp_master_feeling_tired_or_having_little_energy;
+CREATE TEMP TABLE temp_master_feeling_tired_or_having_little_energy AS
+SELECT respondent_sequence_number, ""feeling_tired_or_having_little_energy"" AS ""feeling_tired_or_having_little_energy""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_tired_or_having_little_energy"" AS ""feeling_tired_or_having_little_energy""
+FROM nhanes.dpq_f
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_tired_or_having_little_energy"" AS ""feeling_tired_or_having_little_energy""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_tired_or_having_little_energy"" AS ""feeling_tired_or_having_little_energy""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_feeling_tired_or_having_little_energy ON temp_master_feeling_tired_or_having_little_energy (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""poor appetite or overeating"", ""poor appetite or overeating""
+DROP TABLE IF EXISTS temp_master_poor_appetite_or_overeating;
+CREATE TEMP TABLE temp_master_poor_appetite_or_overeating AS
+SELECT respondent_sequence_number, ""poor_appetite_or_overeating"" AS ""poor_appetite_or_overeating""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""poor_appetite_or_overeating"" AS ""poor_appetite_or_overeating""
+FROM nhanes.dpq_f
+UNION ALL
+SELECT respondent_sequence_number, ""poor_appetite_or_overeating"" AS ""poor_appetite_or_overeating""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""poor_appetite_or_overeating"" AS ""poor_appetite_or_overeating""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_poor_appetite_or_overeating ON temp_master_poor_appetite_or_overeating (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""feeling bad about yourself"", ""feeling bad about yourself""
+DROP TABLE IF EXISTS temp_master_feeling_bad_about_yourself;
+CREATE TEMP TABLE temp_master_feeling_bad_about_yourself AS
+SELECT respondent_sequence_number, ""feeling_bad_about_yourself"" AS ""feeling_bad_about_yourself""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_bad_about_yourself"" AS ""feeling_bad_about_yourself""
+FROM nhanes.dpq_f
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_bad_about_yourself"" AS ""feeling_bad_about_yourself""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_bad_about_yourself"" AS ""feeling_bad_about_yourself""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_feeling_bad_about_yourself ON temp_master_feeling_bad_about_yourself (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""trouble concentrating on things"", ""trouble concentrating on things""
+DROP TABLE IF EXISTS temp_master_trouble_concentrating_on_things;
+CREATE TEMP TABLE temp_master_trouble_concentrating_on_things AS
+SELECT respondent_sequence_number, ""trouble_concentrating_on_things"" AS ""trouble_concentrating_on_things""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""trouble_concentrating_on_things"" AS ""trouble_concentrating_on_things""
+FROM nhanes.dpq_f
+UNION ALL
+SELECT respondent_sequence_number, ""trouble_concentrating_on_things"" AS ""trouble_concentrating_on_things""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""trouble_concentrating_on_things"" AS ""trouble_concentrating_on_things""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_trouble_concentrating_on_things ON temp_master_trouble_concentrating_on_things (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""moving or speaking slowly or too fast"", ""moving or speaking slowly or too fast""
+DROP TABLE IF EXISTS temp_master_moving_or_speaking_slowly_or_too_fast;
+CREATE TEMP TABLE temp_master_moving_or_speaking_slowly_or_too_fast AS
+SELECT respondent_sequence_number, ""moving_or_speaking_slowly_or_too_fast"" AS ""moving_or_speaking_slowly_or_too_fast""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""moving_or_speaking_slowly_or_too_fast"" AS ""moving_or_speaking_slowly_or_too_fast""
+FROM nhanes.dpq_f
+UNION ALL
+SELECT respondent_sequence_number, ""moving_or_speaking_slowly_or_too_fast"" AS ""moving_or_speaking_slowly_or_too_fast""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""moving_or_speaking_slowly_or_too_fast"" AS ""moving_or_speaking_slowly_or_too_fast""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_moving_or_speaking_slowly_or_too_fast ON temp_master_moving_or_speaking_slowly_or_too_fast (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""thought you would be better off dead"", ""thought you would be better off dead""
+DROP TABLE IF EXISTS temp_master_thought_you_would_be_better_off_dead;
+CREATE TEMP TABLE temp_master_thought_you_would_be_better_off_dead AS
+SELECT respondent_sequence_number, ""thought_you_would_be_better_off_dead"" AS ""thought_you_would_be_better_off_dead""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""thought_you_would_be_better_off_dead"" AS ""thought_you_would_be_better_off_dead""
+FROM nhanes.dpq_f
+UNION ALL
+SELECT respondent_sequence_number, ""thought_you_would_be_better_off_dead"" AS ""thought_you_would_be_better_off_dead""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""thought_you_would_be_better_off_dead"" AS ""thought_you_would_be_better_off_dead""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_thought_you_would_be_better_off_dead ON temp_master_thought_you_would_be_better_off_dead (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""gender""
+DROP TABLE IF EXISTS temp_master_gender;
+CREATE TEMP TABLE temp_master_gender AS
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_gender ON temp_master_gender (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""race/hispanic origin""
+DROP TABLE IF EXISTS temp_master_race_hispanic_origin;
+CREATE TEMP TABLE temp_master_race_hispanic_origin AS
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_race_hispanic_origin ON temp_master_race_hispanic_origin (respondent_sequence_number);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT respondent_sequence_number FROM temp_master_age_in_years_at_screening
+UNION
+SELECT respondent_sequence_number FROM temp_master_doctor_told_you_have_diabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_take_diabetic_pills_to_lower_blood_sugar
+UNION
+SELECT respondent_sequence_number FROM temp_master_taking_insulin_now
+UNION
+SELECT respondent_sequence_number FROM temp_master_segmented_neutrophils_num_1000_cell_ul
+UNION
+SELECT respondent_sequence_number FROM temp_master_lymphocyte_number_1000_cells_ul
+UNION
+SELECT respondent_sequence_number FROM temp_master_have_little_interest_in_doing_things
+UNION
+SELECT respondent_sequence_number FROM temp_master_feeling_down_depressed_or_hopeless
+UNION
+SELECT respondent_sequence_number FROM temp_master_trouble_sleeping_or_sleeping_too_much
+UNION
+SELECT respondent_sequence_number FROM temp_master_feeling_tired_or_having_little_energy
+UNION
+SELECT respondent_sequence_number FROM temp_master_poor_appetite_or_overeating
+UNION
+SELECT respondent_sequence_number FROM temp_master_feeling_bad_about_yourself
+UNION
+SELECT respondent_sequence_number FROM temp_master_trouble_concentrating_on_things
+UNION
+SELECT respondent_sequence_number FROM temp_master_moving_or_speaking_slowly_or_too_fast
+UNION
+SELECT respondent_sequence_number FROM temp_master_thought_you_would_be_better_off_dead
+UNION
+SELECT respondent_sequence_number FROM temp_master_gender
+UNION
+SELECT respondent_sequence_number FROM temp_master_race_hispanic_origin;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_respondent_sequence_number ON temp_all_ids (respondent_sequence_number);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.respondent_sequence_number,
+    t0.""age_in_years_at_screening"",
+    t1.""doctor_told_you_have_diabetes"",
+    t2.""take_diabetic_pills_to_lower_blood_sugar"",
+    t3.""taking_insulin_now"",
+    t4.""segmented_neutrophils_num_1000_cell_ul"",
+    t5.""lymphocyte_number_1000_cells_ul"",
+    t6.""have_little_interest_in_doing_things"",
+    t7.""feeling_down_depressed_or_hopeless"",
+    t8.""trouble_sleeping_or_sleeping_too_much"",
+    t9.""feeling_tired_or_having_little_energy"",
+    t10.""poor_appetite_or_overeating"",
+    t11.""feeling_bad_about_yourself"",
+    t12.""trouble_concentrating_on_things"",
+    t13.""moving_or_speaking_slowly_or_too_fast"",
+    t14.""thought_you_would_be_better_off_dead"",
+    t15.""gender"",
+    t16.""race_hispanic_origin""
+FROM temp_all_ids a
+LEFT JOIN temp_master_age_in_years_at_screening t0 ON a.respondent_sequence_number = t0.respondent_sequence_number 
+LEFT JOIN temp_master_doctor_told_you_have_diabetes t1 ON a.respondent_sequence_number = t1.respondent_sequence_number 
+LEFT JOIN temp_master_take_diabetic_pills_to_lower_blood_sugar t2 ON a.respondent_sequence_number = t2.respondent_sequence_number 
+LEFT JOIN temp_master_taking_insulin_now t3 ON a.respondent_sequence_number = t3.respondent_sequence_number 
+LEFT JOIN temp_master_segmented_neutrophils_num_1000_cell_ul t4 ON a.respondent_sequence_number = t4.respondent_sequence_number 
+LEFT JOIN temp_master_lymphocyte_number_1000_cells_ul t5 ON a.respondent_sequence_number = t5.respondent_sequence_number 
+LEFT JOIN temp_master_have_little_interest_in_doing_things t6 ON a.respondent_sequence_number = t6.respondent_sequence_number 
+LEFT JOIN temp_master_feeling_down_depressed_or_hopeless t7 ON a.respondent_sequence_number = t7.respondent_sequence_number 
+LEFT JOIN temp_master_trouble_sleeping_or_sleeping_too_much t8 ON a.respondent_sequence_number = t8.respondent_sequence_number 
+LEFT JOIN temp_master_feeling_tired_or_having_little_energy t9 ON a.respondent_sequence_number = t9.respondent_sequence_number 
+LEFT JOIN temp_master_poor_appetite_or_overeating t10 ON a.respondent_sequence_number = t10.respondent_sequence_number 
+LEFT JOIN temp_master_feeling_bad_about_yourself t11 ON a.respondent_sequence_number = t11.respondent_sequence_number 
+LEFT JOIN temp_master_trouble_concentrating_on_things t12 ON a.respondent_sequence_number = t12.respondent_sequence_number 
+LEFT JOIN temp_master_moving_or_speaking_slowly_or_too_fast t13 ON a.respondent_sequence_number = t13.respondent_sequence_number 
+LEFT JOIN temp_master_thought_you_would_be_better_off_dead t14 ON a.respondent_sequence_number = t14.respondent_sequence_number 
+LEFT JOIN temp_master_gender t15 ON a.respondent_sequence_number = t15.respondent_sequence_number 
+LEFT JOIN temp_master_race_hispanic_origin t16 ON a.respondent_sequence_number = t16.respondent_sequence_number;
+
+CREATE INDEX idx_final_master_respondent_sequence_number    
+    ON final_master_table (respondent_sequence_number);
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Includes all patients age at screening 18 years or more
+CREATE TEMP TABLE temp_inclusion_step1 AS
+SELECT ""respondent_sequence_number""
+FROM final_master_table
+WHERE ""age_in_years_at_screening"" >= 18;
+
+-- STEP 1.2: Include participants who have diabetes
+CREATE TEMP TABLE temp_inclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""doctor_told_you_have_diabetes"" = 'Yes'
+   OR f.""take_diabetic_pills_to_lower_blood_sugar"" = 'Yes'
+   OR f.""taking_insulin_now"" = 'Yes';
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude patients with missing neutrophil counts
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion_step2 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""segmented_neutrophils_num_1000_cell_ul"" IS NOT NULL;
+
+-- STEP 2.2: Exclude patients with missing lymphocyte counts
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""lymphocyte_number_1000_cells_ul"" IS NOT NULL;
+
+-- STEP 2.3: Exclude participants missing any of the depression questions
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""have_little_interest_in_doing_things"" IS NOT NULL
+  AND f.""feeling_down_depressed_or_hopeless"" IS NOT NULL
+  AND f.""trouble_sleeping_or_sleeping_too_much"" IS NOT NULL
+  AND f.""feeling_tired_or_having_little_energy"" IS NOT NULL
+  AND f.""poor_appetite_or_overeating"" IS NOT NULL
+  AND f.""feeling_bad_about_yourself"" IS NOT NULL
+  AND f.""trouble_concentrating_on_things"" IS NOT NULL
+  AND f.""moving_or_speaking_slowly_or_too_fast"" IS NOT NULL
+  AND f.""thought_you_would_be_better_off_dead"" IS NOT NULL;
+
+-- ========== STEP 3: Cohort ==========
+
+-- The final temp table in the exclusion sequence becomes temp_cohort.
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""respondent_sequence_number""
+FROM temp_exclusion_step3;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Age at screening
+-- Extract age at screening
+CREATE TEMP TABLE temp_age_at_screening AS
+SELECT c.""respondent_sequence_number"", f.""age_in_years_at_screening"" AS ""age_at_screening""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.2 Gender
+-- Extract gender
+CREATE TEMP TABLE temp_gender AS
+SELECT c.""respondent_sequence_number"", f.""gender""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.3 Race/Hispanic origin
+-- Extract race/hispanic origin
+CREATE TEMP TABLE temp_race_hispanic_origin AS
+SELECT c.""respondent_sequence_number"", f.""race_hispanic_origin""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.4 Neutrophil count / lymphocyte count
+-- Calculate neutrophil count / lymphocyte count
+CREATE TEMP TABLE temp_neutrophil_lymphocyte_ratio AS
+SELECT c.""respondent_sequence_number"",
+       CASE
+           WHEN f.""lymphocyte_number_1000_cells_ul"" = 0 THEN NULL  -- Avoid division by zero
+           ELSE f.""segmented_neutrophils_num_1000_cell_ul"" / f.""lymphocyte_number_1000_cells_ul""
+       END AS ""neutrophil_count_lymphocyte_count""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Compute quartile cutoffs for neutrophil count / lymphocyte count within cohort
+CREATE TEMP TABLE temp_neutrophil_lymphocyte_ratio_cutoffs AS
+SELECT
+  PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY ""neutrophil_count_lymphocyte_count"") AS q1,
+  PERCENTILE_CONT(0.5)  WITHIN GROUP (ORDER BY ""neutrophil_count_lymphocyte_count"") AS q2,
+  PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY ""neutrophil_count_lymphocyte_count"") AS q3
+FROM temp_neutrophil_lymphocyte_ratio;
+
+-- Assign neutrophil count / lymphocyte count quartile group
+CREATE TEMP TABLE temp_neutrophil_lymphocyte_ratio_quartiles AS
+SELECT ""respondent_sequence_number"",
+  CASE
+    WHEN ""neutrophil_count_lymphocyte_count"" IS NULL THEN NULL
+    WHEN ""neutrophil_count_lymphocyte_count"" <= (SELECT q1 FROM temp_neutrophil_lymphocyte_ratio_cutoffs) THEN 'Q1'
+    WHEN ""neutrophil_count_lymphocyte_count"" > (SELECT q1 FROM temp_neutrophil_lymphocyte_ratio_cutoffs) AND ""neutrophil_count_lymphocyte_count"" <= (SELECT q2 FROM temp_neutrophil_lymphocyte_ratio_cutoffs) THEN 'Q2'
+    WHEN ""neutrophil_count_lymphocyte_count"" > (SELECT q2 FROM temp_neutrophil_lymphocyte_ratio_cutoffs) AND ""neutrophil_count_lymphocyte_count"" <= (SELECT q3 FROM temp_neutrophil_lymphocyte_ratio_cutoffs) THEN 'Q3'
+    ELSE 'Q4'
+  END AS ""neutrophil_count_lymphocyte_count""
+FROM temp_neutrophil_lymphocyte_ratio;
+
+-- 4.5 Depression outcome
+-- Calculate total score for depression questions
+CREATE TEMP TABLE temp_depression_score AS
+SELECT c.""respondent_sequence_number"",
+       (COALESCE(CASE WHEN f.""have_little_interest_in_doing_things"" = 'Not at all' THEN 0
+                       WHEN f.""have_little_interest_in_doing_things"" = 'Several days' THEN 1
+                       WHEN f.""have_little_interest_in_doing_things"" = 'More than half the days' THEN 2
+                       WHEN f.""have_little_interest_in_doing_things"" = 'Nearly every day' THEN 3
+                       ELSE 0 END, 0) +
+        COALESCE(CASE WHEN f.""feeling_down_depressed_or_hopeless"" = 'Not at all' THEN 0
+                       WHEN f.""feeling_down_depressed_or_hopeless"" = 'Several days' THEN 1
+                       WHEN f.""feeling_down_depressed_or_hopeless"" = 'More than half the days' THEN 2
+                       WHEN f.""feeling_down_depressed_or_hopeless"" = 'Nearly every day' THEN 3
+                       ELSE 0 END, 0) +
+        COALESCE(CASE WHEN f.""trouble_sleeping_or_sleeping_too_much"" = 'Not at all' THEN 0
+                       WHEN f.""trouble_sleeping_or_sleeping_too_much"" = 'Several days' THEN 1
+                       WHEN f.""trouble_sleeping_or_sleeping_too_much"" = 'More than half the days' THEN 2
+                       WHEN f.""trouble_sleeping_or_sleeping_too_much"" = 'Nearly every day' THEN 3
+                       ELSE 0 END, 0) +
+        COALESCE(CASE WHEN f.""feeling_tired_or_having_little_energy"" = 'Not at all' THEN 0
+                       WHEN f.""feeling_tired_or_having_little_energy"" = 'Several days' THEN 1
+                       WHEN f.""feeling_tired_or_having_little_energy"" = 'More than half the days' THEN 2
+                       WHEN f.""feeling_tired_or_having_little_energy"" = 'Nearly every day' THEN 3
+                       ELSE 0 END, 0) +
+        COALESCE(CASE WHEN f.""poor_appetite_or_overeating"" = 'Not at all' THEN 0
+                       WHEN f.""poor_appetite_or_overeating"" = 'Several days' THEN 1
+                       WHEN f.""poor_appetite_or_overeating"" = 'More than half the days' THEN 2
+                       WHEN f.""poor_appetite_or_overeating"" = 'Nearly every day' THEN 3
+                       ELSE 0 END, 0) +
+        COALESCE(CASE WHEN f.""feeling_bad_about_yourself"" = 'Not at all' THEN 0
+                       WHEN f.""feeling_bad_about_yourself"" = 'Several days' THEN 1
+                       WHEN f.""feeling_bad_about_yourself"" = 'More than half the days' THEN 2
+                       WHEN f.""feeling_bad_about_yourself"" = 'Nearly every day' THEN 3
+                       ELSE 0 END, 0) +
+        COALESCE(CASE WHEN f.""trouble_concentrating_on_things"" = 'Not at all' THEN 0
+                       WHEN f.""trouble_concentrating_on_things"" = 'Several days' THEN 1
+                       WHEN f.""trouble_concentrating_on_things"" = 'More than half the days' THEN 2
+                       WHEN f.""trouble_concentrating_on_things"" = 'Nearly every day' THEN 3
+                       ELSE 0 END, 0) +
+        COALESCE(CASE WHEN f.""moving_or_speaking_slowly_or_too_fast"" = 'Not at all' THEN 0
+                       WHEN f.""moving_or_speaking_slowly_or_too_fast"" = 'Several days' THEN 1
+                       WHEN f.""moving_or_speaking_slowly_or_too_fast"" = 'More than half the days' THEN 2
+                       WHEN f.""moving_or_speaking_slowly_or_too_fast"" = 'Nearly every day' THEN 3
+                       ELSE 0 END, 0) +
+        COALESCE(CASE WHEN f.""thought_you_would_be_better_off_dead"" = 'Not at all' THEN 0
+                       WHEN f.""thought_you_would_be_better_off_dead"" = 'Several days' THEN 1
+                       WHEN f.""thought_you_would_be_better_off_dead"" = 'More than half the days' THEN 2
+                       WHEN f.""thought_you_would_be_better_off_dead"" = 'Nearly every day' THEN 3
+                       ELSE 0 END, 0)) AS ""total_score""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Determine depression outcome
+CREATE TEMP TABLE temp_depression_outcome AS
+SELECT ""respondent_sequence_number"",
+       CASE
+           WHEN ""total_score"" >= 10 THEN '1'
+           ELSE '0'
+       END AS ""depression_outcome""
+FROM temp_depression_score;
+
+-- ========== STEP 5: Final Output ==========
+CREATE TEMP TABLE temp_final_table AS
+SELECT
+  c.""respondent_sequence_number"",
+  age.""age_at_screening"",
+  g.""gender"",
+  r.""race_hispanic_origin"",
+  nl.""neutrophil_count_lymphocyte_count"",
+  d.""depression_outcome""
+FROM temp_cohort c
+JOIN temp_age_at_screening age ON c.""respondent_sequence_number"" = age.""respondent_sequence_number""
+JOIN temp_gender g ON c.""respondent_sequence_number"" = g.""respondent_sequence_number""
+JOIN temp_race_hispanic_origin r ON c.""respondent_sequence_number"" = r.""respondent_sequence_number""
+JOIN temp_neutrophil_lymphocyte_ratio_quartiles nl ON c.""respondent_sequence_number"" = nl.""respondent_sequence_number""
+JOIN temp_depression_outcome d ON c.""respondent_sequence_number"" = d.""respondent_sequence_number"";
+
+-- ========== STEP 6: View Output ==========
+SELECT * FROM temp_final_table;","    step_num                                                                            step  remaining_after_step  excluded_at_step
+0          0               STEP 1.1: Includes all patients age at screening 18 years or more                 24496               NaN
+1          1                                STEP 1.2: Include participants who have diabetes                  3202           21294.0
+2          2                       STEP 2.1: Exclude patients with missing neutrophil counts                  2971             231.0
+3          3                       STEP 2.2: Exclude patients with missing lymphocyte counts                  2971               0.0
+4          4          STEP 2.3: Exclude participants missing any of the depression questions                  2703             268.0
+5          5             The final temp table in the exclusion sequence becomes temp_cohort.                  2703               0.0
+6          6                                                        Extract age at screening                  2703               0.0
+7          7                                                                  Extract gender                  2703               0.0
+8          8                                                    Extract race/hispanic origin                  2703               0.0
+9          9                                   Calculate neutrophil count / lymphocyte count                  2703               0.0
+10        10  Compute quartile cutoffs for neutrophil count / lymphocyte count within cohort                     1            2702.0
+11        11                       Assign neutrophil count / lymphocyte count quartile group                  2703           -2702.0
+12        12                                  Calculate total score for depression questions                  2703               0.0
+13        13                                                    Determine depression outcome                  2703               0.0
+14        14                                      ========== STEP 5: Final Output ==========                  2703               0.0","(2703, 6)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""respondent_sequence_number"")
+    outcome_vars <- c(""depression_outcome"")
+    
+    cohort <- df
+
+
+    outcome_roles <- c()
+    outcome_roles[""depression_outcome""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    x_raw <- df[[outcome_var]]
+    x_chr <- trimws(tolower(as.character(x_raw)))
+
+    none_tokens <- c(""none"", ""nan"", ""na"", """", ""null"", ""nil"", ""missing"")
+    x_chr[x_chr %in% none_tokens] <- NA_character_
+
+    y <- rep(NA_integer_, length(x_chr))
+
+    y[x_chr %in% c(""yes"", ""y"", ""true"", ""t"")]  <- 1L
+    y[x_chr %in% c(""no"",  ""n"", ""false"", ""f"")] <- 0L
+
+    x_num <- suppressWarnings(as.numeric(x_chr))
+    y[is.na(y) & !is.na(x_num) & x_num == 1] <- 1L
+    y[is.na(y) & !is.na(x_num) & x_num == 0] <- 0L
+
+    idx <- is.na(y) & !is.na(x_chr)
+    if (any(idx)) {
+    vals <- sort(unique(x_chr[idx]))
+
+    if (length(vals) != 2) {
+        stop(sprintf(
+        ""Outcome '%s' must have exactly 2 non-missing classes after excluding none. Found: %s"",
+        outcome_var, paste(vals, collapse = "", "")
+        ))
+    }
+
+    tab <- table(x_chr[idx])
+    minority <- names(tab)[which.min(tab)]
+    majority <- setdiff(vals, minority)
+
+    cat(sprintf(
+        ""Outcome '%s' recoding: 1 = %s (minority)  0 = %s (majority)"",
+        outcome_var, minority, majority
+    ))
+
+    y[idx] <- as.integer(x_chr[idx] == minority)
+    }
+
+    df[[outcome_var]] <- y
+
+    # Must contain both 0 and 1 somewhere (plus NA allowed)
+    u <- sort(unique(df[[outcome_var]][!is.na(df[[outcome_var]])]))
+    if (!(length(u) == 2 && all(u == c(0, 1)))) {
+    stop(sprintf(
+        ""After recoding, '%s' must contain both 0 and 1 (plus NA for none). Found: %s"",
+        outcome_var,
+        ifelse(length(u) == 0, ""<no non-missing values>"", paste(u, collapse = "", ""))
+    ))
+    }
+
+    formula <- as.formula(paste0(outcome_var, "" ~ "", paste(predictor_vars, collapse = "" + "")))
+                
+    
+        
+    
+    model <- glm(formula,
+                data = df,
+                family =  binomial(link = ""logit""))
+            
+    
+    result_table <- tidy(model, conf.int = TRUE, exponentiate = TRUE) %>%
+        select(term, estimate, p.value, conf.low, conf.high)
+
+            
+    ","[{'variable': 'respondent_sequence_number', 'category': 'identifier', 'n_unique': 2703, 'na_count': 0, 'summary': 'Total rows = 2703'}, {'variable': 'age_at_screening', 'category': 'numerical', 'n_unique': 63, 'na_count': 0, 'summary': 'mean = 61.737, sd = 13.947'}, {'variable': 'gender', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'Female: 49.8%; Male: 50.2%'}, {'variable': 'race_hispanic_origin', 'category': 'categorical', 'n_unique': 5, 'na_count': 0, 'summary': 'Mexican American: 18.4%; Non-Hispanic Black: 25.9%; Non-Hispanic White: 34.1%; Other Hispanic: 11.5%; Other Race - Including Multi-Racial: 10.1%'}, {'variable': 'neutrophil_count_lymphocyte_count', 'category': 'categorical', 'n_unique': 4, 'na_count': 0, 'summary': 'Q1: 25%; Q2: 25%; Q3: 25%; Q4: 24.9%'}, {'variable': 'depression_outcome', 'category': 'outcome', 'n_unique': 2, 'na_count': 0, 'summary': '0: 86%; 1: 14%'}]","[{'term': '(Intercept)', 'estimate': 0.22229068036067043, 'p.value': 5.893400505145165e-07, 'conf.low': 0.1225049640994719, 'conf.high': 0.3989675948990326}, {'term': 'age_at_screening', 'estimate': 0.9829631656063862, 'p.value': 1.683437381332289e-05, 'conf.low': 0.9753064042866558, 'conf.high': 0.9907018778272393}, {'term': 'genderFemale', 'estimate': 2.419062669455297, 'p.value': 1.5131801349242662e-13, 'conf.low': 1.9177957523042208, 'conf.high': 3.065996241524336}, {'term': 'race_hispanic_originMexican American', 'estimate': 1.0877315044031692, 'p.value': 0.6019015000346642, 'conf.low': 0.7907088885205215, 'conf.high': 1.4885913864379174}, {'term': 'race_hispanic_originNon-Hispanic Black', 'estimate': 0.9099065388134222, 'p.value': 0.545962973672808, 'conf.low': 0.6683090858550043, 'conf.high': 1.2343696081834397}, {'term': 'race_hispanic_originOther Hispanic', 'estimate': 1.5228249042435746, 'p.value': 0.016380504850253393, 'conf.low': 1.0757453237198222, 'conf.high': 2.1399322681964055}, {'term': 'race_hispanic_originOther Race - Including Multi-Racial', 'estimate': 0.5178601078962662, 'p.value': 0.007748557358855719, 'conf.low': 0.31170238911744613, 'conf.high': 0.824674647448424}, {'term': 'neutrophil_count_lymphocyte_countQ2', 'estimate': 1.0653648171710144, 'p.value': 0.707766088695504, 'conf.low': 0.7648526260398673, 'conf.high': 1.4842893750725972}, {'term': 'neutrophil_count_lymphocyte_countQ3', 'estimate': 1.3306554590195914, 'p.value': 0.08431021143260253, 'conf.low': 0.9627201336362717, 'conf.high': 1.8431753884291389}, {'term': 'neutrophil_count_lymphocyte_countQ4', 'estimate': 1.667165152540525, 'p.value': 0.0021681176986287245, 'conf.low': 1.2040627295638717, 'conf.high': 2.3159837346068852}]",,,,logistic regression,2009-2016,"[[2009, 2010], [2011, 2012], [2013, 2014], [2015, 2016]]",google_gemini-2.0-flash,"Review Required.
+The analysis plan is almost complete but needs some clarification.
+1. The predictor ""neutrophil count / lymphocyte count, categorize in quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75"" is ambiguous. What percentage are you referring to?
+2. Please confirm the variables for ""age at screening"", ""gender"", and ""race/Hispanic origin"" in the NHANES dataset.
+",[],,238.391808,"[[None, None, None], [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None], [None]]",False,0,,/home/nayoonkim/LATCH/analyses/results/fig_22_16_google_gemini-2.0-flash_result_log.csv,

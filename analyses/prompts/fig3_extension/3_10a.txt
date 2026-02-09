@@ -1,0 +1,5 @@
+Do logistic regression for using AIREADI data from 2023-2025.
+Include participants who reported to have diabetes.
+Exclude participants who had missing diabetes status or missing status on diabetic retinopathy or participant who did not report to have diabetes or missing values in Kidney disease status.
+Predictor will be Kidney disease status: categorize as no (group1), yes (group2). Outcome will be diabetic retinopathy presence. Consider age in the analysis.
+    

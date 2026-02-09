@@ -1,0 +1,883 @@
+Title,Schema,Question,Structured Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log
+39671,aireadi,"We want to do a logistic regression analysis to study the association between UACR-SACR ratio and diabetic retinopathy. 
+UACR-SACR ratio will be calculated as ((urinary albumin (ug/ml) divided by urinary creatinine (ug/ml)*1000)/ (serum albumin ALB (g/dL)/serum creatinine SCR (mg/dL))) and then categorized in quartiles in quartiles Q1: <=25%, Q2: >25 and <=50, Q3: >50 and <=75%, Q4: >75%.
+Diabetic retinopathy presence will be based on their response from diabetic retionopathy question, categorized as 1 and 0.
+We will used AIREADI data from 2023-2025, and will exclude participants whose age were less than 20 years old, who didn't say yes when asked about diabetes diagnosis, missing status on diabetic retinopathy, missing serum albumin (ALB) (g/dL), serum creatinine (SCR) (mg/dL), urinary albumin (ug/ml), urinary creatinine (ug/ml).
+for analysis, include the following covariates: age.","Analysis Type: logistic regression
+
+Dataset: AIREADI
+
+Period of Interest: 2023-2025
+
+Inclusion Criteria:
+- age >= 20
+- diabetes diagnosis = Yes
+
+Exclusion Criteria:
+- missing status on diabetic retinopathy
+- missing serum albumin ALB (g/dL)
+- missing serum creatinine SCR (mg/dL)
+- missing urinary albumin (ug/ml)
+- missing urinary creatinine (ug/ml)
+
+Covariates:
+- age
+
+Predictor:
+- UACR-SACR ratio calculated as:
+  ((urinary albumin (ug/ml) / urinary creatinine (ug/ml) * 1000) / (serum albumin ALB (g/dL) / serum creatinine SCR (mg/dL)))
+  categorized into quartiles:
+    Q1: <=25%
+    Q2: >25 and <=50%
+    Q3: >50 and <=75%
+    Q4: >75%
+
+Outcome:
+- diabetic retinopathy presence = 1 if diabetic retionopathy question = Yes; 0 otherwise","{'dataset': 'AIREADI', 'inclusion': [{'keyword': 'age', 'derived': False, 'condition': '>= 20', 'table': 'final_master_table', 'column': 'age', 'examples': ['40', '42', '43', '44', '51']}, {'keyword': 'diabetes diagnosis', 'derived': False, 'condition': '=Yes', 'table': 'final_master_table', 'column': 'type_ii_diabetes', 'examples': ['No', 'Yes']}], 'exclusion': [{'keyword': 'status on diabetic retinopathy', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'examples': ['No', 'Yes']}, {'keyword': 'serum albumin alb (g/dL)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'albumin_g_dl', 'examples': ['2.4', '2.5', '3.2', '3.4', '3.5']}, {'keyword': 'serum creatinine scr (mg/dL)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'creatinine_mg_dl', 'examples': ['0.66', '0.7', '0.76', '0.8', '0.9']}, {'keyword': 'urinary albumin (ug/ml)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'urine_albumin_ug_ml', 'examples': ['0.0', '0.02', '0.8', '0.87', '0.94']}, {'keyword': 'urinary creatinine (ug/ml)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'urine_creatinine_ug_ml', 'examples': ['0.0', '14.1', '18.7', '24.6', '27.7']}], 'covariates': [{'keyword': 'age', 'derived': False, 'table': 'final_master_table', 'column': 'age', 'examples': ['40', '42', '43', '44', '51']}], 'predictor': [{'keyword': 'uacr-sacr ratio', 'derived': True, 'depends_on': [{'keyword': 'urinary albumin (ug/ml)', 'derived': False, 'table': 'final_master_table', 'column': 'urine_albumin_ug_ml', 'examples': ['0.0', '0.02', '0.8', '0.87', '0.94']}, {'keyword': 'urinary creatinine (ug/ml)', 'derived': False, 'table': 'final_master_table', 'column': 'urine_creatinine_ug_ml', 'examples': ['0.0', '14.1', '18.7', '24.6', '27.7']}, {'keyword': 'serum albumin alb (g/dL)', 'derived': False, 'table': 'final_master_table', 'column': 'albumin_g_dl', 'examples': ['2.4', '2.5', '3.2', '3.4', '3.5']}, {'keyword': 'serum creatinine scr (mg/dL)', 'derived': False, 'table': 'final_master_table', 'column': 'creatinine_mg_dl', 'examples': ['0.66', '0.7', '0.76', '0.8', '0.9']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'uacr-sacr ratio = ((urinary albumin (ug/ml) / urinary creatinine (ug/ml) * 1000) / (serum albumin ALB (g/dL) / serum creatinine SCR (mg/dL)))'}}, {'step': 2, 'derivation_method': {'type': 'binning', 'strategy': 'quantiles', 'num_bins': 4, 'labels': ['Q1: <=25%', 'Q2: >25 and <=50%', 'Q3: >50 and <=75%', 'Q4: >75%']}}]}], 'outcome': [{'keyword': 'diabetic retinopathy presence', 'derived': True, 'depends_on': [{'keyword': 'diabetic retionopathy question', 'derived': False, 'table': 'final_master_table', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'examples': ['No', 'Yes']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['1', '0']}}]}]}","{'analysis_type': 'logistic regression', 'dataset': 'AIREADI', 'period_of_interest': '2023-2025', 'inclusion': [{'keyword': 'age', 'derived': False, 'condition': '>= 20', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.participants', 'column': 'age', 'example_values': ['87', '71', '68', '51', '70', '80', '52', '84', '92', '69', '60', '59', '65', '73', '44', '42', '88', '82', '40', '43']}]}, {'keyword': 'diabetes diagnosis', 'derived': False, 'condition': '=Yes', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'type_ii_diabetes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}], 'exclusion': [{'keyword': 'status on diabetic retinopathy', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}, {'keyword': 'serum albumin alb (g/dL)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'albumin_g_dl', 'example_values': ['4.8', '4.3', '3.7', '5.3', '4.21', '5.2', '3.5', '3.9', '2.5', '3.4', '4.4', '4.7', '5.0', '3.6', '3.8', '4.1', '4.9', '3.2', '2.4', '4.0']}]}, {'keyword': 'serum creatinine scr (mg/dL)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'creatinine_mg_dl', 'example_values': ['1.97', '0.66', '1.36', '1.15', '2.11', '0.7', '0.76', '1.18', '1.84', '0.94', '0.8', '0.93', '1.19', '0.97', '1.68', '1.63', '2.41', '0.91', '0.9', '1.83']}]}, {'keyword': 'urinary albumin (ug/ml)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'urine_albumin_ug_ml', 'example_values': ['2.11', '0.02', '36.1', '0.94', '3.07', '0.8', '3.71', '15.23', '11.94', '1.68', '0.0', '74.67', '148.33', '62.52', '4.8', '1.86', '0.87', '23.05', '6.65', '12.97']}]}, {'keyword': 'urinary creatinine (ug/ml)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'urine_creatinine_ug_ml', 'example_values': ['44.2', '173.8', '24.6', '153.2', '121.7', '14.1', '60.5', '0.0', '79.2', '44.6', '132.7', '96.0', '61.0', '62.7', '94.9', '27.7', '18.7', '29.7', '283.4', '68.9']}]}], 'covariates': [{'keyword': 'age', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.participants', 'column': 'age', 'example_values': ['87', '71', '68', '51', '70', '80', '52', '84', '92', '69', '60', '59', '65', '73', '44', '42', '88', '82', '40', '43']}]}], 'predictor': [{'keyword': 'uacr-sacr ratio', 'derived': True, 'depends_on': [{'keyword': 'urinary albumin (ug/ml)', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'urine_albumin_ug_ml', 'example_values': ['2.11', '0.02', '36.1', '0.94', '3.07', '0.8', '3.71', '15.23', '11.94', '1.68', '0.0', '74.67', '148.33', '62.52', '4.8', '1.86', '0.87', '23.05', '6.65', '12.97']}]}, {'keyword': 'urinary creatinine (ug/ml)', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'urine_creatinine_ug_ml', 'example_values': ['44.2', '173.8', '24.6', '153.2', '121.7', '14.1', '60.5', '0.0', '79.2', '44.6', '132.7', '96.0', '61.0', '62.7', '94.9', '27.7', '18.7', '29.7', '283.4', '68.9']}]}, {'keyword': 'serum albumin alb (g/dL)', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'albumin_g_dl', 'example_values': ['4.8', '4.3', '3.7', '5.3', '4.21', '5.2', '3.5', '3.9', '2.5', '3.4', '4.4', '4.7', '5.0', '3.6', '3.8', '4.1', '4.9', '3.2', '2.4', '4.0']}]}, {'keyword': 'serum creatinine scr (mg/dL)', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.measurement', 'column': 'creatinine_mg_dl', 'example_values': ['1.97', '0.66', '1.36', '1.15', '2.11', '0.7', '0.76', '1.18', '1.84', '0.94', '0.8', '0.93', '1.19', '0.97', '1.68', '1.63', '2.41', '0.91', '0.9', '1.83']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'uacr-sacr ratio = ((urinary albumin (ug/ml) / urinary creatinine (ug/ml) * 1000) / (serum albumin ALB (g/dL) / serum creatinine SCR (mg/dL)))'}}, {'step': 2, 'derivation_method': {'type': 'binning', 'strategy': 'quantiles', 'num_bins': 4, 'labels': ['Q1: <=25%', 'Q2: >25 and <=50%', 'Q3: >50 and <=75%', 'Q4: >75%']}}]}], 'outcome': [{'keyword': 'diabetic retinopathy presence', 'derived': True, 'depends_on': [{'keyword': 'diabetic retionopathy question', 'derived': False, 'data_sources': [{'cycle': '2023-2025', 'table': 'aireadi.condition_occurrence', 'column': 'diabetic_retinopathy_in_one_or_both_eyes', 'example_values': ['No', 'Yes', '', '', '', '', '', '', '', '']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['1', '0']}}]}]}",,"-- TEMP TABLE FOR ""age"", ""age""
+DROP TABLE IF EXISTS temp_master_age;
+CREATE TEMP TABLE temp_master_age AS
+SELECT person_id, ""age"" AS ""age""
+FROM aireadi.participants;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age ON temp_master_age (person_id);
+
+-- TEMP TABLE FOR ""diabetes diagnosis""
+DROP TABLE IF EXISTS temp_master_type_ii_diabetes;
+CREATE TEMP TABLE temp_master_type_ii_diabetes AS
+SELECT person_id, ""type_ii_diabetes"" AS ""type_ii_diabetes""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_type_ii_diabetes ON temp_master_type_ii_diabetes (person_id);
+
+-- TEMP TABLE FOR ""diabetic retionopathy question"", ""status on diabetic retinopathy""
+DROP TABLE IF EXISTS temp_master_diabetic_retinopathy_in_one_or_both_eyes;
+CREATE TEMP TABLE temp_master_diabetic_retinopathy_in_one_or_both_eyes AS
+SELECT person_id, ""diabetic_retinopathy_in_one_or_both_eyes"" AS ""diabetic_retinopathy_in_one_or_both_eyes""
+FROM aireadi.condition_occurrence;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_diabetic_retinopathy_in_one_or_both_eyes ON temp_master_diabetic_retinopathy_in_one_or_both_eyes (person_id);
+
+-- TEMP TABLE FOR ""serum albumin alb (g/dL)"", ""serum albumin alb (g/dL)""
+DROP TABLE IF EXISTS temp_master_albumin_g_dl;
+CREATE TEMP TABLE temp_master_albumin_g_dl AS
+SELECT person_id, ""albumin_g_dl"" AS ""albumin_g_dl""
+FROM aireadi.measurement;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_albumin_g_dl ON temp_master_albumin_g_dl (person_id);
+
+-- TEMP TABLE FOR ""serum creatinine scr (mg/dL)"", ""serum creatinine scr (mg/dL)""
+DROP TABLE IF EXISTS temp_master_creatinine_mg_dl;
+CREATE TEMP TABLE temp_master_creatinine_mg_dl AS
+SELECT person_id, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM aireadi.measurement;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_creatinine_mg_dl ON temp_master_creatinine_mg_dl (person_id);
+
+-- TEMP TABLE FOR ""urinary albumin (ug/ml)"", ""urinary albumin (ug/ml)""
+DROP TABLE IF EXISTS temp_master_urine_albumin_ug_ml;
+CREATE TEMP TABLE temp_master_urine_albumin_ug_ml AS
+SELECT person_id, ""urine_albumin_ug_ml"" AS ""urine_albumin_ug_ml""
+FROM aireadi.measurement;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_urine_albumin_ug_ml ON temp_master_urine_albumin_ug_ml (person_id);
+
+-- TEMP TABLE FOR ""urinary creatinine (ug/ml)"", ""urinary creatinine (ug/ml)""
+DROP TABLE IF EXISTS temp_master_urine_creatinine_ug_ml;
+CREATE TEMP TABLE temp_master_urine_creatinine_ug_ml AS
+SELECT person_id, ""urine_creatinine_ug_ml"" AS ""urine_creatinine_ug_ml""
+FROM aireadi.measurement;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_urine_creatinine_ug_ml ON temp_master_urine_creatinine_ug_ml (person_id);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT person_id FROM temp_master_age
+UNION
+SELECT person_id FROM temp_master_type_ii_diabetes
+UNION
+SELECT person_id FROM temp_master_diabetic_retinopathy_in_one_or_both_eyes
+UNION
+SELECT person_id FROM temp_master_albumin_g_dl
+UNION
+SELECT person_id FROM temp_master_creatinine_mg_dl
+UNION
+SELECT person_id FROM temp_master_urine_albumin_ug_ml
+UNION
+SELECT person_id FROM temp_master_urine_creatinine_ug_ml;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_person_id ON temp_all_ids (person_id);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.person_id,
+    t0.""age"",
+    t1.""type_ii_diabetes"",
+    t2.""diabetic_retinopathy_in_one_or_both_eyes"",
+    t3.""albumin_g_dl"",
+    t4.""creatinine_mg_dl"",
+    t5.""urine_albumin_ug_ml"",
+    t6.""urine_creatinine_ug_ml""
+FROM temp_all_ids a
+LEFT JOIN temp_master_age t0 ON a.person_id = t0.person_id 
+LEFT JOIN temp_master_type_ii_diabetes t1 ON a.person_id = t1.person_id 
+LEFT JOIN temp_master_diabetic_retinopathy_in_one_or_both_eyes t2 ON a.person_id = t2.person_id 
+LEFT JOIN temp_master_albumin_g_dl t3 ON a.person_id = t3.person_id 
+LEFT JOIN temp_master_creatinine_mg_dl t4 ON a.person_id = t4.person_id 
+LEFT JOIN temp_master_urine_albumin_ug_ml t5 ON a.person_id = t5.person_id 
+LEFT JOIN temp_master_urine_creatinine_ug_ml t6 ON a.person_id = t6.person_id;
+
+CREATE INDEX idx_final_master_person_id    
+    ON final_master_table (person_id);
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Includes all patients age 20 or older
+CREATE TEMP TABLE temp_inclusion_step1 AS
+SELECT ""person_id""
+FROM final_master_table
+WHERE ""age"" >= 20;
+
+-- STEP 1.2: From the above group, include only those with a diabetes diagnosis of 'Yes'
+CREATE TEMP TABLE temp_inclusion_step2 AS
+SELECT i.""person_id""
+FROM temp_inclusion_step1 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""type_ii_diabetes"" = 'Yes';
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude patients with missing status on diabetic retinopathy
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""person_id""
+FROM temp_inclusion_step2 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""diabetic_retinopathy_in_one_or_both_eyes"" IS NOT NULL;
+
+-- STEP 2.2: Exclude patients with missing serum albumin (ALB) (g/dL)
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""albumin_g_dl"" IS NOT NULL;
+
+-- STEP 2.3: Exclude patients with missing serum creatinine (SCR) (mg/dL)
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""creatinine_mg_dl"" IS NOT NULL;
+
+-- STEP 2.4: Exclude patients with missing urinary albumin (ug/ml)
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step3 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""urine_albumin_ug_ml"" IS NOT NULL;
+
+-- STEP 2.5: Exclude patients with missing urinary creatinine (ug/ml)
+CREATE TEMP TABLE temp_exclusion_step5 AS
+SELECT i.""person_id""
+FROM temp_exclusion_step4 i
+JOIN final_master_table f ON i.""person_id"" = f.""person_id""
+WHERE f.""urine_creatinine_ug_ml"" IS NOT NULL;
+
+-- ========== STEP 3: Cohort ==========
+
+-- The final temp table in the exclusion sequence becomes temp_cohort.
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""person_id""
+FROM temp_exclusion_step5;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Covariate: age
+-- Extract age for the cohort
+CREATE TEMP TABLE temp_age AS
+SELECT c.""person_id"",
+       f.""age""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- 4.2 Predictor: uacr_sacr_ratio
+-- Calculate uacr-sacr ratio from inputs for cohort, handling division by zero
+CREATE TEMP TABLE temp_uacr_sacr_ratio_calculated AS
+SELECT
+    c.""person_id"",
+    (
+        (f.""urine_albumin_ug_ml"" / NULLIF(f.""urine_creatinine_ug_ml"", 0) * 1000.0)
+        /
+        NULLIF( (f.""albumin_g_dl"" / NULLIF(f.""creatinine_mg_dl"", 0)), 0)
+    ) AS ""uacr_sacr_ratio""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- Compute quartile cutoffs for uacr_sacr_ratio within cohort
+CREATE TEMP TABLE temp_uacr_sacr_cutoffs AS
+SELECT
+  PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY ""uacr_sacr_ratio"") AS q1,
+  PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY ""uacr_sacr_ratio"") AS q2,
+  PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY ""uacr_sacr_ratio"") AS q3
+FROM temp_uacr_sacr_ratio_calculated
+WHERE ""uacr_sacr_ratio"" IS NOT NULL; -- Only consider non-null values for cutoffs
+
+-- Assign uacr_sacr_ratio quartile group
+CREATE TEMP TABLE temp_uacr_sacr_quartiles AS
+SELECT
+  r.""person_id"",
+  CASE
+    WHEN r.""uacr_sacr_ratio"" IS NULL THEN NULL
+    WHEN r.""uacr_sacr_ratio"" <= (SELECT q1 FROM temp_uacr_sacr_cutoffs) THEN 'Q1: <=25%'
+    WHEN r.""uacr_sacr_ratio"" > (SELECT q1 FROM temp_uacr_sacr_cutoffs) AND r.""uacr_sacr_ratio"" <= (SELECT q2 FROM temp_uacr_sacr_cutoffs) THEN 'Q2: >25 and <=50%'
+    WHEN r.""uacr_sacr_ratio"" > (SELECT q2 FROM temp_uacr_sacr_cutoffs) AND r.""uacr_sacr_ratio"" <= (SELECT q3 FROM temp_uacr_sacr_cutoffs) THEN 'Q3: >50 and <=75%'
+    WHEN r.""uacr_sacr_ratio"" > (SELECT q3 FROM temp_uacr_sacr_cutoffs) THEN 'Q4: >75%'
+    ELSE NULL
+  END AS ""uacr_sacr_ratio""
+FROM temp_uacr_sacr_ratio_calculated r;
+
+-- 4.3 Outcome: diabetic_retinopathy_presence
+-- Map diabetic retinopathy presence to binary (1 or 0)
+CREATE TEMP TABLE temp_diabetic_retinopathy_presence AS
+SELECT
+  c.""person_id"",
+  CASE f.""diabetic_retinopathy_in_one_or_both_eyes""
+    WHEN 'Yes' THEN 1
+    WHEN 'No' THEN 0
+    ELSE NULL
+  END AS ""diabetic_retinopathy_presence""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""person_id"" = f.""person_id"";
+
+-- ========== STEP 5: Final Table ==========
+CREATE TEMP TABLE temp_final_table AS
+SELECT
+  c.""person_id"",
+  a.""age"",
+  p.""uacr_sacr_ratio"",
+  o.""diabetic_retinopathy_presence""
+FROM temp_cohort c
+JOIN temp_age a ON c.""person_id"" = a.""person_id""
+JOIN temp_uacr_sacr_quartiles p ON c.""person_id"" = p.""person_id""
+JOIN temp_diabetic_retinopathy_presence o ON c.""person_id"" = o.""person_id"";
+
+-- ========== STEP 6: View Output ==========
+SELECT * FROM temp_final_table;","    step_num                                                                                   step  remaining_after_step  excluded_at_step
+0          0                                        STEP 1.1: Includes all patients age 20 or older                  2280               NaN
+1          1  STEP 1.2: From the above group, include only those with a diabetes diagnosis of 'Yes'                   899            1381.0
+2          2                 STEP 2.1: Exclude patients with missing status on diabetic retinopathy                   888              11.0
+3          3                     STEP 2.2: Exclude patients with missing serum albumin (ALB) (g/dL)                   864              24.0
+4          4                 STEP 2.3: Exclude patients with missing serum creatinine (SCR) (mg/dL)                   864               0.0
+5          5                        STEP 2.4: Exclude patients with missing urinary albumin (ug/ml)                   858               6.0
+6          6                     STEP 2.5: Exclude patients with missing urinary creatinine (ug/ml)                   858               0.0
+7          7                    The final temp table in the exclusion sequence becomes temp_cohort.                   858               0.0
+8          8                                                             Extract age for the cohort                   858               0.0
+9          9            Calculate uacr-sacr ratio from inputs for cohort, handling division by zero                   858               0.0
+10        10                             Compute quartile cutoffs for uacr_sacr_ratio within cohort                     1             857.0
+11        11                                                  Assign uacr_sacr_ratio quartile group                   858            -857.0
+12        12                                   Map diabetic retinopathy presence to binary (1 or 0)                   858               0.0
+13        13                                              ========== STEP 5: Final Table ==========                   858               0.0","(858, 4)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""person_id"")
+    outcome_vars <- c(""diabetic_retinopathy_presence"")
+    
+    cohort <- df
+
+
+    outcome_roles <- c()
+    outcome_roles[""diabetic_retinopathy_presence""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    x_raw <- df[[outcome_var]]
+    x_chr <- trimws(tolower(as.character(x_raw)))
+
+    none_tokens <- c(""none"", ""nan"", ""na"", """", ""null"", ""nil"", ""missing"")
+    x_chr[x_chr %in% none_tokens] <- NA_character_
+
+    y <- rep(NA_integer_, length(x_chr))
+
+    y[x_chr %in% c(""yes"", ""y"", ""true"", ""t"")]  <- 1L
+    y[x_chr %in% c(""no"",  ""n"", ""false"", ""f"")] <- 0L
+
+    x_num <- suppressWarnings(as.numeric(x_chr))
+    y[is.na(y) & !is.na(x_num) & x_num == 1] <- 1L
+    y[is.na(y) & !is.na(x_num) & x_num == 0] <- 0L
+
+    idx <- is.na(y) & !is.na(x_chr)
+    if (any(idx)) {
+    vals <- sort(unique(x_chr[idx]))
+
+    if (length(vals) != 2) {
+        stop(sprintf(
+        ""Outcome '%s' must have exactly 2 non-missing classes after excluding none. Found: %s"",
+        outcome_var, paste(vals, collapse = "", "")
+        ))
+    }
+
+    tab <- table(x_chr[idx])
+    minority <- names(tab)[which.min(tab)]
+    majority <- setdiff(vals, minority)
+
+    cat(sprintf(
+        ""Outcome '%s' recoding: 1 = %s (minority)  0 = %s (majority)"",
+        outcome_var, minority, majority
+    ))
+
+    y[idx] <- as.integer(x_chr[idx] == minority)
+    }
+
+    df[[outcome_var]] <- y
+
+    # Must contain both 0 and 1 somewhere (plus NA allowed)
+    u <- sort(unique(df[[outcome_var]][!is.na(df[[outcome_var]])]))
+    if (!(length(u) == 2 && all(u == c(0, 1)))) {
+    stop(sprintf(
+        ""After recoding, '%s' must contain both 0 and 1 (plus NA for none). Found: %s"",
+        outcome_var,
+        ifelse(length(u) == 0, ""<no non-missing values>"", paste(u, collapse = "", ""))
+    ))
+    }
+
+    formula <- as.formula(paste0(outcome_var, "" ~ "", paste(predictor_vars, collapse = "" + "")))
+                
+    
+        
+    
+    model <- glm(formula,
+                data = df,
+                family =  binomial(link = ""logit""))
+            
+    
+    result_table <- tidy(model, conf.int = TRUE, exponentiate = TRUE) %>%
+        select(term, estimate, p.value, conf.low, conf.high)
+
+            
+    ","[{'variable': 'person_id', 'category': 'identifier', 'n_unique': 858, 'na_count': 0, 'summary': 'Total rows = 858'}, {'variable': 'age', 'category': 'numerical', 'n_unique': 52, 'na_count': 0, 'summary': 'mean = 61.888, sd = 10.923'}, {'variable': 'uacr_sacr_ratio', 'category': 'categorical', 'n_unique': 4, 'na_count': 1, 'summary': 'Q1: <=25%: 25.1%; Q2: >25 and <=50%: 25%; Q3: >50 and <=75%: 25%; Q4: >75%: 25%'}, {'variable': 'diabetic_retinopathy_presence', 'category': 'outcome', 'n_unique': 2, 'na_count': 0, 'summary': '0: 89.2%; 1: 10.8%'}]","[{'term': '(Intercept)', 'estimate': 0.047474288232444393, 'p.value': 8.504549937385463e-06, 'conf.low': 0.012019933052991524, 'conf.high': 0.17675305222418064}, {'term': 'age', 'estimate': 1.0051734501719558, 'p.value': 0.6230753766153707, 'conf.low': 0.9847266987300324, 'conf.high': 1.026175497473707}, {'term': 'uacr_sacr_ratioQ2: >25 and <=50%', 'estimate': 1.1572135672251092, 'p.value': 0.7099978294077995, 'conf.low': 0.535169056520303, 'conf.high': 2.5335082715823507}, {'term': 'uacr_sacr_ratioQ3: >50 and <=75%', 'estimate': 1.3822105824269637, 'p.value': 0.3980717593491528, 'conf.low': 0.6562875370012426, 'conf.high': 2.9852190342087677}, {'term': 'uacr_sacr_ratioQ4: >75%', 'estimate': 4.2796440681133525, 'p.value': 1.2793105103604447e-05, 'conf.low': 2.2886803127391717, 'conf.high': 8.5317141157121}]","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""person_id"")
+    outcome_vars <- c(""diabetic_retinopathy_presence"")
+    
+    cohort <- df
+
+
+    outcome_roles <- c()
+    outcome_roles[""diabetic_retinopathy_presence""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+
+    library(dplyr)
+    get_mode <- function(x) {
+
+    x_clean <- x[!is.na(x)]
+    if (length(x_clean) == 0) {
+        # If all values were NA, return NA of the correct type
+        return(NA_character_)
+    }
+
+    ux <- unique(x_clean)
+    # Return the value with the highest frequency
+    return(ux[which.max(tabulate(match(x_clean, ux)))])
+    }
+            
+    df <- df %>%
+    mutate(
+        # Impute numerical variables with their mean
+        across(all_of(numerical_vars), ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)),
+        
+        # Impute binary and categorical variables with their mode
+        across(all_of(c(binary_vars, categorical_vars)), ~ ifelse(is.na(.), get_mode(.), .)),
+        
+        # Impute the outcome variable based on its type
+        # This logic handles both numeric (mean) and categorical (mode) outcomes
+        across(all_of(outcome_var), ~ if (is.numeric(.)) {
+            ifelse(is.na(.), mean(., na.rm = TRUE), .)
+        } else {
+            ifelse(is.na(.), get_mode(.), .)
+        })
+    )
+        
+
+    
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    x_raw <- df[[outcome_var]]
+    x_chr <- trimws(tolower(as.character(x_raw)))
+
+    none_tokens <- c(""none"", ""nan"", ""na"", """", ""null"", ""nil"", ""missing"")
+    x_chr[x_chr %in% none_tokens] <- NA_character_
+
+    y <- rep(NA_integer_, length(x_chr))
+
+    y[x_chr %in% c(""yes"", ""y"", ""true"", ""t"")]  <- 1L
+    y[x_chr %in% c(""no"",  ""n"", ""false"", ""f"")] <- 0L
+
+    x_num <- suppressWarnings(as.numeric(x_chr))
+    y[is.na(y) & !is.na(x_num) & x_num == 1] <- 1L
+    y[is.na(y) & !is.na(x_num) & x_num == 0] <- 0L
+
+    idx <- is.na(y) & !is.na(x_chr)
+    if (any(idx)) {
+    vals <- sort(unique(x_chr[idx]))
+
+    if (length(vals) != 2) {
+        stop(sprintf(
+        ""Outcome '%s' must have exactly 2 non-missing classes after excluding none. Found: %s"",
+        outcome_var, paste(vals, collapse = "", "")
+        ))
+    }
+
+    tab <- table(x_chr[idx])
+    minority <- names(tab)[which.min(tab)]
+    majority <- setdiff(vals, minority)
+
+    cat(sprintf(
+        ""Outcome '%s' recoding: 1 = %s (minority)  0 = %s (majority)"",
+        outcome_var, minority, majority
+    ))
+
+    y[idx] <- as.integer(x_chr[idx] == minority)
+    }
+
+    df[[outcome_var]] <- y
+
+    # Must contain both 0 and 1 somewhere (plus NA allowed)
+    u <- sort(unique(df[[outcome_var]][!is.na(df[[outcome_var]])]))
+    if (!(length(u) == 2 && all(u == c(0, 1)))) {
+    stop(sprintf(
+        ""After recoding, '%s' must contain both 0 and 1 (plus NA for none). Found: %s"",
+        outcome_var,
+        ifelse(length(u) == 0, ""<no non-missing values>"", paste(u, collapse = "", ""))
+    ))
+    }
+
+    formula <- as.formula(paste0(outcome_var, "" ~ "", paste(predictor_vars, collapse = "" + "")))
+                
+    
+        
+    
+    model <- glm(formula,
+                data = df,
+                family =  binomial(link = ""logit""))
+            
+    
+    result_table <- tidy(model, conf.int = TRUE, exponentiate = TRUE) %>%
+        select(term, estimate, p.value, conf.low, conf.high)
+
+            
+    
+
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""person_id"")
+    outcome_vars <- c(""diabetic_retinopathy_presence"")
+    
+    cohort <- df
+
+
+    outcome_roles <- c()
+    outcome_roles[""diabetic_retinopathy_presence""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    ","[{'term': '(Intercept)', 'estimate': 0.04705528392132033, 'p.value': 7.903200545685624e-06, 'conf.low': 0.011923702511283229, 'conf.high': 0.1750488323375966}, {'term': 'age', 'estimate': 1.005244469090981, 'p.value': 0.6183200997511453, 'conf.low': 0.9847960922398541, 'conf.high': 1.0262472659546975}, {'term': 'uacr_sacr_ratioQ2: >25 and <=50%', 'estimate': 1.1624519880388897, 'p.value': 0.7014530982598901, 'conf.low': 0.5375897329329882, 'conf.high': 2.5449861178957476}, {'term': 'uacr_sacr_ratioQ3: >50 and <=75%', 'estimate': 1.3880927632336648, 'p.value': 0.3919775408207348, 'conf.low': 0.6590107907287215, 'conf.high': 2.998226093541196}, {'term': 'uacr_sacr_ratioQ4: >75%', 'estimate': 4.298478891082741, 'p.value': 1.2063760748874294e-05, 'conf.low': 2.2986234454494117, 'conf.high': 8.569697175685608}]","[{'variable': 'person_id', 'category': 'identifier', 'n_unique': 858, 'na_count': 0, 'summary': 'Total rows = 858'}, {'variable': 'age', 'category': 'numerical', 'n_unique': 52, 'na_count': 0, 'summary': 'mean = 61.888, sd = 10.923'}, {'variable': 'uacr_sacr_ratio', 'category': 'categorical', 'n_unique': 4, 'na_count': 0, 'summary': 'Q1: <=25%: 25.2%; Q2: >25 and <=50%: 24.9%; Q3: >50 and <=75%: 24.9%; Q4: >75%: 24.9%'}, {'variable': 'diabetic_retinopathy_presence', 'category': 'outcome', 'n_unique': 2, 'na_count': 0, 'summary': '0: 89.2%; 1: 10.8%'}]",logistic regression,2023-2025,"[[2023, 2025]]",google_gemini-2.5-flash,Pass,[],,85.019937,"[[{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 673, 'output_tokens': 1, 'total_cost': 0.0002044, 'formatted_total_cost': '$0.000204'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 1880, 'output_tokens': 247, 'total_cost': 0.0011814999999999998, 'formatted_total_cost': '$0.001181'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 2642, 'output_tokens': 840, 'total_cost': 0.0028926000000000004, 'formatted_total_cost': '$0.002893'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7949, 'output_tokens': 202, 'total_cost': 0.0028896999999999994, 'formatted_total_cost': '$0.002890'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7949, 'output_tokens': 202, 'total_cost': 0.0028896999999999994, 'formatted_total_cost': '$0.002890'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 332, 'output_tokens': 3, 'total_cost': 0.0001071, 'formatted_total_cost': '$0.000107'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5962, 'output_tokens': 69, 'total_cost': 0.0019611, 'formatted_total_cost': '$0.001961'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5962, 'output_tokens': 69, 'total_cost': 0.0019611, 'formatted_total_cost': '$0.001961'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 239, 'output_tokens': 3, 'total_cost': 7.92e-05, 'formatted_total_cost': '$0.000079'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5799, 'output_tokens': 69, 'total_cost': 0.0019122, 'formatted_total_cost': '$0.001912'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 5799, 'output_tokens': 69, 'total_cost': 0.0019122, 'formatted_total_cost': '$0.001912'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 238, 'output_tokens': 3, 'total_cost': 7.890000000000001e-05, 'formatted_total_cost': '$0.000079'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4831, 'output_tokens': 159, 'total_cost': 0.0018468, 'formatted_total_cost': '$0.001847'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4831, 'output_tokens': 159, 'total_cost': 0.0018468, 'formatted_total_cost': '$0.001847'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 283, 'output_tokens': 3, 'total_cost': 9.24e-05, 'formatted_total_cost': '$0.000092'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7507, 'output_tokens': 210, 'total_cost': 0.0027771000000000002, 'formatted_total_cost': '$0.002777'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7507, 'output_tokens': 210, 'total_cost': 0.0027771000000000002, 'formatted_total_cost': '$0.002777'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 339, 'output_tokens': 3, 'total_cost': 0.0001092, 'formatted_total_cost': '$0.000109'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7789, 'output_tokens': 169, 'total_cost': 0.0027592, 'formatted_total_cost': '$0.002759'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7789, 'output_tokens': 169, 'total_cost': 0.0027592, 'formatted_total_cost': '$0.002759'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 340, 'output_tokens': 3, 'total_cost': 0.0001095, 'formatted_total_cost': '$0.000110'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4408, 'output_tokens': 58, 'total_cost': 0.0014673999999999998, 'formatted_total_cost': '$0.001467'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4408, 'output_tokens': 58, 'total_cost': 0.0014673999999999998, 'formatted_total_cost': '$0.001467'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 225, 'output_tokens': 3, 'total_cost': 7.500000000000001e-05, 'formatted_total_cost': '$0.000075'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6068, 'output_tokens': 142, 'total_cost': 0.0021753999999999996, 'formatted_total_cost': '$0.002175'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6068, 'output_tokens': 142, 'total_cost': 0.0021753999999999996, 'formatted_total_cost': '$0.002175'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 314, 'output_tokens': 3, 'total_cost': 0.0001017, 'formatted_total_cost': '$0.000102'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 6964, 'output_tokens': 1683, 'total_cost': 0.0062967000000000006, 'formatted_total_cost': '$0.006297'}]]",False,0,,,

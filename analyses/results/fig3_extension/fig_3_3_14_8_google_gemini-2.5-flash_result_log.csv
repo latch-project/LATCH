@@ -1,0 +1,976 @@
+Title,Schema,Question,Structured Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log
+48203,nhanes,"This study aims to investigate the association between the Weight-Adjusted Waist Index (WWI) and all-cause mortality using a weighted Cox proportional hazards regression model we will be using exam weights.
+The analysis will utilize NHANES data collected between 2005-2018.
+The study population will include participants whose age in years at screening is 20 years and older who have either diabetes or prediabetes. 
+Diabetes is defined as meeting any of the following conditions: doctor told them they have diabetes, taking insulin now, take diabetic pills to lower blood sugar, a fasting blood glucose (FBG) (mg/dL) of 126 mg/dL or higher, or a glycohemoglobin (HbA1c) (%) of 6.5 or greater. 
+Prediabetes is defined as meeting all of the following criteria: ever told have prediabetes, an fasting blood glucose (FBG) (mg/dL) level between 100 and 126 mg/dL, and glycohemoglobin (HbA1c) (%) equal or more than 5.7 and less than 6.5%. 
+Individuals will be excluded if they are missing the necessary data to calculate the WWI, which are waist circumference (cm) and  weight (kg) or mortality status or  months followup examination
+The primary predictor for this analysis is the Weight-Adjusted Waist Index (WWI), calculated as waist circumference (cm) divided by the square root of weight (kg). This index will be categorized into quartiles  Q1: <=25%, Q2: >25 and <=50, Q3: >50 and <=75%, Q4: >75%.
+The outcome months followup examination and mortality data. The model will be adjusted for several covariates, including age in years at screening, gender, and race/Hispanic origin (categorized as Mexican American, Other Hispanic, Non-Hispanic White, Non-Hispanic Black, and Other race).","Analysis Type: weighted cox regression (exam)
+
+Dataset: NHANES
+
+Period of Interest: 2005-2018
+
+Inclusion Criteria:
+- age in years at screening >= 20
+- (
+    (
+      doctor told them they have diabetes = Yes
+      OR taking insulin now = Yes
+      OR take diabetic pills to lower blood sugar = Yes
+      OR fasting blood glucose (FBG) (mg/dL) >= 126
+      OR glycohemoglobin (HbA1c) (%) >= 6.5
+    )
+    OR
+    (
+      ever told have prediabetes = Yes
+      AND fasting blood glucose (FBG) (mg/dL) >= 100 AND fasting blood glucose (FBG) (mg/dL) < 126
+      AND glycohemoglobin (HbA1c) (%) >= 5.7 AND glycohemoglobin (HbA1c) (%) < 6.5
+    )
+  )
+
+Exclusion Criteria:
+- missing waist circumference (cm)
+- missing weight (kg)
+- missing mortality status
+- missing months followup examination
+
+Covariates:
+- age in years at screening
+- gender
+- race/Hispanic origin categorized as:
+  Mexican American,
+  Other Hispanic,
+  Non-Hispanic White,
+  Non-Hispanic Black,
+  Other race
+
+Predictor:
+- Weight-Adjusted Waist Index (WWI) calculated as:
+  waist circumference (cm) / square root of weight (kg)
+  categorized into quartiles:
+    Q1: <=25%
+    Q2: >25 and <=50%
+    Q3: >50 and <=75%
+    Q4: >75%
+
+Outcome:
+- time-to-event: months followup examination
+- event indicator: mortality data","{'dataset': 'NHANES', 'inclusion': [{'keyword': 'age in years at screening', 'derived': False, 'condition': '>= 20', 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'diabetes or prediabetes status', 'derived': True, 'depends_on': [{'keyword': 'doctor told them they have diabetes', 'derived': False, 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'taking insulin now', 'derived': False, 'table': 'final_master_table', 'column': 'taking_insulin_now', 'examples': ['No', 'Yes']}, {'keyword': 'take diabetic pills to lower blood sugar', 'derived': False, 'table': 'final_master_table', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'examples': ['No', 'Yes']}, {'keyword': 'fasting blood glucose (fbg) (mg/dl)', 'derived': False, 'table': 'final_master_table', 'column': 'fasting_glucose_mg_dl', 'examples': ['61.0', '62.0', '76.0', '96.0', '154.0']}, {'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '12.4', '13.2']}, {'keyword': 'ever told have prediabetes', 'derived': False, 'table': 'final_master_table', 'column': 'ever_told_you_have_prediabetes', 'examples': ['No', 'Yes']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['doctor told them they have diabetes = Yes', 'taking insulin now = Yes', 'take diabetic pills to lower blood sugar = Yes', 'fasting blood glucose (fbg) (mg/dl) >= 126', 'glycohemoglobin (hba1c) (%) >= 6.5'], 'output': 'condition_diabetes_part1'}}, {'step': 2, 'derivation_method': {'type': 'boolean_and', 'criteria': ['ever told have prediabetes = Yes', 'fasting blood glucose (fbg) (mg/dl) >= 100', 'fasting blood glucose (fbg) (mg/dl) < 126', 'glycohemoglobin (hba1c) (%) >= 5.7', 'glycohemoglobin (hba1c) (%) < 6.5'], 'output': 'condition_prediabetes_part2'}}, {'step': 3, 'derivation_method': {'type': 'boolean_or', 'criteria': ['condition_diabetes_part1', 'condition_prediabetes_part2'], 'output': 'diabetes or prediabetes status'}}]}], 'exclusion': [{'keyword': 'waist circumference (cm)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'waist_circumference_cm', 'examples': ['44.6', '60.5', '79.2', '121.7', '132.7']}, {'keyword': 'weight (kg)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'weight_kg', 'examples': ['14.1', '24.6', '44.6', '60.5', '79.2']}, {'keyword': 'mortality status', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'mortality_status', 'examples': ['0.0', '1.0']}, {'keyword': 'months followup examination', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'months_followup_examination', 'examples': ['0.0', '3.0', '7.0', '33.0', '34.0']}], 'covariates': [{'keyword': 'age in years at screening', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'gender', 'derived': False, 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['Mexican American', 'Other Hispanic', 'Non-Hispanic White', 'Non-Hispanic Black', 'Other race']}}], 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'predictor': [{'keyword': 'weight-adjusted waist index (wwi)', 'derived': True, 'depends_on': [{'keyword': 'waist circumference (cm)', 'derived': False, 'table': 'final_master_table', 'column': 'waist_circumference_cm', 'examples': ['44.6', '60.5', '79.2', '121.7', '132.7']}, {'keyword': 'weight (kg)', 'derived': False, 'table': 'final_master_table', 'column': 'weight_kg', 'examples': ['14.1', '24.6', '44.6', '60.5', '79.2']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'weight-adjusted waist index (wwi) = waist circumference (cm) / square root of weight (kg)'}}, {'step': 2, 'derivation_method': {'type': 'binning', 'strategy': 'quantiles', 'num_bins': 4, 'labels': ['Q1: <=25%', 'Q2: >25 and <=50%', 'Q3: >50 and <=75%', 'Q4: >75%']}}]}], 'outcome': [{'keyword': 'months followup examination', 'derived': False, 'type': 'time-to-event', 'table': 'final_master_table', 'column': 'months_followup_examination', 'examples': ['0.0', '3.0', '7.0', '33.0', '34.0']}, {'keyword': 'mortality data', 'derived': False, 'type': 'event indicator', 'table': 'final_master_table', 'column': 'mortality_status', 'examples': ['0.0', '1.0']}]}","{'analysis_type': 'weighted cox regression (exam)', 'dataset': 'NHANES', 'period_of_interest': '2005-2018', 'inclusion': [{'keyword': 'age in years at screening', 'derived': False, 'condition': '>= 20', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}]}, {'keyword': 'diabetes or prediabetes status', 'derived': True, 'depends_on': [{'keyword': 'doctor told them they have diabetes', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.diq_d', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2017-2018', 'table': 'nhanes.diq_j', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'taking insulin now', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.diq_d', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}, {'cycle': '2017-2018', 'table': 'nhanes.diq_j', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}]}, {'keyword': 'take diabetic pills to lower blood sugar', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.diq_d', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2017-2018', 'table': 'nhanes.diq_j', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}]}, {'keyword': 'fasting blood glucose (fbg) (mg/dl)', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.glu_d', 'column': 'fasting_glucose_mg_dl', 'example_values': ['62.0', '154.0', '174.0', '96.0', '76.0']}, {'cycle': '2011-2012', 'table': 'nhanes.glu_g', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '217.0', '76.0']}, {'cycle': '2013-2014', 'table': 'nhanes.glu_h', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '76.0', '96.0']}, {'cycle': '2007-2008', 'table': 'nhanes.glu_e', 'column': 'fasting_glucose_mg_dl', 'example_values': ['174.0', '162.0', '76.0', '96.0', '61.0']}, {'cycle': '2009-2010', 'table': 'nhanes.glu_f', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '217.0', '76.0']}, {'cycle': '2015-2016', 'table': 'nhanes.glu_i', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '76.0', '96.0']}, {'cycle': '2017-2018', 'table': 'nhanes.glu_j', 'column': 'fasting_glucose_mg_dl', 'example_values': ['62.0', '154.0', '346.0', '174.0', '217.0']}]}, {'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.ghb_d', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}, {'cycle': '2007-2008', 'table': 'nhanes.ghb_e', 'column': 'glycohemoglobin', 'example_values': ['12.4', '14.7', '13.2', '5.8', '4.8']}, {'cycle': '2009-2010', 'table': 'nhanes.ghb_f', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2015-2016', 'table': 'nhanes.ghb_i', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2017-2018', 'table': 'nhanes.ghb_j', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}]}, {'keyword': 'ever told have prediabetes', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.diq_d', 'column': 'ever_told_you_have_prediabetes', 'example_values': ['No', 'Yes']}, {'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'ever_told_you_have_prediabetes', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'ever_told_you_have_prediabetes', 'example_values': ['No', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'ever_told_you_have_prediabetes', 'example_values': ['No', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'ever_told_you_have_prediabetes', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'ever_told_you_have_prediabetes', 'example_values': ['No', 'Yes']}, {'cycle': '2017-2018', 'table': 'nhanes.diq_j', 'column': 'ever_told_you_have_prediabetes', 'example_values': ['No', 'Yes']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['doctor told them they have diabetes = Yes', 'taking insulin now = Yes', 'take diabetic pills to lower blood sugar = Yes', 'fasting blood glucose (fbg) (mg/dl) >= 126', 'glycohemoglobin (hba1c) (%) >= 6.5'], 'output': 'condition_diabetes_part1'}}, {'step': 2, 'derivation_method': {'type': 'boolean_and', 'criteria': ['ever told have prediabetes = Yes', 'fasting blood glucose (fbg) (mg/dl) >= 100', 'fasting blood glucose (fbg) (mg/dl) < 126', 'glycohemoglobin (hba1c) (%) >= 5.7', 'glycohemoglobin (hba1c) (%) < 6.5'], 'output': 'condition_prediabetes_part2'}}, {'step': 3, 'derivation_method': {'type': 'boolean_or', 'criteria': ['condition_diabetes_part1', 'condition_prediabetes_part2'], 'output': 'diabetes or prediabetes status'}}]}], 'exclusion': [{'keyword': 'waist circumference (cm)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.bmx_d', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2011-2012', 'table': 'nhanes.bmx_g', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2013-2014', 'table': 'nhanes.bmx_h', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2007-2008', 'table': 'nhanes.bmx_e', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2009-2010', 'table': 'nhanes.bmx_f', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2015-2016', 'table': 'nhanes.bmx_i', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '132.7', '136.2']}, {'cycle': '2017-2018', 'table': 'nhanes.bmx_j', 'column': 'waist_circumference_cm', 'example_values': ['153.2', '121.7', '60.5', '79.2', '44.6']}]}, {'keyword': 'weight (kg)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.bmx_d', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}, {'cycle': '2011-2012', 'table': 'nhanes.bmx_g', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}, {'cycle': '2013-2014', 'table': 'nhanes.bmx_h', 'column': 'weight_kg', 'example_values': ['14.1', '121.7', '60.5', '79.2', '44.6']}, {'cycle': '2007-2008', 'table': 'nhanes.bmx_e', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '211.7', '79.2']}, {'cycle': '2009-2010', 'table': 'nhanes.bmx_f', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}, {'cycle': '2015-2016', 'table': 'nhanes.bmx_i', 'column': 'weight_kg', 'example_values': ['24.6', '192.3', '121.7', '14.1', '60.5']}, {'cycle': '2017-2018', 'table': 'nhanes.bmx_j', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}]}, {'keyword': 'mortality status', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2011-2012', 'table': 'nhanes.mortality_data_g', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2013-2014', 'table': 'nhanes.mortality_data_h', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2015-2016', 'table': 'nhanes.mortality_data_i', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2017-2018', 'table': 'nhanes.mortality_data_j', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}]}, {'keyword': 'months followup examination', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'months_followup_examination', 'example_values': ['62.0', '154.0', '174.0', '162.0', '96.0']}, {'cycle': '2011-2012', 'table': 'nhanes.mortality_data_g', 'column': 'months_followup_examination', 'example_values': ['0.0', '62.0', '76.0', '96.0', '61.0']}, {'cycle': '2013-2014', 'table': 'nhanes.mortality_data_h', 'column': 'months_followup_examination', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'months_followup_examination', 'example_values': ['40.0', '109.0', '39.0', '68.0', '0.0']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'months_followup_examination', 'example_values': ['62.0', '76.0', '96.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.mortality_data_i', 'column': 'months_followup_examination', 'example_values': ['0.0', '61.0', '3.0', '7.0', '34.0']}, {'cycle': '2017-2018', 'table': 'nhanes.mortality_data_j', 'column': 'months_followup_examination', 'example_values': ['0.0', '3.0', '7.0', '33.0', '34.0']}]}], 'covariates': [{'keyword': 'age in years at screening', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}]}, {'keyword': 'gender', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['Mexican American', 'Other Hispanic', 'Non-Hispanic White', 'Non-Hispanic Black', 'Other race']}}], 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'predictor': [{'keyword': 'weight-adjusted waist index (wwi)', 'derived': True, 'depends_on': [{'keyword': 'waist circumference (cm)', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.bmx_d', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2011-2012', 'table': 'nhanes.bmx_g', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2013-2014', 'table': 'nhanes.bmx_h', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2007-2008', 'table': 'nhanes.bmx_e', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2009-2010', 'table': 'nhanes.bmx_f', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2015-2016', 'table': 'nhanes.bmx_i', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '132.7', '136.2']}, {'cycle': '2017-2018', 'table': 'nhanes.bmx_j', 'column': 'waist_circumference_cm', 'example_values': ['153.2', '121.7', '60.5', '79.2', '44.6']}]}, {'keyword': 'weight (kg)', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.bmx_d', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}, {'cycle': '2011-2012', 'table': 'nhanes.bmx_g', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}, {'cycle': '2013-2014', 'table': 'nhanes.bmx_h', 'column': 'weight_kg', 'example_values': ['14.1', '121.7', '60.5', '79.2', '44.6']}, {'cycle': '2007-2008', 'table': 'nhanes.bmx_e', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '211.7', '79.2']}, {'cycle': '2009-2010', 'table': 'nhanes.bmx_f', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}, {'cycle': '2015-2016', 'table': 'nhanes.bmx_i', 'column': 'weight_kg', 'example_values': ['24.6', '192.3', '121.7', '14.1', '60.5']}, {'cycle': '2017-2018', 'table': 'nhanes.bmx_j', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'weight-adjusted waist index (wwi) = waist circumference (cm) / square root of weight (kg)'}}, {'step': 2, 'derivation_method': {'type': 'binning', 'strategy': 'quantiles', 'num_bins': 4, 'labels': ['Q1: <=25%', 'Q2: >25 and <=50%', 'Q3: >50 and <=75%', 'Q4: >75%']}}]}], 'outcome': [{'keyword': 'months followup examination', 'derived': False, 'type': 'time-to-event', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'months_followup_examination', 'example_values': ['62.0', '154.0', '174.0', '162.0', '96.0']}, {'cycle': '2011-2012', 'table': 'nhanes.mortality_data_g', 'column': 'months_followup_examination', 'example_values': ['0.0', '62.0', '76.0', '96.0', '61.0']}, {'cycle': '2013-2014', 'table': 'nhanes.mortality_data_h', 'column': 'months_followup_examination', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'months_followup_examination', 'example_values': ['40.0', '109.0', '39.0', '68.0', '0.0']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'months_followup_examination', 'example_values': ['62.0', '76.0', '96.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.mortality_data_i', 'column': 'months_followup_examination', 'example_values': ['0.0', '61.0', '3.0', '7.0', '34.0']}, {'cycle': '2017-2018', 'table': 'nhanes.mortality_data_j', 'column': 'months_followup_examination', 'example_values': ['0.0', '3.0', '7.0', '33.0', '34.0']}]}, {'keyword': 'mortality data', 'derived': False, 'type': 'event indicator', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2011-2012', 'table': 'nhanes.mortality_data_g', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2013-2014', 'table': 'nhanes.mortality_data_h', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2015-2016', 'table': 'nhanes.mortality_data_i', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2017-2018', 'table': 'nhanes.mortality_data_j', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}]}]}",exam,"-- STEP 1: Create temp_master_weight
+
+-- TEMP TABLE FOR weight
+DROP TABLE IF EXISTS temp_master_weight;
+
+CREATE TEMP TABLE temp_master_weight AS
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 14.0) AS survey_weight
+FROM nhanes.demo_d
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 14.0) AS survey_weight
+FROM nhanes.demo_e
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 14.0) AS survey_weight
+FROM nhanes.demo_f
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 14.0) AS survey_weight
+FROM nhanes.demo_g
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 14.0) AS survey_weight
+FROM nhanes.demo_h
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 14.0) AS survey_weight
+FROM nhanes.demo_i
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 14.0) AS survey_weight
+FROM nhanes.demo_j
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL;
+
+
+-- STEP 2: Create temp_psu_stratum
+
+-- TEMP TABLE FOR PSU and Stratum
+DROP TABLE IF EXISTS temp_psu_stratum;
+CREATE TEMP TABLE temp_psu_stratum AS
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_j;
+
+
+-- STEP 3: Create final weight+design table
+DROP TABLE IF EXISTS weight_design;
+CREATE TABLE weight_design AS
+SELECT 
+    s.respondent_sequence_number,
+    s.masked_variance_pseudo_psu,
+    s.masked_variance_pseudo_stratum,
+    w.survey_weight
+FROM temp_psu_stratum s
+INNER JOIN temp_master_weight w
+  ON s.respondent_sequence_number = w.respondent_sequence_number;
+
+
+
+
+-- TEMP TABLE FOR ""age in years at screening"", ""age in years at screening""
+DROP TABLE IF EXISTS temp_master_age_in_years_at_screening;
+CREATE TEMP TABLE temp_master_age_in_years_at_screening AS
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_in_years_at_screening ON temp_master_age_in_years_at_screening (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""doctor told them they have diabetes""
+DROP TABLE IF EXISTS temp_master_doctor_told_you_have_diabetes;
+CREATE TEMP TABLE temp_master_doctor_told_you_have_diabetes AS
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_d
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_e
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_i
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_doctor_told_you_have_diabetes ON temp_master_doctor_told_you_have_diabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""taking insulin now""
+DROP TABLE IF EXISTS temp_master_taking_insulin_now;
+CREATE TEMP TABLE temp_master_taking_insulin_now AS
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_d
+UNION ALL
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_e
+UNION ALL
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_i
+UNION ALL
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_taking_insulin_now ON temp_master_taking_insulin_now (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""take diabetic pills to lower blood sugar""
+DROP TABLE IF EXISTS temp_master_take_diabetic_pills_to_lower_blood_sugar;
+CREATE TEMP TABLE temp_master_take_diabetic_pills_to_lower_blood_sugar AS
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_d
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_e
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_i
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_take_diabetic_pills_to_lower_blood_sugar ON temp_master_take_diabetic_pills_to_lower_blood_sugar (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""fasting blood glucose (fbg) (mg/dl)""
+DROP TABLE IF EXISTS temp_master_fasting_glucose_mg_dl;
+CREATE TEMP TABLE temp_master_fasting_glucose_mg_dl AS
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_d
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_g
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_h
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_e
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_f
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_i
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_fasting_glucose_mg_dl ON temp_master_fasting_glucose_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""glycohemoglobin (hba1c) (%)""
+DROP TABLE IF EXISTS temp_master_glycohemoglobin;
+CREATE TEMP TABLE temp_master_glycohemoglobin AS
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_d
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_g
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_h
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_e
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_f
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_i
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_glycohemoglobin ON temp_master_glycohemoglobin (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""ever told have prediabetes""
+DROP TABLE IF EXISTS temp_master_ever_told_you_have_prediabetes;
+CREATE TEMP TABLE temp_master_ever_told_you_have_prediabetes AS
+SELECT respondent_sequence_number, ""ever_told_you_have_prediabetes"" AS ""ever_told_you_have_prediabetes""
+FROM nhanes.diq_d
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_have_prediabetes"" AS ""ever_told_you_have_prediabetes""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_have_prediabetes"" AS ""ever_told_you_have_prediabetes""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_have_prediabetes"" AS ""ever_told_you_have_prediabetes""
+FROM nhanes.diq_e
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_have_prediabetes"" AS ""ever_told_you_have_prediabetes""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_have_prediabetes"" AS ""ever_told_you_have_prediabetes""
+FROM nhanes.diq_i
+UNION ALL
+SELECT respondent_sequence_number, ""ever_told_you_have_prediabetes"" AS ""ever_told_you_have_prediabetes""
+FROM nhanes.diq_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_ever_told_you_have_prediabetes ON temp_master_ever_told_you_have_prediabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""waist circumference (cm)"", ""waist circumference (cm)""
+DROP TABLE IF EXISTS temp_master_waist_circumference_cm;
+CREATE TEMP TABLE temp_master_waist_circumference_cm AS
+SELECT respondent_sequence_number, ""waist_circumference_cm"" AS ""waist_circumference_cm""
+FROM nhanes.bmx_d
+UNION ALL
+SELECT respondent_sequence_number, ""waist_circumference_cm"" AS ""waist_circumference_cm""
+FROM nhanes.bmx_g
+UNION ALL
+SELECT respondent_sequence_number, ""waist_circumference_cm"" AS ""waist_circumference_cm""
+FROM nhanes.bmx_h
+UNION ALL
+SELECT respondent_sequence_number, ""waist_circumference_cm"" AS ""waist_circumference_cm""
+FROM nhanes.bmx_e
+UNION ALL
+SELECT respondent_sequence_number, ""waist_circumference_cm"" AS ""waist_circumference_cm""
+FROM nhanes.bmx_f
+UNION ALL
+SELECT respondent_sequence_number, ""waist_circumference_cm"" AS ""waist_circumference_cm""
+FROM nhanes.bmx_i
+UNION ALL
+SELECT respondent_sequence_number, ""waist_circumference_cm"" AS ""waist_circumference_cm""
+FROM nhanes.bmx_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_waist_circumference_cm ON temp_master_waist_circumference_cm (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""weight (kg)"", ""weight (kg)""
+DROP TABLE IF EXISTS temp_master_weight_kg;
+CREATE TEMP TABLE temp_master_weight_kg AS
+SELECT respondent_sequence_number, ""weight_kg"" AS ""weight_kg""
+FROM nhanes.bmx_d
+UNION ALL
+SELECT respondent_sequence_number, ""weight_kg"" AS ""weight_kg""
+FROM nhanes.bmx_g
+UNION ALL
+SELECT respondent_sequence_number, ""weight_kg"" AS ""weight_kg""
+FROM nhanes.bmx_h
+UNION ALL
+SELECT respondent_sequence_number, ""weight_kg"" AS ""weight_kg""
+FROM nhanes.bmx_e
+UNION ALL
+SELECT respondent_sequence_number, ""weight_kg"" AS ""weight_kg""
+FROM nhanes.bmx_f
+UNION ALL
+SELECT respondent_sequence_number, ""weight_kg"" AS ""weight_kg""
+FROM nhanes.bmx_i
+UNION ALL
+SELECT respondent_sequence_number, ""weight_kg"" AS ""weight_kg""
+FROM nhanes.bmx_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_weight_kg ON temp_master_weight_kg (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""mortality data"", ""mortality status""
+DROP TABLE IF EXISTS temp_master_mortality_status;
+CREATE TEMP TABLE temp_master_mortality_status AS
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_d
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_g
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_h
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_e
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_f
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_i
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_mortality_status ON temp_master_mortality_status (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""months followup examination"", ""months followup examination""
+DROP TABLE IF EXISTS temp_master_months_followup_examination;
+CREATE TEMP TABLE temp_master_months_followup_examination AS
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_d
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_g
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_h
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_e
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_f
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_i
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_months_followup_examination ON temp_master_months_followup_examination (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""gender""
+DROP TABLE IF EXISTS temp_master_gender;
+CREATE TEMP TABLE temp_master_gender AS
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_gender ON temp_master_gender (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""race/hispanic origin"", ""race/hispanic origin""
+DROP TABLE IF EXISTS temp_master_race_hispanic_origin;
+CREATE TEMP TABLE temp_master_race_hispanic_origin AS
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_race_hispanic_origin ON temp_master_race_hispanic_origin (respondent_sequence_number);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT respondent_sequence_number FROM temp_master_age_in_years_at_screening
+UNION
+SELECT respondent_sequence_number FROM temp_master_doctor_told_you_have_diabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_taking_insulin_now
+UNION
+SELECT respondent_sequence_number FROM temp_master_take_diabetic_pills_to_lower_blood_sugar
+UNION
+SELECT respondent_sequence_number FROM temp_master_fasting_glucose_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_glycohemoglobin
+UNION
+SELECT respondent_sequence_number FROM temp_master_ever_told_you_have_prediabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_waist_circumference_cm
+UNION
+SELECT respondent_sequence_number FROM temp_master_weight_kg
+UNION
+SELECT respondent_sequence_number FROM temp_master_mortality_status
+UNION
+SELECT respondent_sequence_number FROM temp_master_months_followup_examination
+UNION
+SELECT respondent_sequence_number FROM temp_master_gender
+UNION
+SELECT respondent_sequence_number FROM temp_master_race_hispanic_origin;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_respondent_sequence_number ON temp_all_ids (respondent_sequence_number);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.respondent_sequence_number,
+    t0.""age_in_years_at_screening"",
+    t1.""doctor_told_you_have_diabetes"",
+    t2.""taking_insulin_now"",
+    t3.""take_diabetic_pills_to_lower_blood_sugar"",
+    t4.""fasting_glucose_mg_dl"",
+    t5.""glycohemoglobin"",
+    t6.""ever_told_you_have_prediabetes"",
+    t7.""waist_circumference_cm"",
+    t8.""weight_kg"",
+    t9.""mortality_status"",
+    t10.""months_followup_examination"",
+    t11.""gender"",
+    t12.""race_hispanic_origin""
+FROM temp_all_ids a
+LEFT JOIN temp_master_age_in_years_at_screening t0 ON a.respondent_sequence_number = t0.respondent_sequence_number 
+LEFT JOIN temp_master_doctor_told_you_have_diabetes t1 ON a.respondent_sequence_number = t1.respondent_sequence_number 
+LEFT JOIN temp_master_taking_insulin_now t2 ON a.respondent_sequence_number = t2.respondent_sequence_number 
+LEFT JOIN temp_master_take_diabetic_pills_to_lower_blood_sugar t3 ON a.respondent_sequence_number = t3.respondent_sequence_number 
+LEFT JOIN temp_master_fasting_glucose_mg_dl t4 ON a.respondent_sequence_number = t4.respondent_sequence_number 
+LEFT JOIN temp_master_glycohemoglobin t5 ON a.respondent_sequence_number = t5.respondent_sequence_number 
+LEFT JOIN temp_master_ever_told_you_have_prediabetes t6 ON a.respondent_sequence_number = t6.respondent_sequence_number 
+LEFT JOIN temp_master_waist_circumference_cm t7 ON a.respondent_sequence_number = t7.respondent_sequence_number 
+LEFT JOIN temp_master_weight_kg t8 ON a.respondent_sequence_number = t8.respondent_sequence_number 
+LEFT JOIN temp_master_mortality_status t9 ON a.respondent_sequence_number = t9.respondent_sequence_number 
+LEFT JOIN temp_master_months_followup_examination t10 ON a.respondent_sequence_number = t10.respondent_sequence_number 
+LEFT JOIN temp_master_gender t11 ON a.respondent_sequence_number = t11.respondent_sequence_number 
+LEFT JOIN temp_master_race_hispanic_origin t12 ON a.respondent_sequence_number = t12.respondent_sequence_number;
+
+CREATE INDEX idx_final_master_respondent_sequence_number    
+    ON final_master_table (respondent_sequence_number);
+
+
+-- Clean up final_master_table
+DELETE FROM final_master_table
+WHERE respondent_sequence_number NOT IN (
+    SELECT respondent_sequence_number FROM weight_design
+);
+
+
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Includes all patients age in years at screening 20 or older
+CREATE TEMP TABLE temp_inclusion_step1 AS
+SELECT ""respondent_sequence_number""
+FROM final_master_table
+WHERE ""age_in_years_at_screening"" >= 20;
+
+-- STEP 1.2: Calculate derived 'diabetes or prediabetes status' for the inclusion criteria
+CREATE TEMP TABLE temp_diabetes_prediabetes_status_calc AS
+SELECT
+    f.""respondent_sequence_number"",
+    -- condition_diabetes_part1
+    (
+        (f.""doctor_told_you_have_diabetes"" = 'Yes') OR
+        (f.""taking_insulin_now"" = 'Yes') OR
+        (f.""take_diabetic_pills_to_lower_blood_sugar"" = 'Yes') OR
+        (f.""fasting_glucose_mg_dl"" >= 126) OR
+        (f.""glycohemoglobin"" >= 6.5)
+    ) AS ""condition_diabetes_part1"",
+    -- condition_prediabetes_part2
+    (
+        (f.""ever_told_you_have_prediabetes"" = 'Yes') AND
+        (f.""fasting_glucose_mg_dl"" >= 100 AND f.""fasting_glucose_mg_dl"" < 126) AND
+        (f.""glycohemoglobin"" >= 5.7 AND f.""glycohemoglobin"" < 6.5)
+    ) AS ""condition_prediabetes_part2""
+FROM final_master_table f
+JOIN temp_inclusion_step1 i ON f.""respondent_sequence_number"" = i.""respondent_sequence_number"";
+
+-- STEP 1.3: From the above group, include only those who have either diabetes or prediabetes
+CREATE TEMP TABLE temp_inclusion_step2 AS
+SELECT d.""respondent_sequence_number""
+FROM temp_diabetes_prediabetes_status_calc d
+WHERE d.""condition_diabetes_part1"" = TRUE OR d.""condition_prediabetes_part2"" = TRUE;
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude patients with missing waist circumference (cm)
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion_step2 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""waist_circumference_cm"" IS NOT NULL;
+
+-- STEP 2.2: Exclude patients with missing weight (kg)
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""weight_kg"" IS NOT NULL;
+
+-- STEP 2.3: Exclude patients with missing mortality status
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""mortality_status"" IS NOT NULL;
+
+-- STEP 2.4: Exclude patients with missing months followup examination
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step3 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""months_followup_examination"" IS NOT NULL;
+
+-- ========== STEP 3: Cohort ==========
+
+-- The final temp table in the exclusion sequence becomes temp_cohort.
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""respondent_sequence_number""
+FROM temp_exclusion_step4;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Age in years at screening
+-- Extract age in years at screening for the cohort
+CREATE TEMP TABLE temp_age_in_years_at_screening AS
+SELECT c.""respondent_sequence_number"",
+       f.""age_in_years_at_screening""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.2 Gender
+-- Extract gender for the cohort
+CREATE TEMP TABLE temp_gender AS
+SELECT c.""respondent_sequence_number"",
+       f.""gender""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.3 Race/Hispanic origin
+-- Map race/hispanic origin categories
+CREATE TEMP TABLE temp_race_hispanic_origin AS
+SELECT c.""respondent_sequence_number"",
+  CASE f.""race_hispanic_origin""
+    WHEN 'Mexican American' THEN 'Mexican American'
+    WHEN 'Other Hispanic' THEN 'Other Hispanic'
+    WHEN 'Non-Hispanic White' THEN 'Non-Hispanic White'
+    WHEN 'Non-Hispanic Black' THEN 'Non-Hispanic Black'
+    WHEN 'Other Race - Including Multi-Racial' THEN 'Other race'
+    ELSE NULL
+  END AS ""race_hispanic_origin""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.4 Weight-Adjusted Waist Index (WWI)
+-- Calculate WWI from inputs for cohort
+CREATE TEMP TABLE temp_wwi_raw AS
+SELECT c.""respondent_sequence_number"",
+       (f.""waist_circumference_cm"" / SQRT(f.""weight_kg"")) AS ""weight_adjusted_waist_index_wwi""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""waist_circumference_cm"" IS NOT NULL AND f.""weight_kg"" IS NOT NULL AND f.""weight_kg"" > 0; -- Ensure weight is not zero for SQRT
+
+-- Compute quartile cutoffs for WWI within cohort
+CREATE TEMP TABLE temp_wwi_cutoffs AS
+SELECT
+  PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY ""weight_adjusted_waist_index_wwi"") AS q1,
+  PERCENTILE_CONT(0.5)  WITHIN GROUP (ORDER BY ""weight_adjusted_waist_index_wwi"") AS q2,
+  PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY ""weight_adjusted_waist_index_wwi"") AS q3
+FROM temp_wwi_raw;
+
+-- Assign WWI quartile group
+CREATE TEMP TABLE temp_weight_adjusted_waist_index_wwi AS
+SELECT ""respondent_sequence_number"",
+  CASE
+    WHEN ""weight_adjusted_waist_index_wwi"" IS NULL THEN NULL
+    WHEN ""weight_adjusted_waist_index_wwi"" <= (SELECT q1 FROM temp_wwi_cutoffs) THEN 'Q1: <=25%%'
+    WHEN ""weight_adjusted_waist_index_wwi"" > (SELECT q1 FROM temp_wwi_cutoffs) AND ""weight_adjusted_waist_index_wwi"" <= (SELECT q2 FROM temp_wwi_cutoffs) THEN 'Q2: >25 and <=50%%'
+    WHEN ""weight_adjusted_waist_index_wwi"" > (SELECT q2 FROM temp_wwi_cutoffs) AND ""weight_adjusted_waist_index_wwi"" <= (SELECT q3 FROM temp_wwi_cutoffs) THEN 'Q3: >50 and <=75%%'
+    ELSE 'Q4: >75%%'
+  END AS ""weight_adjusted_waist_index_wwi""
+FROM temp_wwi_raw;
+
+-- 4.5 Months followup examination
+-- Extract months followup examination for the cohort
+CREATE TEMP TABLE temp_months_followup_examination AS
+SELECT c.""respondent_sequence_number"",
+       f.""months_followup_examination""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.6 Mortality data
+-- Extract mortality status for the cohort
+CREATE TEMP TABLE temp_mortality_data AS
+SELECT c.""respondent_sequence_number"",
+       f.""mortality_status""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- ========== STEP 5: Final Table ==========
+CREATE TEMP TABLE temp_final_table AS
+SELECT
+  c.""respondent_sequence_number"",
+  age.""age_in_years_at_screening"",
+  gen.""gender"",
+  race.""race_hispanic_origin"",
+  wwi.""weight_adjusted_waist_index_wwi"",
+  mfe.""months_followup_examination"",
+  md.""mortality_status"" -- Corrected column name from mortality_data to mortality_status
+FROM temp_cohort c
+LEFT JOIN temp_age_in_years_at_screening age ON c.""respondent_sequence_number"" = age.""respondent_sequence_number""
+LEFT JOIN temp_gender gen ON c.""respondent_sequence_number"" = gen.""respondent_sequence_number""
+LEFT JOIN temp_race_hispanic_origin race ON c.""respondent_sequence_number"" = race.""respondent_sequence_number""
+LEFT JOIN temp_weight_adjusted_waist_index_wwi wwi ON c.""respondent_sequence_number"" = wwi.""respondent_sequence_number""
+LEFT JOIN temp_months_followup_examination mfe ON c.""respondent_sequence_number"" = mfe.""respondent_sequence_number""
+LEFT JOIN temp_mortality_data md ON c.""respondent_sequence_number"" = md.""respondent_sequence_number"";
+
+-- ========== STEP 6: View Output ==========
+SELECT * FROM temp_final_table;
+
+-- STEP: Create merged final table with design variables + in_analysis flag
+DROP TABLE IF EXISTS temp_final_with_weights;
+
+CREATE TEMP TABLE temp_final_with_weights AS
+SELECT 
+    wd.""respondent_sequence_number"",
+    wd.""masked_variance_pseudo_psu"",
+    wd.""masked_variance_pseudo_stratum"",
+    wd.""survey_weight"",
+    CASE WHEN ft.""respondent_sequence_number"" IS NOT NULL THEN 1 ELSE 0 END AS ""in_analysis"",
+    ft.""age_in_years_at_screening"",
+    ft.""gender"",
+    ft.""race_hispanic_origin"",
+    ft.""weight_adjusted_waist_index_wwi"",
+    ft.""months_followup_examination"",
+    ft.""mortality_status""
+FROM weight_design wd
+LEFT JOIN temp_final_table ft
+  ON wd.""respondent_sequence_number"" = ft.""respondent_sequence_number"";
+  
+-- Preview the result
+SELECT * FROM temp_final_with_weights;
+","   step_num                                                                                        step  remaining_after_step  excluded_at_step
+0         0                                           Total unique participants pooled from all sources                 70190               NaN
+1         1                           Participants with a valid survey weight (after initial filtering)                 68851            1339.0
+2         2                       STEP 1.1: Includes all patients age in years at screening 20 or older                 39019           29832.0
+3         3  STEP 1.3: From the above group, include only those who have either diabetes or prediabetes                  7143           31876.0
+4         4                            STEP 2.1: Exclude patients with missing waist circumference (cm)                  6435             708.0
+5         5                                         STEP 2.2: Exclude patients with missing weight (kg)                  6409              26.0
+6         6                                    STEP 2.3: Exclude patients with missing mortality status                  6398              11.0
+7         7                         STEP 2.4: Exclude patients with missing months followup examination                  6398               0.0
+8         8                         The final temp table in the exclusion sequence becomes temp_cohort.                  6398               0.0
+9         9                                                   ========== STEP 5: Final Table ==========                  6398               0.0","(68851, 11)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""respondent_sequence_number"")
+    outcome_vars <- c(""months_followup_examination"",""mortality_status"")
+    weight_vars <- c(""survey_weight"",""masked_variance_pseudo_psu"",""masked_variance_pseudo_stratum"",""in_analysis"")
+
+    cohort <- df[df$in_analysis == 1, names(df) != ""in_analysis""]
+
+
+    outcome_roles <- c()
+    outcome_roles[""months_followup_examination""] <- ""event_to_time"";outcome_roles[""mortality_status""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else if (name %in% weight_vars) {
+        category <- ""weight""
+        summary_info <- ""Weight variable"" 
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    weight_vars <- report$variable[report$category == ""weight""]; cat(""Weight Variables: ""); print(weight_vars); psu_var <- weight_vars[grepl(""psu"", weight_vars, ignore.case = TRUE)][1]; cat(""PSU:"", psu_var); stratum_var <- weight_vars[grepl(""stratum"", weight_vars, ignore.case = TRUE)][1]; cat(""Stratum:"", stratum_var); weight_var <- weight_vars[grepl(""weight"", weight_vars, ignore.case = TRUE)][1]; cat(""Weight:"", weight_var); in_analysis_var <- weight_vars[grepl(""in_analysis"", weight_vars, ignore.case = TRUE)][1]; cat(""In Analysis:"", in_analysis_var)
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    event_to_time_var <- names(outcome_roles[outcome_roles == ""event_to_time""])[1]
+cat(""Event-to-Time Variable:\n""); print(event_to_time_var); cat(""\n"")
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+    library(survey)
+    options(survey.lonely.psu = ""adjust"")
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    if (!is.numeric(df[[outcome_var]])) {
+        df[[outcome_var]] <- as.numeric(df[[outcome_var]])
+    }
+
+    if (!is.numeric(df[[event_to_time_var]])) {
+        df[[event_to_time_var]] <- as.numeric(df[[event_to_time_var]])
+    }
+    formula <- as.formula(paste0(""Surv("", event_to_time_var, "", "", outcome_var, "") ~ "", paste(predictor_vars, collapse = "" + "")))
+            
+    
+    survey_design <- svydesign(
+        ids     = as.formula(paste0(""~"", psu_var)),
+        strata  = as.formula(paste0(""~"", stratum_var)),
+        weights = as.formula(paste0(""~"", weight_var)),
+        data    = df,
+        nest    = TRUE
+        )
+    survey_design <- subset(survey_design, in_analysis ==1)
+        
+    
+    model <- svycoxph(formula, design = survey_design)
+            
+    
+    result_table <- tidy(model, conf.int = TRUE, exponentiate = TRUE) %>%
+            select(term, estimate, p.value, conf.low, conf.high)
+            
+    ","[{'variable': 'respondent_sequence_number', 'category': 'identifier', 'n_unique': 6398, 'na_count': 0, 'summary': 'Total rows = 6398'}, {'variable': 'masked_variance_pseudo_psu', 'category': 'weight', 'n_unique': 3, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'masked_variance_pseudo_stratum', 'category': 'weight', 'n_unique': 105, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'survey_weight', 'category': 'weight', 'n_unique': 5847, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'age_in_years_at_screening', 'category': 'numerical', 'n_unique': 66, 'na_count': 0, 'summary': 'mean = 61.061, sd = 14.071'}, {'variable': 'gender', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'Female: 48.4%; Male: 51.6%'}, {'variable': 'race_hispanic_origin', 'category': 'categorical', 'n_unique': 5, 'na_count': 0, 'summary': 'Mexican American: 18.1%; Non-Hispanic Black: 26%; Non-Hispanic White: 34.2%; Other Hispanic: 10.6%; Other race: 11.1%'}, {'variable': 'weight_adjusted_waist_index_wwi', 'category': 'categorical', 'n_unique': 4, 'na_count': 0, 'summary': 'Q1: <=25%%: 25%; Q2: >25 and <=50%%: 25%; Q3: >50 and <=75%%: 25%; Q4: >75%%: 25%'}, {'variable': 'months_followup_examination', 'category': 'event_to_time', 'n_unique': 181, 'na_count': 0, 'summary': 'mean = 79.174, sd = 45.98'}, {'variable': 'mortality_status', 'category': 'outcome', 'n_unique': 2, 'na_count': 0, 'summary': '0: 81.2%; 1: 18.8%'}]","[{'term': 'age_in_years_at_screening', 'estimate': 1.0761082388944698, 'p.value': 2.3544840509074865e-108, 'conf.low': 1.0691348162474865, 'conf.high': 1.0831271456307134}, {'term': 'genderFemale', 'estimate': 0.7442092120331081, 'p.value': 0.0004916239242686998, 'conf.low': 0.6302924607159909, 'conf.high': 0.878714859837904}, {'term': 'race_hispanic_originMexican American', 'estimate': 0.779365812091881, 'p.value': 0.04735770080866619, 'conf.low': 0.6091791288200388, 'conf.high': 0.9970976356891507}, {'term': 'race_hispanic_originNon-Hispanic Black', 'estimate': 1.0899055577626957, 'p.value': 0.2482689949606584, 'conf.low': 0.9417124277010346, 'conf.high': 1.2614191868976097}, {'term': 'race_hispanic_originOther Hispanic', 'estimate': 0.6250294067351293, 'p.value': 0.0016820936433196963, 'conf.low': 0.4661815799058238, 'conf.high': 0.8380034221055831}, {'term': 'race_hispanic_originOther race', 'estimate': 0.8309719978053433, 'p.value': 0.28124843909122954, 'conf.low': 0.593358617623117, 'conf.high': 1.1637388261127386}, {'term': 'weight_adjusted_waist_index_wwiQ2: >25 and <=50%%', 'estimate': 1.2214924036663086, 'p.value': 0.09960125894217516, 'conf.low': 0.9626662853420175, 'conf.high': 1.5499074964325783}, {'term': 'weight_adjusted_waist_index_wwiQ3: >50 and <=75%%', 'estimate': 1.2135839552143648, 'p.value': 0.10989224955163733, 'conf.low': 0.9571962695706223, 'conf.high': 1.5386457962423963}, {'term': 'weight_adjusted_waist_index_wwiQ4: >75%%', 'estimate': 1.4556188037863507, 'p.value': 0.0021621137402248465, 'conf.low': 1.1451240321315557, 'conf.high': 1.8503027117441448}]",,,,weighted cox regression (exam),2005-2018,"[[2005, 2006], [2007, 2008], [2009, 2010], [2011, 2012], [2013, 2014], [2015, 2016], [2017, 2018]]",google_gemini-2.5-flash,Pass,[],"['\'\'\'\n1.  **Identify the problematic column:** The error message `column md.mortality_data does not exist` indicates that the column `mortality_data` is not found in the table aliased as `md`.\n2.  **Review `temp_mortality_data` table creation:** Locate the `CREATE TEMP TABLE temp_mortality_data` statement. It selects `f.""mortality_status""` from `final_master_table` and names this column `mortality_status`.\n3.  **Correct the column name in the final `SELECT` statement:** In the `temp_final_table` creation, change `md.""mortality_data""` to `md.""mortality_status""` to match the actual column name in `temp_mortality_data`.\n\'\'\'', '```sql\n-- ========== STEP 1: Inclusion ==========\n\n-- STEP 1.1: Includes all patients age in years at screening 20 or older\nCREATE TEMP TABLE temp_inclusion_step1 AS\nSELECT ""respondent_sequence_number""\nFROM final_master_table\nWHERE ""age_in_years_at_screening"" >= 20;\n\n-- STEP 1.2: Calculate derived \'diabetes or prediabetes status\' for the inclusion criteria\nCREATE TEMP TABLE temp_diabetes_prediabetes_status_calc AS\nSELECT\n    f.""respondent_sequence_number"",\n    -- condition_diabetes_part1\n    (\n        (f.""doctor_told_you_have_diabetes"" = \'Yes\') OR\n        (f.""taking_insulin_now"" = \'Yes\') OR\n        (f.""take_diabetic_pills_to_lower_blood_sugar"" = \'Yes\') OR\n        (f.""fasting_glucose_mg_dl"" >= 126) OR\n        (f.""glycohemoglobin"" >= 6.5)\n    ) AS ""condition_diabetes_part1"",\n    -- condition_prediabetes_part2\n    (\n        (f.""ever_told_you_have_prediabetes"" = \'Yes\') AND\n        (f.""fasting_glucose_mg_dl"" >= 100 AND f.""fasting_glucose_mg_dl"" < 126) AND\n        (f.""glycohemoglobin"" >= 5.7 AND f.""glycohemoglobin"" < 6.5)\n    ) AS ""condition_prediabetes_part2""\nFROM final_master_table f\nJOIN temp_inclusion_step1 i ON f.""respondent_sequence_number"" = i.""respondent_sequence_number"";\n\n-- STEP 1.3: From the above group, include only those who have either diabetes or prediabetes\nCREATE TEMP TABLE temp_inclusion_step2 AS\nSELECT d.""respondent_sequence_number""\nFROM temp_diabetes_prediabetes_status_calc d\nWHERE d.""condition_diabetes_part1"" = TRUE OR d.""condition_prediabetes_part2"" = TRUE;\n\n-- ========== STEP 2: Exclusions ==========\n\n-- STEP 2.1: Exclude patients with missing waist circumference (cm)\nCREATE TEMP TABLE temp_exclusion_step1 AS\nSELECT i.""respondent_sequence_number""\nFROM temp_inclusion_step2 i\nJOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""\nWHERE f.""waist_circumference_cm"" IS NOT NULL;\n\n-- STEP 2.2: Exclude patients with missing weight (kg)\nCREATE TEMP TABLE temp_exclusion_step2 AS\nSELECT i.""respondent_sequence_number""\nFROM temp_exclusion_step1 i\nJOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""\nWHERE f.""weight_kg"" IS NOT NULL;\n\n-- STEP 2.3: Exclude patients with missing mortality status\nCREATE TEMP TABLE temp_exclusion_step3 AS\nSELECT i.""respondent_sequence_number""\nFROM temp_exclusion_step2 i\nJOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""\nWHERE f.""mortality_status"" IS NOT NULL;\n\n-- STEP 2.4: Exclude patients with missing months followup examination\nCREATE TEMP TABLE temp_exclusion_step4 AS\nSELECT i.""respondent_sequence_number""\nFROM temp_exclusion_step3 i\nJOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""\nWHERE f.""months_followup_examination"" IS NOT NULL;\n\n-- ========== STEP 3: Cohort ==========\n\n-- The final temp table in the exclusion sequence becomes temp_cohort.\nCREATE TEMP TABLE temp_cohort AS\nSELECT ""respondent_sequence_number""\nFROM temp_exclusion_step4;\n\n-- ========== STEP 4: Variables ==========\n\n-- 4.1 Age in years at screening\n-- Extract age in years at screening for the cohort\nCREATE TEMP TABLE temp_age_in_years_at_screening AS\nSELECT c.""respondent_sequence_number"",\n       f.""age_in_years_at_screening""\nFROM temp_cohort c\nJOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";\n\n-- 4.2 Gender\n-- Extract gender for the cohort\nCREATE TEMP TABLE temp_gender AS\nSELECT c.""respondent_sequence_number"",\n       f.""gender""\nFROM temp_cohort c\nJOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";\n\n-- 4.3 Race/Hispanic origin\n-- Map race/hispanic origin categories\nCREATE TEMP TABLE temp_race_hispanic_origin AS\nSELECT c.""respondent_sequence_number"",\n  CASE f.""race_hispanic_origin""\n    WHEN \'Mexican American\' THEN \'Mexican American\'\n    WHEN \'Other Hispanic\' THEN \'Other Hispanic\'\n    WHEN \'Non-Hispanic White\' THEN \'Non-Hispanic White\'\n    WHEN \'Non-Hispanic Black\' THEN \'Non-Hispanic Black\'\n    WHEN \'Other Race - Including Multi-Racial\' THEN \'Other race\'\n    ELSE NULL\n  END AS ""race_hispanic_origin""\nFROM temp_cohort c\nJOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";\n\n-- 4.4 Weight-Adjusted Waist Index (WWI)\n-- Calculate WWI from inputs for cohort\nCREATE TEMP TABLE temp_wwi_raw AS\nSELECT c.""respondent_sequence_number"",\n       (f.""waist_circumference_cm"" / SQRT(f.""weight_kg"")) AS ""weight_adjusted_waist_index_wwi""\nFROM temp_cohort c\nJOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number""\nWHERE f.""waist_circumference_cm"" IS NOT NULL AND f.""weight_kg"" IS NOT NULL AND f.""weight_kg"" > 0; -- Ensure weight is not zero for SQRT\n\n-- Compute quartile cutoffs for WWI within cohort\nCREATE TEMP TABLE temp_wwi_cutoffs AS\nSELECT\n  PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY ""weight_adjusted_waist_index_wwi"") AS q1,\n  PERCENTILE_CONT(0.5)  WITHIN GROUP (ORDER BY ""weight_adjusted_waist_index_wwi"") AS q2,\n  PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY ""weight_adjusted_waist_index_wwi"") AS q3\nFROM temp_wwi_raw;\n\n-- Assign WWI quartile group\nCREATE TEMP TABLE temp_weight_adjusted_waist_index_wwi AS\nSELECT ""respondent_sequence_number"",\n  CASE\n    WHEN ""weight_adjusted_waist_index_wwi"" IS NULL THEN NULL\n    WHEN ""weight_adjusted_waist_index_wwi"" <= (SELECT q1 FROM temp_wwi_cutoffs) THEN \'Q1: <=25%%\'\n    WHEN ""weight_adjusted_waist_index_wwi"" > (SELECT q1 FROM temp_wwi_cutoffs) AND ""weight_adjusted_waist_index_wwi"" <= (SELECT q2 FROM temp_wwi_cutoffs) THEN \'Q2: >25 and <=50%%\'\n    WHEN ""weight_adjusted_waist_index_wwi"" > (SELECT q2 FROM temp_wwi_cutoffs) AND ""weight_adjusted_waist_index_wwi"" <= (SELECT q3 FROM temp_wwi_cutoffs) THEN \'Q3: >50 and <=75%%\'\n    ELSE \'Q4: >75%%\'\n  END AS ""weight_adjusted_waist_index_wwi""\nFROM temp_wwi_raw;\n\n-- 4.5 Months followup examination\n-- Extract months followup examination for the cohort\nCREATE TEMP TABLE temp_months_followup_examination AS\nSELECT c.""respondent_sequence_number"",\n       f.""months_followup_examination""\nFROM temp_cohort c\nJOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";\n\n-- 4.6 Mortality data\n-- Extract mortality status for the cohort\nCREATE TEMP TABLE temp_mortality_data AS\nSELECT c.""respondent_sequence_number"",\n       f.""mortality_status""\nFROM temp_cohort c\nJOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";\n\n-- ========== STEP 5: Final Table ==========\nCREATE TEMP TABLE temp_final_table AS\nSELECT\n  c.""respondent_sequence_number"",\n  age.""age_in_years_at_screening"",\n  gen.""gender"",\n  race.""race_hispanic_origin"",\n  wwi.""weight_adjusted_waist_index_wwi"",\n  mfe.""months_followup_examination"",\n  md.""mortality_status"" -- Corrected column name from mortality_data to mortality_status\nFROM temp_cohort c\nLEFT JOIN temp_age_in_years_at_screening age ON c.""respondent_sequence_number"" = age.""respondent_sequence_number""\nLEFT JOIN temp_gender gen ON c.""respondent_sequence_number"" = gen.""respondent_sequence_number""\nLEFT JOIN temp_race_hispanic_origin race ON c.""respondent_sequence_number"" = race.""respondent_sequence_number""\nLEFT JOIN temp_weight_adjusted_waist_index_wwi wwi ON c.""respondent_sequence_number"" = wwi.""respondent_sequence_number""\nLEFT JOIN temp_months_followup_examination mfe ON c.""respondent_sequence_number"" = mfe.""respondent_sequence_number""\nLEFT JOIN temp_mortality_data md ON c.""respondent_sequence_number"" = md.""respondent_sequence_number"";\n\n-- ========== STEP 6: View Output ==========\nSELECT * FROM temp_final_table;\n```']",531.71792,"[[{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 843, 'output_tokens': 1, 'total_cost': 0.0002554, 'formatted_total_cost': '$0.000255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 2050, 'output_tokens': 413, 'total_cost': 0.0016475, 'formatted_total_cost': '$0.001648'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 2808, 'output_tokens': 1366, 'total_cost': 0.0042574, 'formatted_total_cost': '$0.004257'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3353, 'output_tokens': 75, 'total_cost': 0.0011933999999999998, 'formatted_total_cost': '$0.001193'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3353, 'output_tokens': 75, 'total_cost': 0.0011933999999999998, 'formatted_total_cost': '$0.001193'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3395, 'output_tokens': 77, 'total_cost': 0.0012109999999999998, 'formatted_total_cost': '$0.001211'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3395, 'output_tokens': 77, 'total_cost': 0.0012109999999999998, 'formatted_total_cost': '$0.001211'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3384, 'output_tokens': 77, 'total_cost': 0.0012077, 'formatted_total_cost': '$0.001208'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3384, 'output_tokens': 77, 'total_cost': 0.0012077, 'formatted_total_cost': '$0.001208'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3419, 'output_tokens': 75, 'total_cost': 0.0012132, 'formatted_total_cost': '$0.001213'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3419, 'output_tokens': 75, 'total_cost': 0.0012132, 'formatted_total_cost': '$0.001213'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3591, 'output_tokens': 77, 'total_cost': 0.0012698, 'formatted_total_cost': '$0.001270'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3591, 'output_tokens': 77, 'total_cost': 0.0012698, 'formatted_total_cost': '$0.001270'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3536, 'output_tokens': 75, 'total_cost': 0.0012483, 'formatted_total_cost': '$0.001248'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3536, 'output_tokens': 75, 'total_cost': 0.0012483, 'formatted_total_cost': '$0.001248'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3681, 'output_tokens': 75, 'total_cost': 0.0012917999999999998, 'formatted_total_cost': '$0.001292'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3681, 'output_tokens': 75, 'total_cost': 0.0012917999999999998, 'formatted_total_cost': '$0.001292'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 562, 'output_tokens': 3, 'total_cost': 0.0001761, 'formatted_total_cost': '$0.000176'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3455, 'output_tokens': 84, 'total_cost': 0.0012465, 'formatted_total_cost': '$0.001246'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3455, 'output_tokens': 84, 'total_cost': 0.0012465, 'formatted_total_cost': '$0.001246'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3492, 'output_tokens': 83, 'total_cost': 0.0012550999999999999, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3492, 'output_tokens': 83, 'total_cost': 0.0012550999999999999, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3475, 'output_tokens': 85, 'total_cost': 0.0012549999999999998, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3475, 'output_tokens': 85, 'total_cost': 0.0012549999999999998, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3423, 'output_tokens': 82, 'total_cost': 0.0012318999999999997, 'formatted_total_cost': '$0.001232'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3423, 'output_tokens': 82, 'total_cost': 0.0012318999999999997, 'formatted_total_cost': '$0.001232'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3571, 'output_tokens': 82, 'total_cost': 0.0012762999999999997, 'formatted_total_cost': '$0.001276'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 632, 'output_tokens': 68, 'total_cost': 0.00035959999999999996, 'formatted_total_cost': '$0.000360'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 632, 'output_tokens': 68, 'total_cost': 0.00035959999999999996, 'formatted_total_cost': '$0.000360'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3399, 'output_tokens': 83, 'total_cost': 0.0012272, 'formatted_total_cost': '$0.001227'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3399, 'output_tokens': 83, 'total_cost': 0.0012272, 'formatted_total_cost': '$0.001227'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3706, 'output_tokens': 85, 'total_cost': 0.0013243, 'formatted_total_cost': '$0.001324'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3706, 'output_tokens': 85, 'total_cost': 0.0013243, 'formatted_total_cost': '$0.001324'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 670, 'output_tokens': 3, 'total_cost': 0.0002085, 'formatted_total_cost': '$0.000208'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3319, 'output_tokens': 72, 'total_cost': 0.0011757, 'formatted_total_cost': '$0.001176'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3319, 'output_tokens': 72, 'total_cost': 0.0011757, 'formatted_total_cost': '$0.001176'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3343, 'output_tokens': 72, 'total_cost': 0.0011829, 'formatted_total_cost': '$0.001183'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3343, 'output_tokens': 72, 'total_cost': 0.0011829, 'formatted_total_cost': '$0.001183'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3336, 'output_tokens': 72, 'total_cost': 0.0011808, 'formatted_total_cost': '$0.001181'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3336, 'output_tokens': 72, 'total_cost': 0.0011808, 'formatted_total_cost': '$0.001181'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3280, 'output_tokens': 72, 'total_cost': 0.0011639999999999999, 'formatted_total_cost': '$0.001164'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3280, 'output_tokens': 72, 'total_cost': 0.0011639999999999999, 'formatted_total_cost': '$0.001164'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3358, 'output_tokens': 72, 'total_cost': 0.0011874, 'formatted_total_cost': '$0.001187'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3358, 'output_tokens': 72, 'total_cost': 0.0011874, 'formatted_total_cost': '$0.001187'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3286, 'output_tokens': 72, 'total_cost': 0.0011658, 'formatted_total_cost': '$0.001166'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3286, 'output_tokens': 72, 'total_cost': 0.0011658, 'formatted_total_cost': '$0.001166'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3369, 'output_tokens': 72, 'total_cost': 0.0011907, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3369, 'output_tokens': 72, 'total_cost': 0.0011907, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 663, 'output_tokens': 3, 'total_cost': 0.00020639999999999998, 'formatted_total_cost': '$0.000206'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3721, 'output_tokens': 77, 'total_cost': 0.0013088, 'formatted_total_cost': '$0.001309'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3721, 'output_tokens': 77, 'total_cost': 0.0013088, 'formatted_total_cost': '$0.001309'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3591, 'output_tokens': 75, 'total_cost': 0.0012648, 'formatted_total_cost': '$0.001265'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3591, 'output_tokens': 75, 'total_cost': 0.0012648, 'formatted_total_cost': '$0.001265'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3731, 'output_tokens': 75, 'total_cost': 0.0013067999999999999, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3731, 'output_tokens': 75, 'total_cost': 0.0013067999999999999, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3756, 'output_tokens': 75, 'total_cost': 0.0013142999999999998, 'formatted_total_cost': '$0.001314'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3756, 'output_tokens': 75, 'total_cost': 0.0013142999999999998, 'formatted_total_cost': '$0.001314'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3794, 'output_tokens': 75, 'total_cost': 0.0013257, 'formatted_total_cost': '$0.001326'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3794, 'output_tokens': 75, 'total_cost': 0.0013257, 'formatted_total_cost': '$0.001326'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3785, 'output_tokens': 75, 'total_cost': 0.001323, 'formatted_total_cost': '$0.001323'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3785, 'output_tokens': 75, 'total_cost': 0.001323, 'formatted_total_cost': '$0.001323'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4061, 'output_tokens': 75, 'total_cost': 0.0014058, 'formatted_total_cost': '$0.001406'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4061, 'output_tokens': 75, 'total_cost': 0.0014058, 'formatted_total_cost': '$0.001406'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 562, 'output_tokens': 3, 'total_cost': 0.0001761, 'formatted_total_cost': '$0.000176'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3277, 'output_tokens': 78, 'total_cost': 0.0011781, 'formatted_total_cost': '$0.001178'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3277, 'output_tokens': 78, 'total_cost': 0.0011781, 'formatted_total_cost': '$0.001178'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3303, 'output_tokens': 78, 'total_cost': 0.0011859, 'formatted_total_cost': '$0.001186'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3303, 'output_tokens': 78, 'total_cost': 0.0011859, 'formatted_total_cost': '$0.001186'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3524, 'output_tokens': 78, 'total_cost': 0.0012522, 'formatted_total_cost': '$0.001252'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3524, 'output_tokens': 78, 'total_cost': 0.0012522, 'formatted_total_cost': '$0.001252'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3322, 'output_tokens': 76, 'total_cost': 0.0011866, 'formatted_total_cost': '$0.001187'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3322, 'output_tokens': 76, 'total_cost': 0.0011866, 'formatted_total_cost': '$0.001187'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3328, 'output_tokens': 78, 'total_cost': 0.0011934, 'formatted_total_cost': '$0.001193'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3328, 'output_tokens': 78, 'total_cost': 0.0011934, 'formatted_total_cost': '$0.001193'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3490, 'output_tokens': 78, 'total_cost': 0.001242, 'formatted_total_cost': '$0.001242'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3490, 'output_tokens': 78, 'total_cost': 0.001242, 'formatted_total_cost': '$0.001242'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3256, 'output_tokens': 76, 'total_cost': 0.0011668000000000002, 'formatted_total_cost': '$0.001167'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3256, 'output_tokens': 76, 'total_cost': 0.0011668000000000002, 'formatted_total_cost': '$0.001167'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 650, 'output_tokens': 3, 'total_cost': 0.0002025, 'formatted_total_cost': '$0.000202'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3349, 'output_tokens': 76, 'total_cost': 0.0011947, 'formatted_total_cost': '$0.001195'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3349, 'output_tokens': 76, 'total_cost': 0.0011947, 'formatted_total_cost': '$0.001195'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3192, 'output_tokens': 76, 'total_cost': 0.0011476, 'formatted_total_cost': '$0.001148'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3192, 'output_tokens': 76, 'total_cost': 0.0011476, 'formatted_total_cost': '$0.001148'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3201, 'output_tokens': 76, 'total_cost': 0.0011503, 'formatted_total_cost': '$0.001150'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3201, 'output_tokens': 76, 'total_cost': 0.0011503, 'formatted_total_cost': '$0.001150'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3339, 'output_tokens': 78, 'total_cost': 0.0011967, 'formatted_total_cost': '$0.001197'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3339, 'output_tokens': 78, 'total_cost': 0.0011967, 'formatted_total_cost': '$0.001197'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3312, 'output_tokens': 76, 'total_cost': 0.0011836, 'formatted_total_cost': '$0.001184'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3312, 'output_tokens': 76, 'total_cost': 0.0011836, 'formatted_total_cost': '$0.001184'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3201, 'output_tokens': 78, 'total_cost': 0.0011553, 'formatted_total_cost': '$0.001155'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3201, 'output_tokens': 78, 'total_cost': 0.0011553, 'formatted_total_cost': '$0.001155'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3206, 'output_tokens': 76, 'total_cost': 0.0011518, 'formatted_total_cost': '$0.001152'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3206, 'output_tokens': 76, 'total_cost': 0.0011518, 'formatted_total_cost': '$0.001152'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 698, 'output_tokens': 3, 'total_cost': 0.00021690000000000001, 'formatted_total_cost': '$0.000217'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3516, 'output_tokens': 103, 'total_cost': 0.0013123, 'formatted_total_cost': '$0.001312'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3516, 'output_tokens': 103, 'total_cost': 0.0013123, 'formatted_total_cost': '$0.001312'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3517, 'output_tokens': 103, 'total_cost': 0.0013126, 'formatted_total_cost': '$0.001313'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3517, 'output_tokens': 103, 'total_cost': 0.0013126, 'formatted_total_cost': '$0.001313'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3499, 'output_tokens': 103, 'total_cost': 0.0013072, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3499, 'output_tokens': 103, 'total_cost': 0.0013072, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3519, 'output_tokens': 105, 'total_cost': 0.0013181999999999998, 'formatted_total_cost': '$0.001318'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3519, 'output_tokens': 105, 'total_cost': 0.0013181999999999998, 'formatted_total_cost': '$0.001318'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3572, 'output_tokens': 103, 'total_cost': 0.0013291, 'formatted_total_cost': '$0.001329'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3572, 'output_tokens': 103, 'total_cost': 0.0013291, 'formatted_total_cost': '$0.001329'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3508, 'output_tokens': 101, 'total_cost': 0.0013049, 'formatted_total_cost': '$0.001305'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3508, 'output_tokens': 101, 'total_cost': 0.0013049, 'formatted_total_cost': '$0.001305'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3742, 'output_tokens': 103, 'total_cost': 0.0013801, 'formatted_total_cost': '$0.001380'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3742, 'output_tokens': 103, 'total_cost': 0.0013801, 'formatted_total_cost': '$0.001380'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 682, 'output_tokens': 3, 'total_cost': 0.00021209999999999998, 'formatted_total_cost': '$0.000212'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3362, 'output_tokens': 82, 'total_cost': 0.0012136, 'formatted_total_cost': '$0.001214'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3362, 'output_tokens': 82, 'total_cost': 0.0012136, 'formatted_total_cost': '$0.001214'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3457, 'output_tokens': 84, 'total_cost': 0.0012471, 'formatted_total_cost': '$0.001247'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3457, 'output_tokens': 84, 'total_cost': 0.0012471, 'formatted_total_cost': '$0.001247'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3487, 'output_tokens': 82, 'total_cost': 0.0012510999999999998, 'formatted_total_cost': '$0.001251'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3487, 'output_tokens': 82, 'total_cost': 0.0012510999999999998, 'formatted_total_cost': '$0.001251'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3413, 'output_tokens': 82, 'total_cost': 0.0012288999999999998, 'formatted_total_cost': '$0.001229'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3413, 'output_tokens': 82, 'total_cost': 0.0012288999999999998, 'formatted_total_cost': '$0.001229'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3414, 'output_tokens': 84, 'total_cost': 0.0012341999999999998, 'formatted_total_cost': '$0.001234'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3414, 'output_tokens': 84, 'total_cost': 0.0012341999999999998, 'formatted_total_cost': '$0.001234'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3496, 'output_tokens': 82, 'total_cost': 0.0012537999999999998, 'formatted_total_cost': '$0.001254'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3496, 'output_tokens': 82, 'total_cost': 0.0012537999999999998, 'formatted_total_cost': '$0.001254'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3509, 'output_tokens': 80, 'total_cost': 0.0012527, 'formatted_total_cost': '$0.001253'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3509, 'output_tokens': 80, 'total_cost': 0.0012527, 'formatted_total_cost': '$0.001253'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 712, 'output_tokens': 3, 'total_cost': 0.00022109999999999998, 'formatted_total_cost': '$0.000221'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3633, 'output_tokens': 78, 'total_cost': 0.0012849, 'formatted_total_cost': '$0.001285'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3633, 'output_tokens': 78, 'total_cost': 0.0012849, 'formatted_total_cost': '$0.001285'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3729, 'output_tokens': 80, 'total_cost': 0.0013187000000000001, 'formatted_total_cost': '$0.001319'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3729, 'output_tokens': 80, 'total_cost': 0.0013187000000000001, 'formatted_total_cost': '$0.001319'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3789, 'output_tokens': 78, 'total_cost': 0.0013317, 'formatted_total_cost': '$0.001332'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3789, 'output_tokens': 78, 'total_cost': 0.0013317, 'formatted_total_cost': '$0.001332'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3607, 'output_tokens': 78, 'total_cost': 0.0012771, 'formatted_total_cost': '$0.001277'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3607, 'output_tokens': 78, 'total_cost': 0.0012771, 'formatted_total_cost': '$0.001277'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3604, 'output_tokens': 78, 'total_cost': 0.0012762000000000001, 'formatted_total_cost': '$0.001276'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3604, 'output_tokens': 78, 'total_cost': 0.0012762000000000001, 'formatted_total_cost': '$0.001276'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3769, 'output_tokens': 80, 'total_cost': 0.0013307000000000002, 'formatted_total_cost': '$0.001331'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3769, 'output_tokens': 80, 'total_cost': 0.0013307000000000002, 'formatted_total_cost': '$0.001331'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3804, 'output_tokens': 80, 'total_cost': 0.0013412, 'formatted_total_cost': '$0.001341'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3804, 'output_tokens': 80, 'total_cost': 0.0013412, 'formatted_total_cost': '$0.001341'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 500, 'output_tokens': 3, 'total_cost': 0.00015749999999999998, 'formatted_total_cost': '$0.000157'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3355, 'output_tokens': 74, 'total_cost': 0.0011915, 'formatted_total_cost': '$0.001192'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 571, 'output_tokens': 59, 'total_cost': 0.0003188, 'formatted_total_cost': '$0.000319'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 571, 'output_tokens': 59, 'total_cost': 0.0003188, 'formatted_total_cost': '$0.000319'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3472, 'output_tokens': 75, 'total_cost': 0.0012291, 'formatted_total_cost': '$0.001229'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 561, 'output_tokens': 59, 'total_cost': 0.0003158, 'formatted_total_cost': '$0.000316'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 561, 'output_tokens': 59, 'total_cost': 0.0003158, 'formatted_total_cost': '$0.000316'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3487, 'output_tokens': 73, 'total_cost': 0.0012285999999999998, 'formatted_total_cost': '$0.001229'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 566, 'output_tokens': 59, 'total_cost': 0.00031729999999999996, 'formatted_total_cost': '$0.000317'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 566, 'output_tokens': 59, 'total_cost': 0.00031729999999999996, 'formatted_total_cost': '$0.000317'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3363, 'output_tokens': 76, 'total_cost': 0.0011989000000000001, 'formatted_total_cost': '$0.001199'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 577, 'output_tokens': 76, 'total_cost': 0.0003631, 'formatted_total_cost': '$0.000363'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 577, 'output_tokens': 76, 'total_cost': 0.0003631, 'formatted_total_cost': '$0.000363'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3464, 'output_tokens': 74, 'total_cost': 0.0012242, 'formatted_total_cost': '$0.001224'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 569, 'output_tokens': 59, 'total_cost': 0.0003182, 'formatted_total_cost': '$0.000318'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 569, 'output_tokens': 59, 'total_cost': 0.0003182, 'formatted_total_cost': '$0.000318'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3488, 'output_tokens': 73, 'total_cost': 0.0012289, 'formatted_total_cost': '$0.001229'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 560, 'output_tokens': 59, 'total_cost': 0.0003155, 'formatted_total_cost': '$0.000316'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 560, 'output_tokens': 59, 'total_cost': 0.0003155, 'formatted_total_cost': '$0.000316'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3510, 'output_tokens': 73, 'total_cost': 0.0012354999999999998, 'formatted_total_cost': '$0.001235'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3510, 'output_tokens': 73, 'total_cost': 0.0012354999999999998, 'formatted_total_cost': '$0.001235'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 463, 'output_tokens': 3, 'total_cost': 0.00014639999999999998, 'formatted_total_cost': '$0.000146'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4015, 'output_tokens': 142, 'total_cost': 0.0015595000000000001, 'formatted_total_cost': '$0.001560'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4015, 'output_tokens': 142, 'total_cost': 0.0015595000000000001, 'formatted_total_cost': '$0.001560'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4168, 'output_tokens': 140, 'total_cost': 0.0016003999999999997, 'formatted_total_cost': '$0.001600'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4168, 'output_tokens': 140, 'total_cost': 0.0016003999999999997, 'formatted_total_cost': '$0.001600'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4254, 'output_tokens': 140, 'total_cost': 0.0016262, 'formatted_total_cost': '$0.001626'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4254, 'output_tokens': 140, 'total_cost': 0.0016262, 'formatted_total_cost': '$0.001626'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4000, 'output_tokens': 142, 'total_cost': 0.001555, 'formatted_total_cost': '$0.001555'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4000, 'output_tokens': 142, 'total_cost': 0.001555, 'formatted_total_cost': '$0.001555'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4125, 'output_tokens': 140, 'total_cost': 0.0015875, 'formatted_total_cost': '$0.001587'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4125, 'output_tokens': 140, 'total_cost': 0.0015875, 'formatted_total_cost': '$0.001587'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4261, 'output_tokens': 142, 'total_cost': 0.0016333, 'formatted_total_cost': '$0.001633'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4261, 'output_tokens': 142, 'total_cost': 0.0016333, 'formatted_total_cost': '$0.001633'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4216, 'output_tokens': 140, 'total_cost': 0.0016148, 'formatted_total_cost': '$0.001615'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4216, 'output_tokens': 140, 'total_cost': 0.0016148, 'formatted_total_cost': '$0.001615'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 544, 'output_tokens': 3, 'total_cost': 0.00017069999999999998, 'formatted_total_cost': '$0.000171'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4109, 'output_tokens': 127, 'total_cost': 0.0015501999999999998, 'formatted_total_cost': '$0.001550'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4109, 'output_tokens': 127, 'total_cost': 0.0015501999999999998, 'formatted_total_cost': '$0.001550'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4178, 'output_tokens': 127, 'total_cost': 0.0015709, 'formatted_total_cost': '$0.001571'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4178, 'output_tokens': 127, 'total_cost': 0.0015709, 'formatted_total_cost': '$0.001571'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4228, 'output_tokens': 127, 'total_cost': 0.0015859, 'formatted_total_cost': '$0.001586'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4228, 'output_tokens': 127, 'total_cost': 0.0015859, 'formatted_total_cost': '$0.001586'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4093, 'output_tokens': 127, 'total_cost': 0.0015454000000000002, 'formatted_total_cost': '$0.001545'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4093, 'output_tokens': 127, 'total_cost': 0.0015454000000000002, 'formatted_total_cost': '$0.001545'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4130, 'output_tokens': 127, 'total_cost': 0.0015564999999999997, 'formatted_total_cost': '$0.001556'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4130, 'output_tokens': 127, 'total_cost': 0.0015564999999999997, 'formatted_total_cost': '$0.001556'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4233, 'output_tokens': 127, 'total_cost': 0.0015873999999999997, 'formatted_total_cost': '$0.001587'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4233, 'output_tokens': 127, 'total_cost': 0.0015873999999999997, 'formatted_total_cost': '$0.001587'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4202, 'output_tokens': 127, 'total_cost': 0.0015780999999999998, 'formatted_total_cost': '$0.001578'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4202, 'output_tokens': 127, 'total_cost': 0.0015780999999999998, 'formatted_total_cost': '$0.001578'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 559, 'output_tokens': 5, 'total_cost': 0.00018020000000000002, 'formatted_total_cost': '$0.000180'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3816, 'output_tokens': 107, 'total_cost': 0.0014122999999999998, 'formatted_total_cost': '$0.001412'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3816, 'output_tokens': 107, 'total_cost': 0.0014122999999999998, 'formatted_total_cost': '$0.001412'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3941, 'output_tokens': 106, 'total_cost': 0.0014473, 'formatted_total_cost': '$0.001447'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3941, 'output_tokens': 106, 'total_cost': 0.0014473, 'formatted_total_cost': '$0.001447'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4029, 'output_tokens': 108, 'total_cost': 0.0014787, 'formatted_total_cost': '$0.001479'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4029, 'output_tokens': 108, 'total_cost': 0.0014787, 'formatted_total_cost': '$0.001479'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3855, 'output_tokens': 107, 'total_cost': 0.001424, 'formatted_total_cost': '$0.001424'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3855, 'output_tokens': 107, 'total_cost': 0.001424, 'formatted_total_cost': '$0.001424'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3830, 'output_tokens': 108, 'total_cost': 0.0014190000000000001, 'formatted_total_cost': '$0.001419'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3830, 'output_tokens': 108, 'total_cost': 0.0014190000000000001, 'formatted_total_cost': '$0.001419'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4029, 'output_tokens': 106, 'total_cost': 0.0014736999999999999, 'formatted_total_cost': '$0.001474'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4029, 'output_tokens': 106, 'total_cost': 0.0014736999999999999, 'formatted_total_cost': '$0.001474'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4022, 'output_tokens': 108, 'total_cost': 0.0014766000000000002, 'formatted_total_cost': '$0.001477'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4022, 'output_tokens': 108, 'total_cost': 0.0014766000000000002, 'formatted_total_cost': '$0.001477'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 574, 'output_tokens': 3, 'total_cost': 0.00017969999999999998, 'formatted_total_cost': '$0.000180'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3504, 'output_tokens': 84, 'total_cost': 0.0012611999999999999, 'formatted_total_cost': '$0.001261'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3504, 'output_tokens': 84, 'total_cost': 0.0012611999999999999, 'formatted_total_cost': '$0.001261'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3579, 'output_tokens': 82, 'total_cost': 0.0012786999999999998, 'formatted_total_cost': '$0.001279'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3579, 'output_tokens': 82, 'total_cost': 0.0012786999999999998, 'formatted_total_cost': '$0.001279'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3674, 'output_tokens': 82, 'total_cost': 0.0013072000000000001, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3674, 'output_tokens': 82, 'total_cost': 0.0013072000000000001, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3515, 'output_tokens': 82, 'total_cost': 0.0012594999999999998, 'formatted_total_cost': '$0.001259'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3515, 'output_tokens': 82, 'total_cost': 0.0012594999999999998, 'formatted_total_cost': '$0.001259'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3563, 'output_tokens': 84, 'total_cost': 0.0012789, 'formatted_total_cost': '$0.001279'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3563, 'output_tokens': 84, 'total_cost': 0.0012789, 'formatted_total_cost': '$0.001279'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3599, 'output_tokens': 82, 'total_cost': 0.0012847000000000002, 'formatted_total_cost': '$0.001285'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3599, 'output_tokens': 82, 'total_cost': 0.0012847000000000002, 'formatted_total_cost': '$0.001285'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3535, 'output_tokens': 84, 'total_cost': 0.0012705, 'formatted_total_cost': '$0.001270'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3535, 'output_tokens': 84, 'total_cost': 0.0012705, 'formatted_total_cost': '$0.001270'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 683, 'output_tokens': 7, 'total_cost': 0.00022239999999999998, 'formatted_total_cost': '$0.000222'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7953, 'output_tokens': 2340, 'total_cost': 0.0082359, 'formatted_total_cost': '$0.008236'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4791, 'output_tokens': 171, 'total_cost': 0.0018648000000000002, 'formatted_total_cost': '$0.001865'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4917, 'output_tokens': 2357, 'total_cost': 0.0073676, 'formatted_total_cost': '$0.007368'}]]",True,1,,,

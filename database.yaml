@@ -1,0 +1,8 @@
+services:
+  db-test:
+    build: .
+    ports:
+      - "10010:5432"
+    # This instructs Docker to load variables from the file
+    env_file:
+      - .env

@@ -1,0 +1,8 @@
+We will plan to perform a weighted Cox regression for NHANES data from 2005-2018.
+Participants will be excluded if have missing data on any of the following: fasting plasma glucose (mmol/L) or glycohemoglobin (HbA1c) (%) or months follow up examination or mortality status or age at screening was less than 20 years old.
+They will also be excluded if they don't have diabetes or prediabetes when they are defined as the following:
+diabetes defined as meeting any of these: glycohemoglobin (%)>=6.5 or fasting plasma glucose >=126 mg/dl, doctor told you have diabetes yes or taking inculin now yes.
+prediabtes defined as meeting any of these: glycohemoglobin (%) >=5.7 less or equal to 6.4 fasting plasma glucose level between 100-125 mg/dl or yes to do you have prediabetes.
+Main predictor is SHR - which is fasting plasma glucose (mmol/l)/ (1.59* glycohemoglobin (%)-2.59), categorized as quartiles, categorized in quartiles(%) Q1: <=25, Q2: >25 and <=50, Q3: >50 and <=75, Q4: >75.
+The analysis will employ a weighted Cox proportional hazards regression model and covariates will include age at screening, gender, race/Hispanic origin.
+The main outcome is all-cause mortality with months followup examination serving as the time-to-event variable.

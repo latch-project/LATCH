@@ -1,0 +1,6 @@
+We will perform a logistic regression using NHANES data from 2009-2016.
+Include participants whose age at screening 18 years or more and who have diabetes, defined as meeting any of these: who said yes to self-reported diaetes or takes diabetic medication or takes insulin
+Exclude who are missing neutrophil counts or lymphocyte counts.
+Exclude participants missing any of the depression questions: "have little interest in doing things", "feeling down, depressed, or hopeless", "trouble sleeping or sleeping too much", "feeling tired or having little energy", "poor appetite or overeating", "feeling bad about yourself", "trouble concentrating on things", "moving or speaking slowly or too fast", "thought you would be better off dead".
+The main predictor is neutrophil count / lymphocyte count, categorize in quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75 and adjust for age at screening, gender, and race/Hispanic origin.
+Outcome is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), if value is null assign (0), and the total score >=10 was defined as clinically relevant depression and else was not. 

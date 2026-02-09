@@ -1,0 +1,625 @@
+Title,Schema,Question,Structured Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log
+77944,nhanes,"We will perform a Cox regression. Include participants who reported yes to a self-reported diabetes question.
+1999-2010 NHANES data will be used. Exclude participants with no self reported diabetes, <18 year old, and months followup examination missing, red cell distribution missing, mortality information missing.
+Predictor is red cell distribution, categorized in quartiles (Q1: <= 25%, Q2: <25 and <=50%, Q3: <50 and <=75%, Q4: >75%) 
+The main outcome is all-cause mortality, with months followup examination serving as the time-to-event variable. 
+Adjust for age at screening, gender, race/Hispanic origin. and hemoglobin.","Analysis Type: cox regression
+
+Dataset: NHANES
+
+Period of Interest: 1999-2010
+
+Inclusion Criteria:
+- self-reported diabetes = yes
+
+Exclusion Criteria:
+- no self reported diabetes
+- <18 year old
+- months followup examination missing
+- red cell distribution missing
+- mortality information missing
+
+Covariates:
+- age at screening
+- gender
+- race/Hispanic origin
+- hemoglobin
+
+Predictor:
+- red cell distribution categorized in quartiles:
+  Q1: <= 25%
+  Q2: >25 and <=50%
+  Q3: >50 and <=75%
+  Q4: >75%
+
+Outcome:
+- months followup examination (time-to-event)
+- all-cause mortality (event indicator)","{'dataset': 'NHANES', 'inclusion': [{'keyword': 'self-reported diabetes', 'derived': False, 'condition': '=yes', 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}], 'exclusion': [{'keyword': 'self reported diabetes', 'derived': False, 'condition': '=no', 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'age', 'derived': False, 'condition': '<18', 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'months followup examination', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'months_followup_examination', 'examples': ['0.0', '39.0', '40.0', '61.0', '62.0']}, {'keyword': 'red cell distribution', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'red_cell_distribution_width', 'examples': ['12.4', '13.2', '14.7', '16.3', '16.7']}, {'keyword': 'mortality information', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'mortality_status', 'examples': ['0.0', '1.0']}], 'covariates': [{'keyword': 'age at screening', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'gender', 'derived': False, 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/hispanic origin', 'derived': False, 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'keyword': 'hemoglobin', 'derived': False, 'table': 'final_master_table', 'column': 'hemoglobin_g_dl', 'examples': ['5.8', '6.2', '7.7', '12.4', '13.2']}], 'predictor': [{'keyword': 'red cell distribution', 'derived': True, 'depends_on': [{'keyword': 'red cell distribution', 'derived': False, 'table': 'final_master_table', 'column': 'red_cell_distribution_width', 'examples': ['12.4', '13.2', '14.7', '16.3', '16.7']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'quantiles', 'num_bins': 4, 'labels': ['Q1: <= 25%', 'Q2: >25 and <=50%', 'Q3: >50 and <=75%', 'Q4: >75%']}}], 'table': 'final_master_table', 'column': 'red_cell_distribution_width', 'examples': ['12.4', '13.2', '14.7', '16.3', '16.7']}], 'outcome': [{'keyword': 'months followup examination', 'derived': False, 'table': 'final_master_table', 'column': 'months_followup_examination', 'examples': ['0.0', '39.0', '40.0', '61.0', '62.0']}, {'keyword': 'all-cause mortality', 'derived': False, 'table': 'final_master_table', 'column': 'mortality_status', 'examples': ['0.0', '1.0']}]}","{'analysis_type': 'cox regression', 'dataset': 'NHANES', 'period_of_interest': '1999-2010', 'inclusion': [{'keyword': 'self-reported diabetes', 'derived': False, 'condition': '=yes', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.diq_d', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2001-2002', 'table': 'nhanes.diq_b', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2003-2004', 'table': 'nhanes.diq_c', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '1999-2000', 'table': 'nhanes.diq', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}], 'exclusion': [{'keyword': 'self reported diabetes', 'derived': False, 'condition': '=no', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.diq_d', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2001-2002', 'table': 'nhanes.diq_b', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2003-2004', 'table': 'nhanes.diq_c', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '1999-2000', 'table': 'nhanes.diq', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'age', 'derived': False, 'condition': '<18', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}]}, {'keyword': 'months followup examination', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'months_followup_examination', 'example_values': ['62.0', '154.0', '174.0', '162.0', '96.0']}, {'cycle': '2001-2002', 'table': 'nhanes.mortality_data_b', 'column': 'months_followup_examination', 'example_values': ['0.0', '154.0', '174.0', '96.0', '61.0']}, {'cycle': '2003-2004', 'table': 'nhanes.mortality_data_c', 'column': 'months_followup_examination', 'example_values': ['180.0', '109.0', '40.0', '39.0', '68.0']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'months_followup_examination', 'example_values': ['40.0', '109.0', '39.0', '68.0', '0.0']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'months_followup_examination', 'example_values': ['62.0', '76.0', '96.0', '61.0', '63.0']}, {'cycle': '1999-2000', 'table': 'nhanes.mortality_data', 'column': 'months_followup_examination', 'example_values': ['154.0', '174.0', '96.0', '61.0', '248.0']}]}, {'keyword': 'red cell distribution', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.cbc_d', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '14.7', '13.2', '22.5']}, {'cycle': '2001-2002', 'table': 'nhanes.l25_b', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '14.7', '13.2', '30.5']}, {'cycle': '2003-2004', 'table': 'nhanes.l25_c', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '14.7', '13.2', '16.3']}, {'cycle': '2007-2008', 'table': 'nhanes.cbc_e', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '13.2', '14.7', '16.3']}, {'cycle': '2009-2010', 'table': 'nhanes.cbc_f', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '13.2', '14.7', '25.6']}, {'cycle': '1999-2000', 'table': 'nhanes.lab25', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '14.7', '13.2', '22.5']}]}, {'keyword': 'mortality information', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2001-2002', 'table': 'nhanes.mortality_data_b', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2003-2004', 'table': 'nhanes.mortality_data_c', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '1999-2000', 'table': 'nhanes.mortality_data', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}]}], 'covariates': [{'keyword': 'age at screening', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}]}, {'keyword': 'gender', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/hispanic origin', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.demo_d', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2001-2002', 'table': 'nhanes.demo_b', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2003-2004', 'table': 'nhanes.demo_c', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '1999-2000', 'table': 'nhanes.demo', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}, {'keyword': 'hemoglobin', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.cbc_d', 'column': 'hemoglobin_g_dl', 'example_values': ['16.7', '12.4', '5.8', '13.2', '14.7']}, {'cycle': '2001-2002', 'table': 'nhanes.l25_b', 'column': 'hemoglobin_g_dl', 'example_values': ['12.4', '16.7', '13.2', '14.7', '16.3']}, {'cycle': '2003-2004', 'table': 'nhanes.l25_c', 'column': 'hemoglobin_g_dl', 'example_values': ['16.7', '12.4', '13.2', '14.7', '6.2']}, {'cycle': '2007-2008', 'table': 'nhanes.cbc_e', 'column': 'hemoglobin_g_dl', 'example_values': ['16.7', '12.4', '13.2', '14.7', '16.3']}, {'cycle': '2009-2010', 'table': 'nhanes.cbc_f', 'column': 'hemoglobin_g_dl', 'example_values': ['16.7', '12.4', '13.2', '14.7', '16.3']}, {'cycle': '1999-2000', 'table': 'nhanes.lab25', 'column': 'hemoglobin_g_dl', 'example_values': ['16.7', '12.4', '13.2', '14.7', '7.7']}]}], 'predictor': [{'keyword': 'red cell distribution', 'derived': True, 'depends_on': [{'keyword': 'red cell distribution', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.cbc_d', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '14.7', '13.2', '22.5']}, {'cycle': '2001-2002', 'table': 'nhanes.l25_b', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '14.7', '13.2', '30.5']}, {'cycle': '2003-2004', 'table': 'nhanes.l25_c', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '14.7', '13.2', '16.3']}, {'cycle': '2007-2008', 'table': 'nhanes.cbc_e', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '13.2', '14.7', '16.3']}, {'cycle': '2009-2010', 'table': 'nhanes.cbc_f', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '13.2', '14.7', '25.6']}, {'cycle': '1999-2000', 'table': 'nhanes.lab25', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '14.7', '13.2', '22.5']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'quantiles', 'num_bins': 4, 'labels': ['Q1: <= 25%', 'Q2: >25 and <=50%', 'Q3: >50 and <=75%', 'Q4: >75%']}}], 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.cbc_d', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '14.7', '13.2', '22.5']}, {'cycle': '2001-2002', 'table': 'nhanes.l25_b', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '14.7', '13.2', '30.5']}, {'cycle': '2003-2004', 'table': 'nhanes.l25_c', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '14.7', '13.2', '16.3']}, {'cycle': '2007-2008', 'table': 'nhanes.cbc_e', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '13.2', '14.7', '16.3']}, {'cycle': '2009-2010', 'table': 'nhanes.cbc_f', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '13.2', '14.7', '25.6']}, {'cycle': '1999-2000', 'table': 'nhanes.lab25', 'column': 'red_cell_distribution_width', 'example_values': ['16.7', '12.4', '14.7', '13.2', '22.5']}]}], 'outcome': [{'keyword': 'months followup examination', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'months_followup_examination', 'example_values': ['62.0', '154.0', '174.0', '162.0', '96.0']}, {'cycle': '2001-2002', 'table': 'nhanes.mortality_data_b', 'column': 'months_followup_examination', 'example_values': ['0.0', '154.0', '174.0', '96.0', '61.0']}, {'cycle': '2003-2004', 'table': 'nhanes.mortality_data_c', 'column': 'months_followup_examination', 'example_values': ['180.0', '109.0', '40.0', '39.0', '68.0']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'months_followup_examination', 'example_values': ['40.0', '109.0', '39.0', '68.0', '0.0']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'months_followup_examination', 'example_values': ['62.0', '76.0', '96.0', '61.0', '63.0']}, {'cycle': '1999-2000', 'table': 'nhanes.mortality_data', 'column': 'months_followup_examination', 'example_values': ['154.0', '174.0', '96.0', '61.0', '248.0']}]}, {'keyword': 'all-cause mortality', 'derived': False, 'data_sources': [{'cycle': '2005-2006', 'table': 'nhanes.mortality_data_d', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2001-2002', 'table': 'nhanes.mortality_data_b', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2003-2004', 'table': 'nhanes.mortality_data_c', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2007-2008', 'table': 'nhanes.mortality_data_e', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '2009-2010', 'table': 'nhanes.mortality_data_f', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}, {'cycle': '1999-2000', 'table': 'nhanes.mortality_data', 'column': 'mortality_status', 'example_values': ['0.0', '1.0', '', '', '']}]}]}",,"-- TEMP TABLE FOR ""self reported diabetes"", ""self-reported diabetes""
+DROP TABLE IF EXISTS temp_master_doctor_told_you_have_diabetes;
+CREATE TEMP TABLE temp_master_doctor_told_you_have_diabetes AS
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_d
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_b
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_c
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_e
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_doctor_told_you_have_diabetes ON temp_master_doctor_told_you_have_diabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""age"", ""age at screening""
+DROP TABLE IF EXISTS temp_master_age_in_years_at_screening;
+CREATE TEMP TABLE temp_master_age_in_years_at_screening AS
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_b
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_c
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_in_years_at_screening ON temp_master_age_in_years_at_screening (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""months followup examination"", ""months followup examination""
+DROP TABLE IF EXISTS temp_master_months_followup_examination;
+CREATE TEMP TABLE temp_master_months_followup_examination AS
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_d
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_b
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_c
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_e
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data_f
+UNION ALL
+SELECT respondent_sequence_number, ""months_followup_examination"" AS ""months_followup_examination""
+FROM nhanes.mortality_data;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_months_followup_examination ON temp_master_months_followup_examination (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""red cell distribution"", ""red cell distribution"", ""red cell distribution""
+DROP TABLE IF EXISTS temp_master_red_cell_distribution_width;
+CREATE TEMP TABLE temp_master_red_cell_distribution_width AS
+SELECT respondent_sequence_number, ""red_cell_distribution_width"" AS ""red_cell_distribution_width""
+FROM nhanes.cbc_d
+UNION ALL
+SELECT respondent_sequence_number, ""red_cell_distribution_width"" AS ""red_cell_distribution_width""
+FROM nhanes.l25_b
+UNION ALL
+SELECT respondent_sequence_number, ""red_cell_distribution_width"" AS ""red_cell_distribution_width""
+FROM nhanes.l25_c
+UNION ALL
+SELECT respondent_sequence_number, ""red_cell_distribution_width"" AS ""red_cell_distribution_width""
+FROM nhanes.cbc_e
+UNION ALL
+SELECT respondent_sequence_number, ""red_cell_distribution_width"" AS ""red_cell_distribution_width""
+FROM nhanes.cbc_f
+UNION ALL
+SELECT respondent_sequence_number, ""red_cell_distribution_width"" AS ""red_cell_distribution_width""
+FROM nhanes.lab25;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_red_cell_distribution_width ON temp_master_red_cell_distribution_width (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""all-cause mortality"", ""mortality information""
+DROP TABLE IF EXISTS temp_master_mortality_status;
+CREATE TEMP TABLE temp_master_mortality_status AS
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_d
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_b
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_c
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_e
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data_f
+UNION ALL
+SELECT respondent_sequence_number, ""mortality_status"" AS ""mortality_status""
+FROM nhanes.mortality_data;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_mortality_status ON temp_master_mortality_status (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""gender""
+DROP TABLE IF EXISTS temp_master_gender;
+CREATE TEMP TABLE temp_master_gender AS
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_b
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_c
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_gender ON temp_master_gender (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""race/hispanic origin""
+DROP TABLE IF EXISTS temp_master_race_hispanic_origin;
+CREATE TEMP TABLE temp_master_race_hispanic_origin AS
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_d
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_b
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_c
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_race_hispanic_origin ON temp_master_race_hispanic_origin (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""hemoglobin""
+DROP TABLE IF EXISTS temp_master_hemoglobin_g_dl;
+CREATE TEMP TABLE temp_master_hemoglobin_g_dl AS
+SELECT respondent_sequence_number, ""hemoglobin_g_dl"" AS ""hemoglobin_g_dl""
+FROM nhanes.cbc_d
+UNION ALL
+SELECT respondent_sequence_number, ""hemoglobin_g_dl"" AS ""hemoglobin_g_dl""
+FROM nhanes.l25_b
+UNION ALL
+SELECT respondent_sequence_number, ""hemoglobin_g_dl"" AS ""hemoglobin_g_dl""
+FROM nhanes.l25_c
+UNION ALL
+SELECT respondent_sequence_number, ""hemoglobin_g_dl"" AS ""hemoglobin_g_dl""
+FROM nhanes.cbc_e
+UNION ALL
+SELECT respondent_sequence_number, ""hemoglobin_g_dl"" AS ""hemoglobin_g_dl""
+FROM nhanes.cbc_f
+UNION ALL
+SELECT respondent_sequence_number, ""hemoglobin_g_dl"" AS ""hemoglobin_g_dl""
+FROM nhanes.lab25;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_hemoglobin_g_dl ON temp_master_hemoglobin_g_dl (respondent_sequence_number);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT respondent_sequence_number FROM temp_master_doctor_told_you_have_diabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_age_in_years_at_screening
+UNION
+SELECT respondent_sequence_number FROM temp_master_months_followup_examination
+UNION
+SELECT respondent_sequence_number FROM temp_master_red_cell_distribution_width
+UNION
+SELECT respondent_sequence_number FROM temp_master_mortality_status
+UNION
+SELECT respondent_sequence_number FROM temp_master_gender
+UNION
+SELECT respondent_sequence_number FROM temp_master_race_hispanic_origin
+UNION
+SELECT respondent_sequence_number FROM temp_master_hemoglobin_g_dl;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_respondent_sequence_number ON temp_all_ids (respondent_sequence_number);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.respondent_sequence_number,
+    t0.""doctor_told_you_have_diabetes"",
+    t1.""age_in_years_at_screening"",
+    t2.""months_followup_examination"",
+    t3.""red_cell_distribution_width"",
+    t4.""mortality_status"",
+    t5.""gender"",
+    t6.""race_hispanic_origin"",
+    t7.""hemoglobin_g_dl""
+FROM temp_all_ids a
+LEFT JOIN temp_master_doctor_told_you_have_diabetes t0 ON a.respondent_sequence_number = t0.respondent_sequence_number 
+LEFT JOIN temp_master_age_in_years_at_screening t1 ON a.respondent_sequence_number = t1.respondent_sequence_number 
+LEFT JOIN temp_master_months_followup_examination t2 ON a.respondent_sequence_number = t2.respondent_sequence_number 
+LEFT JOIN temp_master_red_cell_distribution_width t3 ON a.respondent_sequence_number = t3.respondent_sequence_number 
+LEFT JOIN temp_master_mortality_status t4 ON a.respondent_sequence_number = t4.respondent_sequence_number 
+LEFT JOIN temp_master_gender t5 ON a.respondent_sequence_number = t5.respondent_sequence_number 
+LEFT JOIN temp_master_race_hispanic_origin t6 ON a.respondent_sequence_number = t6.respondent_sequence_number 
+LEFT JOIN temp_master_hemoglobin_g_dl t7 ON a.respondent_sequence_number = t7.respondent_sequence_number;
+
+CREATE INDEX idx_final_master_respondent_sequence_number    
+    ON final_master_table (respondent_sequence_number);
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Include participants who reported yes to self-reported diabetes
+CREATE TEMP TABLE temp_inclusion AS
+SELECT ""respondent_sequence_number""
+FROM final_master_table
+WHERE ""doctor_told_you_have_diabetes"" = 'Yes';
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude participants with no self reported diabetes (redundant with inclusion but keeping for clarity)
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""doctor_told_you_have_diabetes"" = 'Yes';
+
+-- STEP 2.2: Exclude participants <18 years old
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT e.""respondent_sequence_number""
+FROM temp_exclusion_step1 e
+JOIN final_master_table f ON e.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""age_in_years_at_screening"" >= 18;
+
+-- STEP 2.3: Exclude participants with missing months followup examination
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT e.""respondent_sequence_number""
+FROM temp_exclusion_step2 e
+JOIN final_master_table f ON e.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""months_followup_examination"" IS NOT NULL;
+
+-- STEP 2.4: Exclude participants with missing red cell distribution
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT e.""respondent_sequence_number""
+FROM temp_exclusion_step3 e
+JOIN final_master_table f ON e.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""red_cell_distribution_width"" IS NOT NULL;
+
+-- STEP 2.5: Exclude participants with missing mortality information
+CREATE TEMP TABLE temp_exclusion_step5 AS
+SELECT e.""respondent_sequence_number""
+FROM temp_exclusion_step4 e
+JOIN final_master_table f ON e.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""mortality_status"" IS NOT NULL;
+
+-- ========== STEP 3: Cohort ==========
+
+-- The final temp table in the exclusion sequence becomes temp_cohort
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""respondent_sequence_number""
+FROM temp_exclusion_step5;
+
+-- ========== STEP 4: Variables ==========
+
+-- STEP 4.1: Age at screening
+CREATE TEMP TABLE temp_age_at_screening AS
+SELECT c.""respondent_sequence_number"", f.""age_in_years_at_screening""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- STEP 4.2: Gender
+CREATE TEMP TABLE temp_gender AS
+SELECT c.""respondent_sequence_number"", f.""gender""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- STEP 4.3: Race/Hispanic origin
+CREATE TEMP TABLE temp_race_hispanic_origin AS
+SELECT c.""respondent_sequence_number"", f.""race_hispanic_origin""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- STEP 4.4: Hemoglobin
+CREATE TEMP TABLE temp_hemoglobin AS
+SELECT c.""respondent_sequence_number"", f.""hemoglobin_g_dl"" AS ""hemoglobin""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- STEP 4.5: Red cell distribution - raw values
+CREATE TEMP TABLE temp_red_cell_distribution_raw AS
+SELECT c.""respondent_sequence_number"", f.""red_cell_distribution_width"" AS ""red_cell_distribution""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Calculate quartile cutoffs for red cell distribution
+CREATE TEMP TABLE temp_red_cell_distribution_cutoffs AS
+SELECT
+  PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY ""red_cell_distribution"") AS q1,
+  PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY ""red_cell_distribution"") AS q2,
+  PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY ""red_cell_distribution"") AS q3
+FROM temp_red_cell_distribution_raw;
+
+-- Assign red cell distribution quartile groups
+CREATE TEMP TABLE temp_red_cell_distribution AS
+SELECT ""respondent_sequence_number"",
+  CASE
+    WHEN ""red_cell_distribution"" <= (SELECT q1 FROM temp_red_cell_distribution_cutoffs) THEN 'Q1: <= 25%'
+    WHEN ""red_cell_distribution"" <= (SELECT q2 FROM temp_red_cell_distribution_cutoffs) THEN 'Q2: >25 and <=50%'
+    WHEN ""red_cell_distribution"" <= (SELECT q3 FROM temp_red_cell_distribution_cutoffs) THEN 'Q3: >50 and <=75%'
+    ELSE 'Q4: >75%'
+  END AS ""red_cell_distribution""
+FROM temp_red_cell_distribution_raw;
+
+-- STEP 4.6: Months followup examination
+CREATE TEMP TABLE temp_months_followup_examination AS
+SELECT c.""respondent_sequence_number"", f.""months_followup_examination""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- STEP 4.7: All-cause mortality
+CREATE TEMP TABLE temp_all_cause_mortality AS
+SELECT c.""respondent_sequence_number"", f.""mortality_status"" AS ""all_cause_mortality""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- ========== STEP 5: Final Table ==========
+
+CREATE TEMP TABLE temp_final_table AS
+SELECT 
+  c.""respondent_sequence_number"",
+  a.""age_in_years_at_screening"" AS ""age_at_screening"",
+  g.""gender"",
+  r.""race_hispanic_origin"",
+  h.""hemoglobin"",
+  rcd.""red_cell_distribution"",
+  m.""months_followup_examination"",
+  acm.""all_cause_mortality""
+FROM temp_cohort c
+JOIN temp_age_at_screening a ON c.""respondent_sequence_number"" = a.""respondent_sequence_number""
+JOIN temp_gender g ON c.""respondent_sequence_number"" = g.""respondent_sequence_number""
+JOIN temp_race_hispanic_origin r ON c.""respondent_sequence_number"" = r.""respondent_sequence_number""
+JOIN temp_hemoglobin h ON c.""respondent_sequence_number"" = h.""respondent_sequence_number""
+JOIN temp_red_cell_distribution rcd ON c.""respondent_sequence_number"" = rcd.""respondent_sequence_number""
+JOIN temp_months_followup_examination m ON c.""respondent_sequence_number"" = m.""respondent_sequence_number""
+JOIN temp_all_cause_mortality acm ON c.""respondent_sequence_number"" = acm.""respondent_sequence_number"";
+
+-- ========== STEP 6: Final Output ==========
+
+SELECT * FROM temp_final_table;","    step_num                                                                                                              step  remaining_after_step  excluded_at_step
+0          0                                         STEP 1.1: Include participants who reported yes to self-reported diabetes                  3613               NaN
+1          1  STEP 2.1: Exclude participants with no self reported diabetes (redundant with inclusion but keeping for clarity)                  3613               0.0
+2          2                                                                      STEP 2.2: Exclude participants <18 years old                  3544              69.0
+3          3                                           STEP 2.3: Exclude participants with missing months followup examination                  3352             192.0
+4          4                                                 STEP 2.4: Exclude participants with missing red cell distribution                  3157             195.0
+5          5                                                 STEP 2.5: Exclude participants with missing mortality information                  3157               0.0
+6          6                                                The final temp table in the exclusion sequence becomes temp_cohort                  3157               0.0
+7          7                                                                                        STEP 4.1: Age at screening                  3157               0.0
+8          8                                                                                                  STEP 4.2: Gender                  3157               0.0
+9          9                                                                                    STEP 4.3: Race/Hispanic origin                  3157               0.0
+10        10                                                                                              STEP 4.4: Hemoglobin                  3157               0.0
+11        11                                                                      STEP 4.5: Red cell distribution - raw values                  3157               0.0
+12        12                                                              Calculate quartile cutoffs for red cell distribution                     1            3156.0
+13        13                                                                      Assign red cell distribution quartile groups                  3157           -3156.0
+14        14                                                                             STEP 4.6: Months followup examination                  3157               0.0
+15        15                                                                                     STEP 4.7: All-cause mortality                  3157               0.0
+16        16                                                                         ========== STEP 5: Final Table ==========                  3157               0.0","(3157, 8)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""respondent_sequence_number"")
+    outcome_vars <- c(""months_followup_examination"",""all_cause_mortality"")
+    
+    cohort <- df
+
+
+    outcome_roles <- c()
+    outcome_roles[""months_followup_examination""] <- ""event_to_time"";outcome_roles[""all_cause_mortality""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    event_to_time_var <- names(outcome_roles[outcome_roles == ""event_to_time""])[1]
+cat(""Event-to-Time Variable:\n""); print(event_to_time_var); cat(""\n"")
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    if (!is.numeric(df[[outcome_var]])) {
+        df[[outcome_var]] <- as.numeric(df[[outcome_var]])
+    }
+
+    if (!is.numeric(df[[event_to_time_var]])) {
+        df[[event_to_time_var]] <- as.numeric(df[[event_to_time_var]])
+    }
+    formula <- as.formula(paste0(""Surv("", event_to_time_var, "", "", outcome_var, "") ~ "", paste(predictor_vars, collapse = "" + "")))
+            
+    
+        
+    
+    library(survival)
+    model <- coxph(formula, data = df)
+            
+    
+    result_table <- tidy(model, conf.int = TRUE, exponentiate = TRUE) %>%
+            select(term, estimate, p.value, conf.low, conf.high)
+            
+    ","[{'variable': 'respondent_sequence_number', 'category': 'identifier', 'n_unique': 3157, 'na_count': 0, 'summary': 'Total rows = 3157'}, {'variable': 'age_at_screening', 'category': 'numerical', 'n_unique': 68, 'na_count': 0, 'summary': 'mean = 62.369, sd = 13.945'}, {'variable': 'gender', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'Female: 50.1%; Male: 49.9%'}, {'variable': 'race_hispanic_origin', 'category': 'categorical', 'n_unique': 5, 'na_count': 0, 'summary': 'Mexican American: 23.9%; Non-Hispanic Black: 25.6%; Non-Hispanic White: 39%; Other Hispanic: 7.4%; Other Race - Including Multi-Racial: 4.1%'}, {'variable': 'hemoglobin', 'category': 'numerical', 'n_unique': 103, 'na_count': 0, 'summary': 'mean = 13.788, sd = 1.6'}, {'variable': 'red_cell_distribution', 'category': 'categorical', 'n_unique': 4, 'na_count': 0, 'summary': 'Q1: <= 25%: 27.4%; Q2: >25 and <=50%: 23.9%; Q3: >50 and <=75%: 23.9%; Q4: >75%: 24.8%'}, {'variable': 'months_followup_examination', 'category': 'event_to_time', 'n_unique': 249, 'na_count': 0, 'summary': 'mean = 129.801, sd = 59.596'}, {'variable': 'all_cause_mortality', 'category': 'outcome', 'n_unique': 2, 'na_count': 0, 'summary': '0: 54.6%; 1: 45.4%'}]","[{'term': 'age_at_screening', 'estimate': 1.068146309221401, 'p.value': 1.386958549979196e-136, 'conf.low': 1.06261234498771, 'conf.high': 1.0737090937114009}, {'term': 'genderMale', 'estimate': 1.4126269924075594, 'p.value': 3.812292621105037e-09, 'conf.low': 1.259279913545765, 'conf.high': 1.5846477008115203}, {'term': 'race_hispanic_originMexican American', 'estimate': 0.6772769493776825, 'p.value': 7.917751117449878e-08, 'conf.low': 0.5874719265277704, 'conf.high': 0.78081018929618}, {'term': 'race_hispanic_originNon-Hispanic Black', 'estimate': 0.78252011272498, 'p.value': 0.00044116625302264125, 'conf.low': 0.6824867334116105, 'conf.high': 0.8972155748114917}, {'term': 'race_hispanic_originOther Hispanic', 'estimate': 0.5513897976490746, 'p.value': 8.288236938221058e-06, 'conf.low': 0.4244051126575877, 'conf.high': 0.7163691008519517}, {'term': 'race_hispanic_originOther Race - Including Multi-Racial', 'estimate': 0.6020905037230666, 'p.value': 0.0019268209984728856, 'conf.low': 0.43692961788040124, 'conf.high': 0.8296827677466468}, {'term': 'hemoglobin', 'estimate': 0.9371609864243767, 'p.value': 0.0017025523529848304, 'conf.low': 0.899928849408947, 'conf.high': 0.9759335030238658}, {'term': 'red_cell_distributionQ2: >25 and <=50%', 'estimate': 1.0484420232536324, 'p.value': 0.5679692334351408, 'conf.low': 0.8913145690650964, 'conf.high': 1.2332690548042518}, {'term': 'red_cell_distributionQ3: >50 and <=75%', 'estimate': 1.350117495612217, 'p.value': 0.00019578510249134839, 'conf.low': 1.1528252176730096, 'conf.high': 1.5811739923919963}, {'term': 'red_cell_distributionQ4: >75%', 'estimate': 1.850425880717319, 'p.value': 8.342580430935114e-14, 'conf.low': 1.5743330985133321, 'conf.high': 2.1749374025496104}]",,,,cox regression,1999-2010,"[[1999, 2000], [2001, 2002], [2003, 2004], [2005, 2006], [2007, 2008], [2009, 2010]]",anthropic_claude-3-7-sonnet-20250219,"Review Required
+
+Your analysis plan is missing some critical information and needs clarification:
+
+1. For Cox regression, you've correctly identified the time-to-event variable (months followup examination) and the outcome (all-cause mortality), which is good.
+
+2. There's a contradiction in your inclusion/exclusion criteria: You state to ""Include participants who reported yes to a self-reported diabetes question"" but also ""Exclude participants with no self reported diabetes"" - these are essentially saying the same thing, so please clarify if you're specifically focusing on diabetic participants only.
+
+3. The exact variable name for ""self-reported diabetes"" in NHANES is not specified. Is this DIQ010 (""Doctor told you have diabetes"")?
+
+4. For the red cell distribution (predictor), please specify the exact NHANES variable name you're referring to. Is this RDW (Red cell distribution width) from the CBC component?
+
+5. For the mortality outcome, please specify which NHANES mortality linkage file you'll be using (NDI, SSDI, or combined mortality file).
+
+6. Please clarify if you want to analyze the entire 1999-2010 period as one cohort or if you want separate analyses for different NHANES cycles.
+
+Could you please provide these missing details so we can properly evaluate your analysis plan?",[],,607.566835,"[[{'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 621, 'output_tokens': 292, 'total_cost': 0.006243, 'formatted_total_cost': '$0.006243'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 1881, 'output_tokens': 193, 'total_cost': 0.008538, 'formatted_total_cost': '$0.008538'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 2633, 'output_tokens': 591, 'total_cost': 0.016764, 'formatted_total_cost': '$0.016764'}], [{'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4182, 'output_tokens': 86, 'total_cost': 0.013836, 'formatted_total_cost': '$0.013836'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4182, 'output_tokens': 86, 'total_cost': 0.013836, 'formatted_total_cost': '$0.013836'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4247, 'output_tokens': 86, 'total_cost': 0.014030999999999998, 'formatted_total_cost': '$0.014031'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4247, 'output_tokens': 86, 'total_cost': 0.014030999999999998, 'formatted_total_cost': '$0.014031'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4155, 'output_tokens': 86, 'total_cost': 0.013755, 'formatted_total_cost': '$0.013755'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4155, 'output_tokens': 86, 'total_cost': 0.013755, 'formatted_total_cost': '$0.013755'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4176, 'output_tokens': 86, 'total_cost': 0.013818, 'formatted_total_cost': '$0.013818'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4176, 'output_tokens': 86, 'total_cost': 0.013818, 'formatted_total_cost': '$0.013818'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4185, 'output_tokens': 86, 'total_cost': 0.013845, 'formatted_total_cost': '$0.013845'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4185, 'output_tokens': 86, 'total_cost': 0.013845, 'formatted_total_cost': '$0.013845'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4040, 'output_tokens': 84, 'total_cost': 0.01338, 'formatted_total_cost': '$0.013380'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4040, 'output_tokens': 84, 'total_cost': 0.01338, 'formatted_total_cost': '$0.013380'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 596, 'output_tokens': 6, 'total_cost': 0.001878, 'formatted_total_cost': '$0.001878'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4149, 'output_tokens': 113, 'total_cost': 0.014142, 'formatted_total_cost': '$0.014142'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4149, 'output_tokens': 113, 'total_cost': 0.014142, 'formatted_total_cost': '$0.014142'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4211, 'output_tokens': 113, 'total_cost': 0.014328000000000002, 'formatted_total_cost': '$0.014328'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4211, 'output_tokens': 113, 'total_cost': 0.014328000000000002, 'formatted_total_cost': '$0.014328'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4225, 'output_tokens': 113, 'total_cost': 0.014369999999999999, 'formatted_total_cost': '$0.014370'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4225, 'output_tokens': 113, 'total_cost': 0.014369999999999999, 'formatted_total_cost': '$0.014370'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4171, 'output_tokens': 113, 'total_cost': 0.014208, 'formatted_total_cost': '$0.014208'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4171, 'output_tokens': 113, 'total_cost': 0.014208, 'formatted_total_cost': '$0.014208'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4214, 'output_tokens': 113, 'total_cost': 0.014337, 'formatted_total_cost': '$0.014337'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4214, 'output_tokens': 113, 'total_cost': 0.014337, 'formatted_total_cost': '$0.014337'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4134, 'output_tokens': 111, 'total_cost': 0.014067, 'formatted_total_cost': '$0.014067'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4134, 'output_tokens': 111, 'total_cost': 0.014067, 'formatted_total_cost': '$0.014067'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 601, 'output_tokens': 8, 'total_cost': 0.0019229999999999998, 'formatted_total_cost': '$0.001923'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4330, 'output_tokens': 77, 'total_cost': 0.014144999999999998, 'formatted_total_cost': '$0.014145'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4330, 'output_tokens': 77, 'total_cost': 0.014144999999999998, 'formatted_total_cost': '$0.014145'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4326, 'output_tokens': 77, 'total_cost': 0.014133, 'formatted_total_cost': '$0.014133'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4326, 'output_tokens': 77, 'total_cost': 0.014133, 'formatted_total_cost': '$0.014133'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4238, 'output_tokens': 77, 'total_cost': 0.013869, 'formatted_total_cost': '$0.013869'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4238, 'output_tokens': 77, 'total_cost': 0.013869, 'formatted_total_cost': '$0.013869'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4473, 'output_tokens': 77, 'total_cost': 0.014574, 'formatted_total_cost': '$0.014574'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4473, 'output_tokens': 77, 'total_cost': 0.014574, 'formatted_total_cost': '$0.014574'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4519, 'output_tokens': 77, 'total_cost': 0.014712, 'formatted_total_cost': '$0.014712'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4519, 'output_tokens': 77, 'total_cost': 0.014712, 'formatted_total_cost': '$0.014712'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4219, 'output_tokens': 75, 'total_cost': 0.013781999999999997, 'formatted_total_cost': '$0.013782'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4219, 'output_tokens': 75, 'total_cost': 0.013781999999999997, 'formatted_total_cost': '$0.013782'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 509, 'output_tokens': 6, 'total_cost': 0.0016170000000000002, 'formatted_total_cost': '$0.001617'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4440, 'output_tokens': 131, 'total_cost': 0.015285000000000002, 'formatted_total_cost': '$0.015285'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4440, 'output_tokens': 131, 'total_cost': 0.015285000000000002, 'formatted_total_cost': '$0.015285'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4150, 'output_tokens': 131, 'total_cost': 0.014414999999999999, 'formatted_total_cost': '$0.014415'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4150, 'output_tokens': 131, 'total_cost': 0.014414999999999999, 'formatted_total_cost': '$0.014415'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4181, 'output_tokens': 131, 'total_cost': 0.014507999999999998, 'formatted_total_cost': '$0.014508'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4181, 'output_tokens': 131, 'total_cost': 0.014507999999999998, 'formatted_total_cost': '$0.014508'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4455, 'output_tokens': 131, 'total_cost': 0.015329999999999998, 'formatted_total_cost': '$0.015330'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4455, 'output_tokens': 131, 'total_cost': 0.015329999999999998, 'formatted_total_cost': '$0.015330'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4533, 'output_tokens': 131, 'total_cost': 0.015564, 'formatted_total_cost': '$0.015564'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4533, 'output_tokens': 131, 'total_cost': 0.015564, 'formatted_total_cost': '$0.015564'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4058, 'output_tokens': 129, 'total_cost': 0.014109, 'formatted_total_cost': '$0.014109'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4058, 'output_tokens': 129, 'total_cost': 0.014109, 'formatted_total_cost': '$0.014109'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 536, 'output_tokens': 8, 'total_cost': 0.001728, 'formatted_total_cost': '$0.001728'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4352, 'output_tokens': 77, 'total_cost': 0.014211, 'formatted_total_cost': '$0.014211'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4352, 'output_tokens': 77, 'total_cost': 0.014211, 'formatted_total_cost': '$0.014211'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4117, 'output_tokens': 77, 'total_cost': 0.013506, 'formatted_total_cost': '$0.013506'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4117, 'output_tokens': 77, 'total_cost': 0.013506, 'formatted_total_cost': '$0.013506'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4138, 'output_tokens': 77, 'total_cost': 0.013569000000000001, 'formatted_total_cost': '$0.013569'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4138, 'output_tokens': 77, 'total_cost': 0.013569000000000001, 'formatted_total_cost': '$0.013569'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4388, 'output_tokens': 77, 'total_cost': 0.014319000000000002, 'formatted_total_cost': '$0.014319'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4388, 'output_tokens': 77, 'total_cost': 0.014319000000000002, 'formatted_total_cost': '$0.014319'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4459, 'output_tokens': 77, 'total_cost': 0.014532, 'formatted_total_cost': '$0.014532'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4459, 'output_tokens': 77, 'total_cost': 0.014532, 'formatted_total_cost': '$0.014532'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 3971, 'output_tokens': 75, 'total_cost': 0.013038, 'formatted_total_cost': '$0.013038'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 3971, 'output_tokens': 75, 'total_cost': 0.013038, 'formatted_total_cost': '$0.013038'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 511, 'output_tokens': 8, 'total_cost': 0.001653, 'formatted_total_cost': '$0.001653'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4466, 'output_tokens': 104, 'total_cost': 0.014958, 'formatted_total_cost': '$0.014958'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4466, 'output_tokens': 104, 'total_cost': 0.014958, 'formatted_total_cost': '$0.014958'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4262, 'output_tokens': 104, 'total_cost': 0.014346000000000001, 'formatted_total_cost': '$0.014346'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 418, 'output_tokens': 104, 'total_cost': 0.002814, 'formatted_total_cost': '$0.002814'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 418, 'output_tokens': 104, 'total_cost': 0.002814, 'formatted_total_cost': '$0.002814'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4487, 'output_tokens': 104, 'total_cost': 0.015021, 'formatted_total_cost': '$0.015021'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4487, 'output_tokens': 104, 'total_cost': 0.015021, 'formatted_total_cost': '$0.015021'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4550, 'output_tokens': 104, 'total_cost': 0.015210000000000001, 'formatted_total_cost': '$0.015210'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4550, 'output_tokens': 104, 'total_cost': 0.015210000000000001, 'formatted_total_cost': '$0.015210'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4532, 'output_tokens': 104, 'total_cost': 0.015156, 'formatted_total_cost': '$0.015156'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4532, 'output_tokens': 104, 'total_cost': 0.015156, 'formatted_total_cost': '$0.015156'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4014, 'output_tokens': 102, 'total_cost': 0.013572, 'formatted_total_cost': '$0.013572'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4014, 'output_tokens': 102, 'total_cost': 0.013572, 'formatted_total_cost': '$0.013572'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 602, 'output_tokens': 8, 'total_cost': 0.0019259999999999998, 'formatted_total_cost': '$0.001926'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4084, 'output_tokens': 82, 'total_cost': 0.013482, 'formatted_total_cost': '$0.013482'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 704, 'output_tokens': 82, 'total_cost': 0.0033420000000000004, 'formatted_total_cost': '$0.003342'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 704, 'output_tokens': 82, 'total_cost': 0.0033420000000000004, 'formatted_total_cost': '$0.003342'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4028, 'output_tokens': 82, 'total_cost': 0.013314000000000001, 'formatted_total_cost': '$0.013314'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 653, 'output_tokens': 82, 'total_cost': 0.003189, 'formatted_total_cost': '$0.003189'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 653, 'output_tokens': 82, 'total_cost': 0.003189, 'formatted_total_cost': '$0.003189'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4213, 'output_tokens': 82, 'total_cost': 0.013869, 'formatted_total_cost': '$0.013869'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4213, 'output_tokens': 82, 'total_cost': 0.013869, 'formatted_total_cost': '$0.013869'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4090, 'output_tokens': 82, 'total_cost': 0.0135, 'formatted_total_cost': '$0.013500'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 685, 'output_tokens': 82, 'total_cost': 0.0032849999999999997, 'formatted_total_cost': '$0.003285'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 685, 'output_tokens': 82, 'total_cost': 0.0032849999999999997, 'formatted_total_cost': '$0.003285'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4169, 'output_tokens': 82, 'total_cost': 0.013737000000000001, 'formatted_total_cost': '$0.013737'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 693, 'output_tokens': 82, 'total_cost': 0.0033090000000000003, 'formatted_total_cost': '$0.003309'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 693, 'output_tokens': 82, 'total_cost': 0.0033090000000000003, 'formatted_total_cost': '$0.003309'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4223, 'output_tokens': 80, 'total_cost': 0.013869, 'formatted_total_cost': '$0.013869'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4223, 'output_tokens': 80, 'total_cost': 0.013869, 'formatted_total_cost': '$0.013869'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 443, 'output_tokens': 6, 'total_cost': 0.001419, 'formatted_total_cost': '$0.001419'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4494, 'output_tokens': 131, 'total_cost': 0.015446999999999999, 'formatted_total_cost': '$0.015447'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4494, 'output_tokens': 131, 'total_cost': 0.015446999999999999, 'formatted_total_cost': '$0.015447'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4170, 'output_tokens': 131, 'total_cost': 0.014475, 'formatted_total_cost': '$0.014475'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4170, 'output_tokens': 131, 'total_cost': 0.014475, 'formatted_total_cost': '$0.014475'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4226, 'output_tokens': 131, 'total_cost': 0.014642999999999998, 'formatted_total_cost': '$0.014643'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4226, 'output_tokens': 131, 'total_cost': 0.014642999999999998, 'formatted_total_cost': '$0.014643'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4468, 'output_tokens': 131, 'total_cost': 0.015368999999999999, 'formatted_total_cost': '$0.015369'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4468, 'output_tokens': 131, 'total_cost': 0.015368999999999999, 'formatted_total_cost': '$0.015369'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4598, 'output_tokens': 131, 'total_cost': 0.015759, 'formatted_total_cost': '$0.015759'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4598, 'output_tokens': 131, 'total_cost': 0.015759, 'formatted_total_cost': '$0.015759'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4076, 'output_tokens': 129, 'total_cost': 0.014162999999999999, 'formatted_total_cost': '$0.014163'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4076, 'output_tokens': 129, 'total_cost': 0.014162999999999999, 'formatted_total_cost': '$0.014163'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 535, 'output_tokens': 8, 'total_cost': 0.001725, 'formatted_total_cost': '$0.001725'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4448, 'output_tokens': 97, 'total_cost': 0.014798999999999998, 'formatted_total_cost': '$0.014799'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4448, 'output_tokens': 97, 'total_cost': 0.014798999999999998, 'formatted_total_cost': '$0.014799'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4342, 'output_tokens': 97, 'total_cost': 0.014481, 'formatted_total_cost': '$0.014481'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 323, 'output_tokens': 4, 'total_cost': 0.001029, 'formatted_total_cost': '$0.001029'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4286, 'output_tokens': 97, 'total_cost': 0.014313, 'formatted_total_cost': '$0.014313'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4286, 'output_tokens': 97, 'total_cost': 0.014313, 'formatted_total_cost': '$0.014313'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4478, 'output_tokens': 97, 'total_cost': 0.014889000000000001, 'formatted_total_cost': '$0.014889'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4478, 'output_tokens': 97, 'total_cost': 0.014889000000000001, 'formatted_total_cost': '$0.014889'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4488, 'output_tokens': 97, 'total_cost': 0.014919, 'formatted_total_cost': '$0.014919'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4488, 'output_tokens': 97, 'total_cost': 0.014919, 'formatted_total_cost': '$0.014919'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4056, 'output_tokens': 95, 'total_cost': 0.013592999999999997, 'formatted_total_cost': '$0.013593'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4056, 'output_tokens': 95, 'total_cost': 0.013592999999999997, 'formatted_total_cost': '$0.013593'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 595, 'output_tokens': 8, 'total_cost': 0.001905, 'formatted_total_cost': '$0.001905'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4201, 'output_tokens': 113, 'total_cost': 0.014298, 'formatted_total_cost': '$0.014298'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4201, 'output_tokens': 113, 'total_cost': 0.014298, 'formatted_total_cost': '$0.014298'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4187, 'output_tokens': 113, 'total_cost': 0.014256, 'formatted_total_cost': '$0.014256'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4187, 'output_tokens': 113, 'total_cost': 0.014256, 'formatted_total_cost': '$0.014256'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4278, 'output_tokens': 113, 'total_cost': 0.014528999999999999, 'formatted_total_cost': '$0.014529'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4278, 'output_tokens': 113, 'total_cost': 0.014528999999999999, 'formatted_total_cost': '$0.014529'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4222, 'output_tokens': 113, 'total_cost': 0.014361, 'formatted_total_cost': '$0.014361'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4222, 'output_tokens': 113, 'total_cost': 0.014361, 'formatted_total_cost': '$0.014361'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4306, 'output_tokens': 113, 'total_cost': 0.014613, 'formatted_total_cost': '$0.014613'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4306, 'output_tokens': 113, 'total_cost': 0.014613, 'formatted_total_cost': '$0.014613'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4218, 'output_tokens': 111, 'total_cost': 0.014319000000000002, 'formatted_total_cost': '$0.014319'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4218, 'output_tokens': 111, 'total_cost': 0.014319000000000002, 'formatted_total_cost': '$0.014319'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 599, 'output_tokens': 8, 'total_cost': 0.0019169999999999999, 'formatted_total_cost': '$0.001917'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4171, 'output_tokens': 90, 'total_cost': 0.013863, 'formatted_total_cost': '$0.013863'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4171, 'output_tokens': 90, 'total_cost': 0.013863, 'formatted_total_cost': '$0.013863'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4180, 'output_tokens': 90, 'total_cost': 0.01389, 'formatted_total_cost': '$0.013890'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4180, 'output_tokens': 90, 'total_cost': 0.01389, 'formatted_total_cost': '$0.013890'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4046, 'output_tokens': 90, 'total_cost': 0.013488, 'formatted_total_cost': '$0.013488'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4046, 'output_tokens': 90, 'total_cost': 0.013488, 'formatted_total_cost': '$0.013488'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4123, 'output_tokens': 90, 'total_cost': 0.013719, 'formatted_total_cost': '$0.013719'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4123, 'output_tokens': 90, 'total_cost': 0.013719, 'formatted_total_cost': '$0.013719'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4263, 'output_tokens': 90, 'total_cost': 0.014139000000000002, 'formatted_total_cost': '$0.014139'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 755, 'output_tokens': 90, 'total_cost': 0.003615, 'formatted_total_cost': '$0.003615'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 755, 'output_tokens': 90, 'total_cost': 0.003615, 'formatted_total_cost': '$0.003615'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4162, 'output_tokens': 88, 'total_cost': 0.013806, 'formatted_total_cost': '$0.013806'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 4162, 'output_tokens': 88, 'total_cost': 0.013806, 'formatted_total_cost': '$0.013806'}, {'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 632, 'output_tokens': 6, 'total_cost': 0.001986, 'formatted_total_cost': '$0.001986'}], [{'model_name': 'anthropic_claude-3-7-sonnet-20250219', 'input_tokens': 7196, 'output_tokens': 1942, 'total_cost': 0.050718, 'formatted_total_cost': '$0.050718'}]]",False,0,,/home/nayoonkim/LATCH/analyses/results/fig_22_20_anthropic_claude-3-7-sonnet-20250219_result_log.csv,

@@ -1,0 +1,6 @@
+This study will examine the relationship between glycohemoglobin (HbA1c) (%) levels and cognitive performance using a weighted linear regression analysis.
+The analysis will use NHANES data from the 2011-2014 period. The study population is limited to participants whose age in years at screening is 60 years and older. 
+Individuals will be excluded if they have missing data for any of the specified cognitive assessments: digit symbol substitution test (DSST), animal fluency score, and CERAD Score Trial 1 recall, CERAD Score Trial 2 recall, CERAD Score Trial 3 recall, and delayed word recall tasks. 
+Furthermore, participants with missing data on doctor told you have diabetes, glycohemoglobin (HbA1c) (%), or fasting plasma glucose (FPG) (mg/dL) will be excluded.
+The primary outcome of interest is the animal fluency score and the predictor is glycohemoglobin (HbA1c) percentage. 
+The analysis will adjust for several covariates: age (categorized as <70 or ≥70 years), gender, and race/Hispanic origin (categorized as Non-Hispanic White, Black, Non-Hispanic Asian, Mexican-American, and others).

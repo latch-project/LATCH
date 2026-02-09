@@ -1,0 +1,5 @@
+We want to do a logistic regression analysis to study the association between hemoglobin (g/dl) and diabetic retinopathy using NHANES data.
+Hemoglobin (g/dl) will be categegorized as tertiles(%) T1: <=33, T2: >33 and <=66, T3: >66 and the outcome will be diabetic retinopathy will be determined from a variable 4 levels retinopathy severity, worse eye, categorized as 0 for no retinopathy and 1 for any retinopathy.
+Include participants who said "Yes" to the questionaire doctor told you have diabetes.
+we will use 2005 - 2008 data and exclude individuals with missing data on hemoglobin (g/dl), or missing data in 4 levels retinopathy severity, worse eye.
+We will adjust the analysis for other factors like age at screening, gender, race/Hispanic origin, which will be categorized as Non-Hispanic White, Non-Hispanic Black, Mexican American, Other Hispanic, and Other race.

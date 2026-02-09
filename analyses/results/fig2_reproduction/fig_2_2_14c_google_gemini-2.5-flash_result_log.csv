@@ -1,0 +1,2042 @@
+Title,Schema,Question,Structured Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log
+25381,nhanes,"This study will examine the relationship between glycohemoglobin (HbA1c) (%) levels and cognitive performance using a weighted linear regression analysis.
+The analysis will use NHANES data from the 2011-2014 period. The study population is limited to participants whose age in years at screening is 60 years and older. 
+Individuals will be excluded if they have missing data for any of the specified cognitive assessments: digit symbol substitution test (DSST), animal fluency score, and CERAD Score Trial 1 recall, CERAD Score Trial 2 recall, CERAD Score Trial 3 recall, and delayed word recall tasks. 
+Furthermore, participants with missing data on doctor told you have diabetes, glycohemoglobin (HbA1c) (%), or fasting plasma glucose (FPG) (mg/dL) will be excluded.
+The primary outcome of interest is the animal fluency score and the predictor is glycohemoglobin (HbA1c) percentage. 
+The analysis will adjust for several covariates: age (categorized as <70 or ≥70 years), gender, and race/Hispanic origin (categorized as Non-Hispanic White, Black, Non-Hispanic Asian, Mexican-American, and others).","Analysis Type: weighted linear regression
+
+Dataset: NHANES
+
+Period of Interest: 2011-2014
+
+Inclusion Criteria:
+- age in years at screening >= 60
+
+Exclusion Criteria:
+- missing digit symbol substitution test (DSST)
+- missing animal fluency score
+- missing CERAD Score Trial 1 recall
+- missing CERAD Score Trial 2 recall
+- missing CERAD Score Trial 3 recall
+- missing delayed word recall tasks
+- missing doctor told you have diabetes
+- missing glycohemoglobin (HbA1c) (%)
+- missing fasting plasma glucose (FPG) (mg/dL)
+
+Covariates:
+- age (in years) categorized as:
+  <70 years
+  >=70 years
+- gender
+- race/Hispanic origin categorized as:
+  Non-Hispanic White
+  Black
+  Non-Hispanic Asian
+  Mexican-American
+  others
+
+Predictor:
+- glycohemoglobin (HbA1c) (%)
+
+Outcome:
+- animal fluency score","{'dataset': 'NHANES', 'inclusion': [{'keyword': 'age in years at screening', 'derived': False, 'condition': '>= 60', 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}], 'exclusion': [{'keyword': 'digit symbol substitution test (dsst)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'digit_symbol_score', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'animal fluency score', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'animal_fluency_score_total', 'examples': ['3.0', '7.0', '33.0', '34.0', '35.0']}, {'keyword': 'cerad score trial 1 recall', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cerad_score_trial_1_recall', 'examples': ['0.0', '3.0', '5.0', '7.0', '8.0']}, {'keyword': 'cerad score trial 2 recall', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cerad_score_trial_2_recall', 'examples': ['0.0', '3.0', '5.0', '7.0', '8.0']}, {'keyword': 'cerad score trial 3 recall', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cerad_score_trial_3_recall', 'examples': ['0.0', '3.0', '5.0', '7.0', '8.0']}, {'keyword': 'delayed word recall tasks', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cerad_score_delayed_recall', 'examples': ['0.0', '3.0', '5.0', '7.0', '8.0']}, {'keyword': 'doctor told you have diabetes', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '12.4', '13.2']}, {'keyword': 'fasting plasma glucose (fpg) (mg/dl)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'fasting_glucose_mg_dl', 'examples': ['76.0', '96.0', '154.0', '162.0', '174.0']}], 'covariates': [{'keyword': 'age (in years)', 'derived': True, 'depends_on': [{'keyword': 'age (in years)', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'labels': ['<70 years', '>=70 years']}}], 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}, {'keyword': 'gender', 'derived': False, 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['non-hispanic white', 'black', 'non-hispanic asian', 'mexican-american', 'others']}}], 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'predictor': [{'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '12.4', '13.2']}], 'outcome': [{'keyword': 'animal fluency score', 'derived': False, 'table': 'final_master_table', 'column': 'animal_fluency_score_total', 'examples': ['3.0', '7.0', '33.0', '34.0', '35.0']}]}","{'analysis_type': 'weighted linear regression', 'dataset': 'NHANES', 'period_of_interest': '2011-2014', 'inclusion': [{'keyword': 'age in years at screening', 'derived': False, 'condition': '>= 60', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}], 'exclusion': [{'keyword': 'digit symbol substitution test (dsst)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'digit_symbol_score', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'digit_symbol_score', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'animal fluency score', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'animal_fluency_score_total', 'example_values': ['3.0', '7.0', '33.0', '34.0', '35.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'animal_fluency_score_total', 'example_values': ['3.0', '7.0', '33.0', '34.0', '35.0']}]}, {'keyword': 'cerad score trial 1 recall', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'cerad_score_trial_1_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'cerad_score_trial_1_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}]}, {'keyword': 'cerad score trial 2 recall', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'cerad_score_trial_2_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'cerad_score_trial_2_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}]}, {'keyword': 'cerad score trial 3 recall', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'cerad_score_trial_3_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'cerad_score_trial_3_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}]}, {'keyword': 'delayed word recall tasks', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'cerad_score_delayed_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'cerad_score_delayed_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}]}, {'keyword': 'doctor told you have diabetes', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}]}, {'keyword': 'fasting plasma glucose (fpg) (mg/dl)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.glu_g', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '217.0', '76.0']}, {'cycle': '2013-2014', 'table': 'nhanes.glu_h', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '76.0', '96.0']}]}], 'covariates': [{'keyword': 'age (in years)', 'derived': True, 'depends_on': [{'keyword': 'age (in years)', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'labels': ['<70 years', '>=70 years']}}], 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'gender', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['non-hispanic white', 'black', 'non-hispanic asian', 'mexican-american', 'others']}}], 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'predictor': [{'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}]}], 'outcome': [{'keyword': 'animal fluency score', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'animal_fluency_score_total', 'example_values': ['3.0', '7.0', '33.0', '34.0', '35.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'animal_fluency_score_total', 'example_values': ['3.0', '7.0', '33.0', '34.0', '35.0']}]}]}",fasting,"-- STEP 1: Create temp_master_weight
+
+-- TEMP TABLE FOR weight
+DROP TABLE IF EXISTS temp_master_weight;
+
+CREATE TEMP TABLE temp_master_weight AS
+SELECT respondent_sequence_number, 
+       (fasting_subsample_2_year_mec_weight * 2.0 / 4.0) AS survey_weight
+FROM nhanes.glu_g
+WHERE fasting_subsample_2_year_mec_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (fasting_subsample_2_year_mec_weight * 2.0 / 4.0) AS survey_weight
+FROM nhanes.glu_h
+WHERE fasting_subsample_2_year_mec_weight IS NOT NULL;
+
+
+-- STEP 2: Create temp_psu_stratum
+
+-- TEMP TABLE FOR PSU and Stratum
+DROP TABLE IF EXISTS temp_psu_stratum;
+CREATE TEMP TABLE temp_psu_stratum AS
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_h;
+
+
+-- STEP 3: Create final weight+design table
+DROP TABLE IF EXISTS weight_design;
+CREATE TABLE weight_design AS
+SELECT 
+    s.respondent_sequence_number,
+    s.masked_variance_pseudo_psu,
+    s.masked_variance_pseudo_stratum,
+    w.survey_weight
+FROM temp_psu_stratum s
+INNER JOIN temp_master_weight w
+  ON s.respondent_sequence_number = w.respondent_sequence_number;
+
+
+
+
+-- TEMP TABLE FOR ""age (in years)"", ""age (in years)"", ""age in years at screening""
+DROP TABLE IF EXISTS temp_master_age_in_years_at_screening;
+CREATE TEMP TABLE temp_master_age_in_years_at_screening AS
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_in_years_at_screening ON temp_master_age_in_years_at_screening (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""digit symbol substitution test (dsst)""
+DROP TABLE IF EXISTS temp_master_digit_symbol_score;
+CREATE TEMP TABLE temp_master_digit_symbol_score AS
+SELECT respondent_sequence_number, ""digit_symbol_score"" AS ""digit_symbol_score""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""digit_symbol_score"" AS ""digit_symbol_score""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_digit_symbol_score ON temp_master_digit_symbol_score (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""animal fluency score"", ""animal fluency score""
+DROP TABLE IF EXISTS temp_master_animal_fluency_score_total;
+CREATE TEMP TABLE temp_master_animal_fluency_score_total AS
+SELECT respondent_sequence_number, ""animal_fluency_score_total"" AS ""animal_fluency_score_total""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""animal_fluency_score_total"" AS ""animal_fluency_score_total""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_animal_fluency_score_total ON temp_master_animal_fluency_score_total (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""cerad score trial 1 recall""
+DROP TABLE IF EXISTS temp_master_cerad_score_trial_1_recall;
+CREATE TEMP TABLE temp_master_cerad_score_trial_1_recall AS
+SELECT respondent_sequence_number, ""cerad_score_trial_1_recall"" AS ""cerad_score_trial_1_recall""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""cerad_score_trial_1_recall"" AS ""cerad_score_trial_1_recall""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cerad_score_trial_1_recall ON temp_master_cerad_score_trial_1_recall (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""cerad score trial 2 recall""
+DROP TABLE IF EXISTS temp_master_cerad_score_trial_2_recall;
+CREATE TEMP TABLE temp_master_cerad_score_trial_2_recall AS
+SELECT respondent_sequence_number, ""cerad_score_trial_2_recall"" AS ""cerad_score_trial_2_recall""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""cerad_score_trial_2_recall"" AS ""cerad_score_trial_2_recall""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cerad_score_trial_2_recall ON temp_master_cerad_score_trial_2_recall (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""cerad score trial 3 recall""
+DROP TABLE IF EXISTS temp_master_cerad_score_trial_3_recall;
+CREATE TEMP TABLE temp_master_cerad_score_trial_3_recall AS
+SELECT respondent_sequence_number, ""cerad_score_trial_3_recall"" AS ""cerad_score_trial_3_recall""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""cerad_score_trial_3_recall"" AS ""cerad_score_trial_3_recall""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cerad_score_trial_3_recall ON temp_master_cerad_score_trial_3_recall (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""delayed word recall tasks""
+DROP TABLE IF EXISTS temp_master_cerad_score_delayed_recall;
+CREATE TEMP TABLE temp_master_cerad_score_delayed_recall AS
+SELECT respondent_sequence_number, ""cerad_score_delayed_recall"" AS ""cerad_score_delayed_recall""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""cerad_score_delayed_recall"" AS ""cerad_score_delayed_recall""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cerad_score_delayed_recall ON temp_master_cerad_score_delayed_recall (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""doctor told you have diabetes""
+DROP TABLE IF EXISTS temp_master_doctor_told_you_have_diabetes;
+CREATE TEMP TABLE temp_master_doctor_told_you_have_diabetes AS
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_doctor_told_you_have_diabetes ON temp_master_doctor_told_you_have_diabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""glycohemoglobin (hba1c) (%)"", ""glycohemoglobin (hba1c) (%)""
+DROP TABLE IF EXISTS temp_master_glycohemoglobin;
+CREATE TEMP TABLE temp_master_glycohemoglobin AS
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_g
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_glycohemoglobin ON temp_master_glycohemoglobin (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""fasting plasma glucose (fpg) (mg/dl)""
+DROP TABLE IF EXISTS temp_master_fasting_glucose_mg_dl;
+CREATE TEMP TABLE temp_master_fasting_glucose_mg_dl AS
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_g
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_fasting_glucose_mg_dl ON temp_master_fasting_glucose_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""gender""
+DROP TABLE IF EXISTS temp_master_gender;
+CREATE TEMP TABLE temp_master_gender AS
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_gender ON temp_master_gender (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""race/hispanic origin"", ""race/hispanic origin""
+DROP TABLE IF EXISTS temp_master_race_hispanic_origin;
+CREATE TEMP TABLE temp_master_race_hispanic_origin AS
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_race_hispanic_origin ON temp_master_race_hispanic_origin (respondent_sequence_number);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT respondent_sequence_number FROM temp_master_age_in_years_at_screening
+UNION
+SELECT respondent_sequence_number FROM temp_master_digit_symbol_score
+UNION
+SELECT respondent_sequence_number FROM temp_master_animal_fluency_score_total
+UNION
+SELECT respondent_sequence_number FROM temp_master_cerad_score_trial_1_recall
+UNION
+SELECT respondent_sequence_number FROM temp_master_cerad_score_trial_2_recall
+UNION
+SELECT respondent_sequence_number FROM temp_master_cerad_score_trial_3_recall
+UNION
+SELECT respondent_sequence_number FROM temp_master_cerad_score_delayed_recall
+UNION
+SELECT respondent_sequence_number FROM temp_master_doctor_told_you_have_diabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_glycohemoglobin
+UNION
+SELECT respondent_sequence_number FROM temp_master_fasting_glucose_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_gender
+UNION
+SELECT respondent_sequence_number FROM temp_master_race_hispanic_origin;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_respondent_sequence_number ON temp_all_ids (respondent_sequence_number);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.respondent_sequence_number,
+    t0.""age_in_years_at_screening"",
+    t1.""digit_symbol_score"",
+    t2.""animal_fluency_score_total"",
+    t3.""cerad_score_trial_1_recall"",
+    t4.""cerad_score_trial_2_recall"",
+    t5.""cerad_score_trial_3_recall"",
+    t6.""cerad_score_delayed_recall"",
+    t7.""doctor_told_you_have_diabetes"",
+    t8.""glycohemoglobin"",
+    t9.""fasting_glucose_mg_dl"",
+    t10.""gender"",
+    t11.""race_hispanic_origin""
+FROM temp_all_ids a
+LEFT JOIN temp_master_age_in_years_at_screening t0 ON a.respondent_sequence_number = t0.respondent_sequence_number 
+LEFT JOIN temp_master_digit_symbol_score t1 ON a.respondent_sequence_number = t1.respondent_sequence_number 
+LEFT JOIN temp_master_animal_fluency_score_total t2 ON a.respondent_sequence_number = t2.respondent_sequence_number 
+LEFT JOIN temp_master_cerad_score_trial_1_recall t3 ON a.respondent_sequence_number = t3.respondent_sequence_number 
+LEFT JOIN temp_master_cerad_score_trial_2_recall t4 ON a.respondent_sequence_number = t4.respondent_sequence_number 
+LEFT JOIN temp_master_cerad_score_trial_3_recall t5 ON a.respondent_sequence_number = t5.respondent_sequence_number 
+LEFT JOIN temp_master_cerad_score_delayed_recall t6 ON a.respondent_sequence_number = t6.respondent_sequence_number 
+LEFT JOIN temp_master_doctor_told_you_have_diabetes t7 ON a.respondent_sequence_number = t7.respondent_sequence_number 
+LEFT JOIN temp_master_glycohemoglobin t8 ON a.respondent_sequence_number = t8.respondent_sequence_number 
+LEFT JOIN temp_master_fasting_glucose_mg_dl t9 ON a.respondent_sequence_number = t9.respondent_sequence_number 
+LEFT JOIN temp_master_gender t10 ON a.respondent_sequence_number = t10.respondent_sequence_number 
+LEFT JOIN temp_master_race_hispanic_origin t11 ON a.respondent_sequence_number = t11.respondent_sequence_number;
+
+CREATE INDEX idx_final_master_respondent_sequence_number    
+    ON final_master_table (respondent_sequence_number);
+
+
+-- Clean up final_master_table
+DELETE FROM final_master_table
+WHERE respondent_sequence_number NOT IN (
+    SELECT respondent_sequence_number FROM weight_design
+);
+
+
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Includes all patients whose age in years at screening is 60 years and older
+CREATE TEMP TABLE temp_inclusion_step1 AS
+SELECT ""respondent_sequence_number""
+FROM final_master_table
+WHERE ""age_in_years_at_screening"" >= 60;
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude patients with missing digit symbol substitution test (DSST) data
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""digit_symbol_score"" IS NOT NULL;
+
+-- STEP 2.2: Exclude patients with missing animal fluency score data
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""animal_fluency_score_total"" IS NOT NULL;
+
+-- STEP 2.3: Exclude patients with missing CERAD Score Trial 1 recall data
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""cerad_score_trial_1_recall"" IS NOT NULL;
+
+-- STEP 2.4: Exclude patients with missing CERAD Score Trial 2 recall data
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step3 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""cerad_score_trial_2_recall"" IS NOT NULL;
+
+-- STEP 2.5: Exclude patients with missing CERAD Score Trial 3 recall data
+CREATE TEMP TABLE temp_exclusion_step5 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step4 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""cerad_score_trial_3_recall"" IS NOT NULL;
+
+-- STEP 2.6: Exclude patients with missing delayed word recall tasks data
+CREATE TEMP TABLE temp_exclusion_step6 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step5 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""cerad_score_delayed_recall"" IS NOT NULL;
+
+-- STEP 2.7: Exclude patients with missing doctor told you have diabetes data
+CREATE TEMP TABLE temp_exclusion_step7 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step6 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""doctor_told_you_have_diabetes"" IS NOT NULL;
+
+-- STEP 2.8: Exclude patients with missing glycohemoglobin (HbA1c) (%) data
+CREATE TEMP TABLE temp_exclusion_step8 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step7 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""glycohemoglobin"" IS NOT NULL;
+
+-- STEP 2.9: Exclude patients with missing fasting plasma glucose (FPG) (mg/dL) data
+CREATE TEMP TABLE temp_exclusion_step9 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step8 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""fasting_glucose_mg_dl"" IS NOT NULL;
+
+-- ========== STEP 3: Final Cohort ==========
+
+-- The final temp table in the exclusion sequence becomes temp_cohort.
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""respondent_sequence_number""
+FROM temp_exclusion_step9;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Age (in years)
+-- Bin age into <70 years and >=70 years
+CREATE TEMP TABLE temp_age_in_years AS
+SELECT c.""respondent_sequence_number"",
+       CASE
+           WHEN f.""age_in_years_at_screening"" < 70 THEN '<70 years'
+           WHEN f.""age_in_years_at_screening"" >= 70 THEN '>=70 years'
+           ELSE NULL
+       END AS ""age_in_years""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.2 Gender
+-- Extract gender
+CREATE TEMP TABLE temp_gender AS
+SELECT c.""respondent_sequence_number"",
+       f.""gender""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.3 Race/Hispanic origin
+-- Map race/hispanic origin categories
+CREATE TEMP TABLE temp_race_hispanic_origin AS
+SELECT c.""respondent_sequence_number"",
+       CASE
+           WHEN f.""race_hispanic_origin"" = 'Non-Hispanic White' THEN 'non-hispanic white'
+           WHEN f.""race_hispanic_origin"" = 'Non-Hispanic Black' THEN 'black'
+           -- Assuming 'Non-Hispanic Asian' is a possible value or needs to be derived from 'Other Race - Including Multi-Racial' if not explicitly present.
+           -- Based on the schema examples, 'Non-Hispanic Asian' is not directly listed, so it might be grouped under 'others'.
+           -- For now, I will map based on explicit examples and put others into 'others'.
+           WHEN f.""race_hispanic_origin"" = 'Mexican American' THEN 'mexican-american'
+           WHEN f.""race_hispanic_origin"" = 'Other Hispanic' THEN 'others' -- Grouping 'Other Hispanic' into 'others' as per mapping labels
+           WHEN f.""race_hispanic_origin"" = 'Other Race - Including Multi-Racial' THEN 'others' -- Grouping 'Other Race - Including Multi-Racial' into 'others'
+           ELSE NULL
+       END AS ""race_hispanic_origin""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.4 Glycohemoglobin (HbA1c) (%)
+-- Extract glycohemoglobin (HbA1c) (%)
+CREATE TEMP TABLE temp_glycohemoglobin_hba1c AS
+SELECT c.""respondent_sequence_number"",
+       f.""glycohemoglobin"" AS ""glycohemoglobin_hba1c""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.5 Animal fluency score
+-- Extract animal fluency score
+CREATE TEMP TABLE temp_animal_fluency_score AS
+SELECT c.""respondent_sequence_number"",
+       f.""animal_fluency_score_total"" AS ""animal_fluency_score""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- ========== STEP 5: Final Table ==========
+CREATE TEMP TABLE temp_final_table AS
+SELECT
+  c.""respondent_sequence_number"",
+  age.""age_in_years"",
+  g.""gender"",
+  r.""race_hispanic_origin"",
+  pred.""glycohemoglobin_hba1c"",
+  outc.""animal_fluency_score""
+FROM temp_cohort c
+LEFT JOIN temp_age_in_years age ON c.""respondent_sequence_number"" = age.""respondent_sequence_number""
+LEFT JOIN temp_gender g ON c.""respondent_sequence_number"" = g.""respondent_sequence_number""
+LEFT JOIN temp_race_hispanic_origin r ON c.""respondent_sequence_number"" = r.""respondent_sequence_number""
+LEFT JOIN temp_glycohemoglobin_hba1c pred ON c.""respondent_sequence_number"" = pred.""respondent_sequence_number""
+LEFT JOIN temp_animal_fluency_score outc ON c.""respondent_sequence_number"" = outc.""respondent_sequence_number"";
+
+-- ========== STEP 6: Final Output ==========
+SELECT * FROM temp_final_table;
+
+-- STEP: Create merged final table with design variables + in_analysis flag
+DROP TABLE IF EXISTS temp_final_with_weights;
+
+CREATE TEMP TABLE temp_final_with_weights AS
+SELECT 
+    wd.""respondent_sequence_number"",
+    wd.""masked_variance_pseudo_psu"",
+    wd.""masked_variance_pseudo_stratum"",
+    wd.""survey_weight"",
+    CASE WHEN ft.""respondent_sequence_number"" IS NOT NULL THEN 1 ELSE 0 END AS ""in_analysis"",
+    ft.""age_in_years"",
+    ft.""gender"",
+    ft.""race_hispanic_origin"",
+    ft.""glycohemoglobin_hba1c"",
+    ft.""animal_fluency_score""
+FROM weight_design wd
+LEFT JOIN temp_final_table ft
+  ON wd.""respondent_sequence_number"" = ft.""respondent_sequence_number"";
+  
+-- Preview the result
+SELECT * FROM temp_final_with_weights;
+","    step_num                                                                                   step  remaining_after_step  excluded_at_step
+0          0                                      Total unique participants pooled from all sources                 19931               NaN
+1          1                      Participants with a valid survey weight (after initial filtering)                  6166           13765.0
+2          2  STEP 1.1: Includes all patients whose age in years at screening is 60 years and older                  1627            4539.0
+3          3     STEP 2.1: Exclude patients with missing digit symbol substitution test (DSST) data                  1435             192.0
+4          4                      STEP 2.2: Exclude patients with missing animal fluency score data                  1402              33.0
+5          5                STEP 2.3: Exclude patients with missing CERAD Score Trial 1 recall data                  1397               5.0
+6          6                STEP 2.4: Exclude patients with missing CERAD Score Trial 2 recall data                  1397               0.0
+7          7                STEP 2.5: Exclude patients with missing CERAD Score Trial 3 recall data                  1397               0.0
+8          8                 STEP 2.6: Exclude patients with missing delayed word recall tasks data                  1396               1.0
+9          9             STEP 2.7: Exclude patients with missing doctor told you have diabetes data                  1395               1.0
+10        10               STEP 2.8: Exclude patients with missing glycohemoglobin (HbA1c) (%) data                  1361              34.0
+11        11      STEP 2.9: Exclude patients with missing fasting plasma glucose (FPG) (mg/dL) data                  1351              10.0
+12        12                    The final temp table in the exclusion sequence becomes temp_cohort.                  1351               0.0
+13        13                                              ========== STEP 5: Final Table ==========                  1351               0.0","(6166, 10)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""respondent_sequence_number"")
+    outcome_vars <- c(""animal_fluency_score"")
+    weight_vars <- c(""survey_weight"",""masked_variance_pseudo_psu"",""masked_variance_pseudo_stratum"",""in_analysis"")
+
+    cohort <- df[df$in_analysis == 1, names(df) != ""in_analysis""]
+
+
+    outcome_roles <- c()
+    outcome_roles[""animal_fluency_score""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else if (name %in% weight_vars) {
+        category <- ""weight""
+        summary_info <- ""Weight variable"" 
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    weight_vars <- report$variable[report$category == ""weight""]; cat(""Weight Variables: ""); print(weight_vars); psu_var <- weight_vars[grepl(""psu"", weight_vars, ignore.case = TRUE)][1]; cat(""PSU:"", psu_var); stratum_var <- weight_vars[grepl(""stratum"", weight_vars, ignore.case = TRUE)][1]; cat(""Stratum:"", stratum_var); weight_var <- weight_vars[grepl(""weight"", weight_vars, ignore.case = TRUE)][1]; cat(""Weight:"", weight_var); in_analysis_var <- weight_vars[grepl(""in_analysis"", weight_vars, ignore.case = TRUE)][1]; cat(""In Analysis:"", in_analysis_var)
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+    library(survey)
+    options(survey.lonely.psu = ""adjust"")
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    formula <- as.formula(paste0(outcome_var, "" ~ "", paste(predictor_vars, collapse = "" + "")))
+
+            
+    
+    survey_design <- svydesign(
+        ids     = as.formula(paste0(""~"", psu_var)),
+        strata  = as.formula(paste0(""~"", stratum_var)),
+        weights = as.formula(paste0(""~"", weight_var)),
+        data    = df,
+        nest    = TRUE
+        )
+    survey_design <- subset(survey_design, in_analysis ==1)
+        
+    
+            model <- svyglm(formula,
+    design = survey_design,
+    family = gaussian()) 
+            
+    
+    result_table <- tidy(model, conf.int = TRUE) %>%
+            select(term, estimate, p.value, conf.low, conf.high)
+            
+    ","[{'variable': 'respondent_sequence_number', 'category': 'identifier', 'n_unique': 1351, 'na_count': 0, 'summary': 'Total rows = 1351'}, {'variable': 'masked_variance_pseudo_psu', 'category': 'weight', 'n_unique': 3, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'masked_variance_pseudo_stratum', 'category': 'weight', 'n_unique': 29, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'survey_weight', 'category': 'weight', 'n_unique': 1276, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'age_in_years', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': '<70 years: 53.1%; >=70 years: 46.9%'}, {'variable': 'gender', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'Female: 50.8%; Male: 49.2%'}, {'variable': 'race_hispanic_origin', 'category': 'categorical', 'n_unique': 4, 'na_count': 0, 'summary': 'black: 20.4%; mexican-american: 8.8%; non-hispanic white: 50.5%; others: 20.4%'}, {'variable': 'glycohemoglobin_hba1c', 'category': 'numerical', 'n_unique': 67, 'na_count': 0, 'summary': 'mean = 6.06, sd = 1.06'}, {'variable': 'animal_fluency_score', 'category': 'outcome', 'n_unique': 35, 'na_count': 0, 'summary': 'mean = 16.682, sd = 5.441'}]","[{'term': '(Intercept)', 'estimate': 23.266884014269152, 'p.value': 1.898424216922864e-14, 'conf.low': 20.119821094193604, 'conf.high': 26.4139469343447}, {'term': 'age_in_years>=70 years', 'estimate': -3.2349523318132816, 'p.value': 3.154200898059175e-11, 'conf.low': -3.8427010494419815, 'conf.high': -2.6272036141845816}, {'term': 'genderMale', 'estimate': 0.3468812345506019, 'p.value': 0.3813703724426538, 'conf.low': -0.4538311237960952, 'conf.high': 1.147593592897299}, {'term': 'race_hispanic_originblack', 'estimate': -3.8937834005705643, 'p.value': 1.11808922811611e-09, 'conf.low': -4.761858465722374, 'conf.high': -3.025708335418755}, {'term': 'race_hispanic_originmexican-american', 'estimate': -2.943888794226657, 'p.value': 1.002596908116041e-05, 'conf.low': -4.052196061293591, 'conf.high': -1.8355815271597236}, {'term': 'race_hispanic_originothers', 'estimate': -2.966711244572022, 'p.value': 0.00019663211479747678, 'conf.low': -4.3749073822936415, 'conf.high': -1.558515106850402}, {'term': 'glycohemoglobin_hba1c', 'estimate': -0.5499008451240112, 'p.value': 0.029432366995138137, 'conf.low': -1.0403772408315775, 'conf.high': -0.05942444941644481}]",,,,weighted linear regression,2011-2014,"[[2011, 2012], [2013, 2014]]",google_gemini-2.5-flash,Pass,[],,186.82072,"[[{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 682, 'output_tokens': 1, 'total_cost': 0.0002071, 'formatted_total_cost': '$0.000207'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 1889, 'output_tokens': 229, 'total_cost': 0.0011392, 'formatted_total_cost': '$0.001139'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 2624, 'output_tokens': 819, 'total_cost': 0.0028347, 'formatted_total_cost': '$0.002835'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3401, 'output_tokens': 84, 'total_cost': 0.0012303, 'formatted_total_cost': '$0.001230'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3401, 'output_tokens': 84, 'total_cost': 0.0012303, 'formatted_total_cost': '$0.001230'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3269, 'output_tokens': 84, 'total_cost': 0.0011906999999999998, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3269, 'output_tokens': 84, 'total_cost': 0.0011906999999999998, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 317, 'output_tokens': 3, 'total_cost': 0.0001026, 'formatted_total_cost': '$0.000103'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3628, 'output_tokens': 76, 'total_cost': 0.0012784, 'formatted_total_cost': '$0.001278'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3628, 'output_tokens': 76, 'total_cost': 0.0012784, 'formatted_total_cost': '$0.001278'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3658, 'output_tokens': 78, 'total_cost': 0.0012924, 'formatted_total_cost': '$0.001292'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3658, 'output_tokens': 78, 'total_cost': 0.0012924, 'formatted_total_cost': '$0.001292'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 314, 'output_tokens': 3, 'total_cost': 0.0001017, 'formatted_total_cost': '$0.000102'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3452, 'output_tokens': 78, 'total_cost': 0.0012306, 'formatted_total_cost': '$0.001231'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3452, 'output_tokens': 78, 'total_cost': 0.0012306, 'formatted_total_cost': '$0.001231'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3273, 'output_tokens': 78, 'total_cost': 0.0011769, 'formatted_total_cost': '$0.001177'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3273, 'output_tokens': 78, 'total_cost': 0.0011769, 'formatted_total_cost': '$0.001177'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 315, 'output_tokens': 3, 'total_cost': 0.00010200000000000001, 'formatted_total_cost': '$0.000102'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3364, 'output_tokens': 84, 'total_cost': 0.0012191999999999997, 'formatted_total_cost': '$0.001219'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3364, 'output_tokens': 84, 'total_cost': 0.0012191999999999997, 'formatted_total_cost': '$0.001219'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3273, 'output_tokens': 84, 'total_cost': 0.0011918999999999999, 'formatted_total_cost': '$0.001192'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3273, 'output_tokens': 84, 'total_cost': 0.0011918999999999999, 'formatted_total_cost': '$0.001192'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 317, 'output_tokens': 3, 'total_cost': 0.0001026, 'formatted_total_cost': '$0.000103'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3472, 'output_tokens': 73, 'total_cost': 0.0012240999999999999, 'formatted_total_cost': '$0.001224'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 561, 'output_tokens': 59, 'total_cost': 0.0003158, 'formatted_total_cost': '$0.000316'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 561, 'output_tokens': 59, 'total_cost': 0.0003158, 'formatted_total_cost': '$0.000316'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3487, 'output_tokens': 73, 'total_cost': 0.0012285999999999998, 'formatted_total_cost': '$0.001229'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 569, 'output_tokens': 75, 'total_cost': 0.0003581999999999999, 'formatted_total_cost': '$0.000358'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 569, 'output_tokens': 75, 'total_cost': 0.0003581999999999999, 'formatted_total_cost': '$0.000358'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 253, 'output_tokens': 3, 'total_cost': 8.340000000000001e-05, 'formatted_total_cost': '$0.000083'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4166, 'output_tokens': 127, 'total_cost': 0.0015673000000000002, 'formatted_total_cost': '$0.001567'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4166, 'output_tokens': 127, 'total_cost': 0.0015673000000000002, 'formatted_total_cost': '$0.001567'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4229, 'output_tokens': 125, 'total_cost': 0.0015812, 'formatted_total_cost': '$0.001581'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4229, 'output_tokens': 125, 'total_cost': 0.0015812, 'formatted_total_cost': '$0.001581'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 283, 'output_tokens': 3, 'total_cost': 9.24e-05, 'formatted_total_cost': '$0.000092'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3642, 'output_tokens': 101, 'total_cost': 0.0013451000000000001, 'formatted_total_cost': '$0.001345'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3642, 'output_tokens': 101, 'total_cost': 0.0013451000000000001, 'formatted_total_cost': '$0.001345'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3728, 'output_tokens': 101, 'total_cost': 0.0013709, 'formatted_total_cost': '$0.001371'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3728, 'output_tokens': 101, 'total_cost': 0.0013709, 'formatted_total_cost': '$0.001371'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 318, 'output_tokens': 3, 'total_cost': 0.0001029, 'formatted_total_cost': '$0.000103'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3303, 'output_tokens': 78, 'total_cost': 0.0011859, 'formatted_total_cost': '$0.001186'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3303, 'output_tokens': 78, 'total_cost': 0.0011859, 'formatted_total_cost': '$0.001186'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3524, 'output_tokens': 78, 'total_cost': 0.0012522, 'formatted_total_cost': '$0.001252'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3524, 'output_tokens': 78, 'total_cost': 0.0012522, 'formatted_total_cost': '$0.001252'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 314, 'output_tokens': 3, 'total_cost': 0.0001017, 'formatted_total_cost': '$0.000102'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3492, 'output_tokens': 83, 'total_cost': 0.0012550999999999999, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3492, 'output_tokens': 83, 'total_cost': 0.0012550999999999999, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3475, 'output_tokens': 85, 'total_cost': 0.0012549999999999998, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3475, 'output_tokens': 85, 'total_cost': 0.0012549999999999998, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 315, 'output_tokens': 3, 'total_cost': 0.00010200000000000001, 'formatted_total_cost': '$0.000102'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3333, 'output_tokens': 84, 'total_cost': 0.0012098999999999999, 'formatted_total_cost': '$0.001210'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3333, 'output_tokens': 84, 'total_cost': 0.0012098999999999999, 'formatted_total_cost': '$0.001210'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3270, 'output_tokens': 84, 'total_cost': 0.0011909999999999998, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3270, 'output_tokens': 84, 'total_cost': 0.0011909999999999998, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 317, 'output_tokens': 3, 'total_cost': 0.0001026, 'formatted_total_cost': '$0.000103'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3421, 'output_tokens': 84, 'total_cost': 0.0012362999999999999, 'formatted_total_cost': '$0.001236'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3421, 'output_tokens': 84, 'total_cost': 0.0012362999999999999, 'formatted_total_cost': '$0.001236'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3553, 'output_tokens': 80, 'total_cost': 0.0012659000000000001, 'formatted_total_cost': '$0.001266'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3553, 'output_tokens': 80, 'total_cost': 0.0012659000000000001, 'formatted_total_cost': '$0.001266'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 332, 'output_tokens': 3, 'total_cost': 0.0001071, 'formatted_total_cost': '$0.000107'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3517, 'output_tokens': 103, 'total_cost': 0.0013126, 'formatted_total_cost': '$0.001313'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3517, 'output_tokens': 103, 'total_cost': 0.0013126, 'formatted_total_cost': '$0.001313'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3499, 'output_tokens': 103, 'total_cost': 0.0013072, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3499, 'output_tokens': 103, 'total_cost': 0.0013072, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 319, 'output_tokens': 3, 'total_cost': 0.0001032, 'formatted_total_cost': '$0.000103'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3419, 'output_tokens': 79, 'total_cost': 0.0012232, 'formatted_total_cost': '$0.001223'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3419, 'output_tokens': 79, 'total_cost': 0.0012232, 'formatted_total_cost': '$0.001223'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3369, 'output_tokens': 79, 'total_cost': 0.0012082, 'formatted_total_cost': '$0.001208'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3369, 'output_tokens': 79, 'total_cost': 0.0012082, 'formatted_total_cost': '$0.001208'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 310, 'output_tokens': 3, 'total_cost': 0.0001005, 'formatted_total_cost': '$0.000101'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7384, 'output_tokens': 2063, 'total_cost': 0.007372700000000001, 'formatted_total_cost': '$0.007373'}]]",False,0,,,
+15985,nhanes,"This study will examine the relationship between glycohemoglobin (HbA1c) (%) levels and cognitive performance using a weighted linear regression analysis.
+The analysis will use NHANES data from the 2011-2014 period. The study population is limited to participants whose age in years at screening is 60 years and older. 
+Individuals will be excluded if they have missing data for any of the specified cognitive assessments: digit symbol substitution test (DSST), animal fluency score, and CERAD Score Trial 1 recall, CERAD Score Trial 2 recall, CERAD Score Trial 3 recall, and delayed word recall tasks. 
+Furthermore, participants with missing data on doctor told you have diabetes, glycohemoglobin (HbA1c) (%), or fasting plasma glucose (FPG) (mg/dL) will be excluded.
+The primary outcome of interest is the animal fluency score and the predictor is glycohemoglobin (HbA1c) percentage. 
+The analysis will adjust for several covariates: age (categorized as <70 or ≥70 years), gender, and race/Hispanic origin (categorized as Non-Hispanic White, Black, Non-Hispanic Asian, Mexican-American, and others).","Analysis Type: weighted linear regression
+
+Dataset: NHANES
+
+Period of Interest: 2011-2014
+
+Inclusion Criteria:
+- age in years at screening >= 60
+
+Exclusion Criteria:
+- missing digit symbol substitution test (DSST)
+- missing animal fluency score
+- missing CERAD Score Trial 1 recall
+- missing CERAD Score Trial 2 recall
+- missing CERAD Score Trial 3 recall
+- missing delayed word recall tasks
+- missing doctor told you have diabetes
+- missing glycohemoglobin (HbA1c) (%)
+- missing fasting plasma glucose (FPG) (mg/dL)
+
+Covariates:
+- age in years at screening categorized as:
+  <70,
+  ≥70
+- gender
+- race/Hispanic origin categorized as:
+  Non-Hispanic White,
+  Black,
+  Non-Hispanic Asian,
+  Mexican-American,
+  others
+
+Predictor:
+- glycohemoglobin (HbA1c) (%)
+
+Outcome:
+- animal fluency score","{'dataset': 'NHANES', 'inclusion': [{'keyword': 'age in years at screening', 'derived': False, 'condition': '>= 60', 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}], 'exclusion': [{'keyword': 'digit symbol substitution test', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'digit_symbol_score', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'animal fluency score', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'animal_fluency_score_total', 'examples': ['3.0', '7.0', '33.0', '34.0', '35.0']}, {'keyword': 'cerad score trial 1 recall', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cerad_score_trial_1_recall', 'examples': ['0.0', '3.0', '5.0', '7.0', '8.0']}, {'keyword': 'cerad score trial 2 recall', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cerad_score_trial_2_recall', 'examples': ['0.0', '3.0', '5.0', '7.0', '8.0']}, {'keyword': 'cerad score trial 3 recall', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cerad_score_trial_3_recall', 'examples': ['0.0', '3.0', '5.0', '7.0', '8.0']}, {'keyword': 'delayed word recall tasks', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cerad_score_delayed_recall', 'examples': ['0.0', '3.0', '5.0', '7.0', '8.0']}, {'keyword': 'doctor told you have diabetes', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '12.4', '13.2']}, {'keyword': 'fasting plasma glucose (fpg) (mg/dl)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'fasting_glucose_mg_dl', 'examples': ['76.0', '96.0', '154.0', '162.0', '174.0']}], 'covariates': [{'keyword': 'age in years at screening', 'derived': True, 'depends_on': [{'keyword': 'age in years at screening', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'labels': ['<70', '≥70']}}], 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}, {'keyword': 'gender', 'derived': False, 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['non-hispanic white', 'black', 'non-hispanic asian', 'mexican-american', 'others']}}], 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'predictor': [{'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '12.4', '13.2']}], 'outcome': [{'keyword': 'animal fluency score', 'derived': False, 'table': 'final_master_table', 'column': 'animal_fluency_score_total', 'examples': ['3.0', '7.0', '33.0', '34.0', '35.0']}]}","{'analysis_type': 'weighted linear regression', 'dataset': 'NHANES', 'period_of_interest': '2011-2014', 'inclusion': [{'keyword': 'age in years at screening', 'derived': False, 'condition': '>= 60', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}], 'exclusion': [{'keyword': 'digit symbol substitution test', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'digit_symbol_score', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'digit_symbol_score', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'animal fluency score', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'animal_fluency_score_total', 'example_values': ['3.0', '7.0', '33.0', '34.0', '35.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'animal_fluency_score_total', 'example_values': ['3.0', '7.0', '33.0', '34.0', '35.0']}]}, {'keyword': 'cerad score trial 1 recall', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'cerad_score_trial_1_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'cerad_score_trial_1_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}]}, {'keyword': 'cerad score trial 2 recall', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'cerad_score_trial_2_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'cerad_score_trial_2_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}]}, {'keyword': 'cerad score trial 3 recall', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'cerad_score_trial_3_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'cerad_score_trial_3_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}]}, {'keyword': 'delayed word recall tasks', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'cerad_score_delayed_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'cerad_score_delayed_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}]}, {'keyword': 'doctor told you have diabetes', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}]}, {'keyword': 'fasting plasma glucose (fpg) (mg/dl)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.glu_g', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '217.0', '76.0']}, {'cycle': '2013-2014', 'table': 'nhanes.glu_h', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '76.0', '96.0']}]}], 'covariates': [{'keyword': 'age in years at screening', 'derived': True, 'depends_on': [{'keyword': 'age in years at screening', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'labels': ['<70', '≥70']}}], 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'gender', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['non-hispanic white', 'black', 'non-hispanic asian', 'mexican-american', 'others']}}], 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'predictor': [{'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}]}], 'outcome': [{'keyword': 'animal fluency score', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'animal_fluency_score_total', 'example_values': ['3.0', '7.0', '33.0', '34.0', '35.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'animal_fluency_score_total', 'example_values': ['3.0', '7.0', '33.0', '34.0', '35.0']}]}]}",fasting,"-- STEP 1: Create temp_master_weight
+
+-- TEMP TABLE FOR weight
+DROP TABLE IF EXISTS temp_master_weight;
+
+CREATE TEMP TABLE temp_master_weight AS
+SELECT respondent_sequence_number, 
+       (fasting_subsample_2_year_mec_weight * 2.0 / 4.0) AS survey_weight
+FROM nhanes.glu_g
+WHERE fasting_subsample_2_year_mec_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (fasting_subsample_2_year_mec_weight * 2.0 / 4.0) AS survey_weight
+FROM nhanes.glu_h
+WHERE fasting_subsample_2_year_mec_weight IS NOT NULL;
+
+
+-- STEP 2: Create temp_psu_stratum
+
+-- TEMP TABLE FOR PSU and Stratum
+DROP TABLE IF EXISTS temp_psu_stratum;
+CREATE TEMP TABLE temp_psu_stratum AS
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_h;
+
+
+-- STEP 3: Create final weight+design table
+DROP TABLE IF EXISTS weight_design;
+CREATE TABLE weight_design AS
+SELECT 
+    s.respondent_sequence_number,
+    s.masked_variance_pseudo_psu,
+    s.masked_variance_pseudo_stratum,
+    w.survey_weight
+FROM temp_psu_stratum s
+INNER JOIN temp_master_weight w
+  ON s.respondent_sequence_number = w.respondent_sequence_number;
+
+
+
+
+-- TEMP TABLE FOR ""age in years at screening"", ""age in years at screening"", ""age in years at screening""
+DROP TABLE IF EXISTS temp_master_age_in_years_at_screening;
+CREATE TEMP TABLE temp_master_age_in_years_at_screening AS
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_in_years_at_screening ON temp_master_age_in_years_at_screening (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""digit symbol substitution test""
+DROP TABLE IF EXISTS temp_master_digit_symbol_score;
+CREATE TEMP TABLE temp_master_digit_symbol_score AS
+SELECT respondent_sequence_number, ""digit_symbol_score"" AS ""digit_symbol_score""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""digit_symbol_score"" AS ""digit_symbol_score""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_digit_symbol_score ON temp_master_digit_symbol_score (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""animal fluency score"", ""animal fluency score""
+DROP TABLE IF EXISTS temp_master_animal_fluency_score_total;
+CREATE TEMP TABLE temp_master_animal_fluency_score_total AS
+SELECT respondent_sequence_number, ""animal_fluency_score_total"" AS ""animal_fluency_score_total""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""animal_fluency_score_total"" AS ""animal_fluency_score_total""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_animal_fluency_score_total ON temp_master_animal_fluency_score_total (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""cerad score trial 1 recall""
+DROP TABLE IF EXISTS temp_master_cerad_score_trial_1_recall;
+CREATE TEMP TABLE temp_master_cerad_score_trial_1_recall AS
+SELECT respondent_sequence_number, ""cerad_score_trial_1_recall"" AS ""cerad_score_trial_1_recall""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""cerad_score_trial_1_recall"" AS ""cerad_score_trial_1_recall""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cerad_score_trial_1_recall ON temp_master_cerad_score_trial_1_recall (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""cerad score trial 2 recall""
+DROP TABLE IF EXISTS temp_master_cerad_score_trial_2_recall;
+CREATE TEMP TABLE temp_master_cerad_score_trial_2_recall AS
+SELECT respondent_sequence_number, ""cerad_score_trial_2_recall"" AS ""cerad_score_trial_2_recall""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""cerad_score_trial_2_recall"" AS ""cerad_score_trial_2_recall""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cerad_score_trial_2_recall ON temp_master_cerad_score_trial_2_recall (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""cerad score trial 3 recall""
+DROP TABLE IF EXISTS temp_master_cerad_score_trial_3_recall;
+CREATE TEMP TABLE temp_master_cerad_score_trial_3_recall AS
+SELECT respondent_sequence_number, ""cerad_score_trial_3_recall"" AS ""cerad_score_trial_3_recall""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""cerad_score_trial_3_recall"" AS ""cerad_score_trial_3_recall""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cerad_score_trial_3_recall ON temp_master_cerad_score_trial_3_recall (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""delayed word recall tasks""
+DROP TABLE IF EXISTS temp_master_cerad_score_delayed_recall;
+CREATE TEMP TABLE temp_master_cerad_score_delayed_recall AS
+SELECT respondent_sequence_number, ""cerad_score_delayed_recall"" AS ""cerad_score_delayed_recall""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""cerad_score_delayed_recall"" AS ""cerad_score_delayed_recall""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cerad_score_delayed_recall ON temp_master_cerad_score_delayed_recall (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""doctor told you have diabetes""
+DROP TABLE IF EXISTS temp_master_doctor_told_you_have_diabetes;
+CREATE TEMP TABLE temp_master_doctor_told_you_have_diabetes AS
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_doctor_told_you_have_diabetes ON temp_master_doctor_told_you_have_diabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""glycohemoglobin (hba1c) (%)"", ""glycohemoglobin (hba1c) (%)""
+DROP TABLE IF EXISTS temp_master_glycohemoglobin;
+CREATE TEMP TABLE temp_master_glycohemoglobin AS
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_g
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_glycohemoglobin ON temp_master_glycohemoglobin (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""fasting plasma glucose (fpg) (mg/dl)""
+DROP TABLE IF EXISTS temp_master_fasting_glucose_mg_dl;
+CREATE TEMP TABLE temp_master_fasting_glucose_mg_dl AS
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_g
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_fasting_glucose_mg_dl ON temp_master_fasting_glucose_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""gender""
+DROP TABLE IF EXISTS temp_master_gender;
+CREATE TEMP TABLE temp_master_gender AS
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_gender ON temp_master_gender (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""race/hispanic origin"", ""race/hispanic origin""
+DROP TABLE IF EXISTS temp_master_race_hispanic_origin;
+CREATE TEMP TABLE temp_master_race_hispanic_origin AS
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_race_hispanic_origin ON temp_master_race_hispanic_origin (respondent_sequence_number);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT respondent_sequence_number FROM temp_master_age_in_years_at_screening
+UNION
+SELECT respondent_sequence_number FROM temp_master_digit_symbol_score
+UNION
+SELECT respondent_sequence_number FROM temp_master_animal_fluency_score_total
+UNION
+SELECT respondent_sequence_number FROM temp_master_cerad_score_trial_1_recall
+UNION
+SELECT respondent_sequence_number FROM temp_master_cerad_score_trial_2_recall
+UNION
+SELECT respondent_sequence_number FROM temp_master_cerad_score_trial_3_recall
+UNION
+SELECT respondent_sequence_number FROM temp_master_cerad_score_delayed_recall
+UNION
+SELECT respondent_sequence_number FROM temp_master_doctor_told_you_have_diabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_glycohemoglobin
+UNION
+SELECT respondent_sequence_number FROM temp_master_fasting_glucose_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_gender
+UNION
+SELECT respondent_sequence_number FROM temp_master_race_hispanic_origin;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_respondent_sequence_number ON temp_all_ids (respondent_sequence_number);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.respondent_sequence_number,
+    t0.""age_in_years_at_screening"",
+    t1.""digit_symbol_score"",
+    t2.""animal_fluency_score_total"",
+    t3.""cerad_score_trial_1_recall"",
+    t4.""cerad_score_trial_2_recall"",
+    t5.""cerad_score_trial_3_recall"",
+    t6.""cerad_score_delayed_recall"",
+    t7.""doctor_told_you_have_diabetes"",
+    t8.""glycohemoglobin"",
+    t9.""fasting_glucose_mg_dl"",
+    t10.""gender"",
+    t11.""race_hispanic_origin""
+FROM temp_all_ids a
+LEFT JOIN temp_master_age_in_years_at_screening t0 ON a.respondent_sequence_number = t0.respondent_sequence_number 
+LEFT JOIN temp_master_digit_symbol_score t1 ON a.respondent_sequence_number = t1.respondent_sequence_number 
+LEFT JOIN temp_master_animal_fluency_score_total t2 ON a.respondent_sequence_number = t2.respondent_sequence_number 
+LEFT JOIN temp_master_cerad_score_trial_1_recall t3 ON a.respondent_sequence_number = t3.respondent_sequence_number 
+LEFT JOIN temp_master_cerad_score_trial_2_recall t4 ON a.respondent_sequence_number = t4.respondent_sequence_number 
+LEFT JOIN temp_master_cerad_score_trial_3_recall t5 ON a.respondent_sequence_number = t5.respondent_sequence_number 
+LEFT JOIN temp_master_cerad_score_delayed_recall t6 ON a.respondent_sequence_number = t6.respondent_sequence_number 
+LEFT JOIN temp_master_doctor_told_you_have_diabetes t7 ON a.respondent_sequence_number = t7.respondent_sequence_number 
+LEFT JOIN temp_master_glycohemoglobin t8 ON a.respondent_sequence_number = t8.respondent_sequence_number 
+LEFT JOIN temp_master_fasting_glucose_mg_dl t9 ON a.respondent_sequence_number = t9.respondent_sequence_number 
+LEFT JOIN temp_master_gender t10 ON a.respondent_sequence_number = t10.respondent_sequence_number 
+LEFT JOIN temp_master_race_hispanic_origin t11 ON a.respondent_sequence_number = t11.respondent_sequence_number;
+
+CREATE INDEX idx_final_master_respondent_sequence_number    
+    ON final_master_table (respondent_sequence_number);
+
+
+-- Clean up final_master_table
+DELETE FROM final_master_table
+WHERE respondent_sequence_number NOT IN (
+    SELECT respondent_sequence_number FROM weight_design
+);
+
+
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Includes all patients whose age in years at screening is 60 years and older
+CREATE TEMP TABLE temp_inclusion_step1 AS
+SELECT ""respondent_sequence_number""
+FROM final_master_table
+WHERE ""age_in_years_at_screening"" >= 60;
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude patients with missing digit symbol substitution test (DSST) data
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""digit_symbol_score"" IS NOT NULL;
+
+-- STEP 2.2: Exclude patients with missing animal fluency score data
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""animal_fluency_score_total"" IS NOT NULL;
+
+-- STEP 2.3: Exclude patients with missing CERAD Score Trial 1 recall data
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""cerad_score_trial_1_recall"" IS NOT NULL;
+
+-- STEP 2.4: Exclude patients with missing CERAD Score Trial 2 recall data
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step3 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""cerad_score_trial_2_recall"" IS NOT NULL;
+
+-- STEP 2.5: Exclude patients with missing CERAD Score Trial 3 recall data
+CREATE TEMP TABLE temp_exclusion_step5 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step4 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""cerad_score_trial_3_recall"" IS NOT NULL;
+
+-- STEP 2.6: Exclude patients with missing delayed word recall tasks data
+CREATE TEMP TABLE temp_exclusion_step6 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step5 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""cerad_score_delayed_recall"" IS NOT NULL;
+
+-- STEP 2.7: Exclude patients with missing doctor told you have diabetes data
+CREATE TEMP TABLE temp_exclusion_step7 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step6 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""doctor_told_you_have_diabetes"" IS NOT NULL;
+
+-- STEP 2.8: Exclude patients with missing glycohemoglobin (HbA1c) (%) data
+CREATE TEMP TABLE temp_exclusion_step8 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step7 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""glycohemoglobin"" IS NOT NULL;
+
+-- STEP 2.9: Exclude patients with missing fasting plasma glucose (FPG) (mg/dL) data
+CREATE TEMP TABLE temp_exclusion_step9 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step8 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""fasting_glucose_mg_dl"" IS NOT NULL;
+
+-- ========== STEP 3: Final Cohort ==========
+
+-- The final temp table in the exclusion sequence becomes temp_cohort.
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""respondent_sequence_number""
+FROM temp_exclusion_step9;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Covariate: age in years at screening (categorized as <70 or ≥70 years)
+CREATE TEMP TABLE temp_age_in_years_at_screening AS
+SELECT
+  c.""respondent_sequence_number"",
+  CASE
+    WHEN f.""age_in_years_at_screening"" < 70 THEN '<70'
+    WHEN f.""age_in_years_at_screening"" >= 70 THEN '≥70'
+    ELSE NULL
+  END AS ""age_in_years_at_screening""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.2 Covariate: gender
+CREATE TEMP TABLE temp_gender AS
+SELECT
+  c.""respondent_sequence_number"",
+  f.""gender""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.3 Covariate: race/hispanic origin (categorized)
+CREATE TEMP TABLE temp_race_hispanic_origin AS
+SELECT
+  c.""respondent_sequence_number"",
+  CASE
+    WHEN f.""race_hispanic_origin"" = 'Non-Hispanic White' THEN 'non-hispanic white'
+    WHEN f.""race_hispanic_origin"" = 'Non-Hispanic Black' THEN 'black'
+    WHEN f.""race_hispanic_origin"" = 'Mexican American' THEN 'mexican-american'
+    WHEN f.""race_hispanic_origin"" = 'Non-Hispanic Asian' THEN 'non-hispanic asian' -- Assuming this value might exist in data
+    WHEN f.""race_hispanic_origin"" = 'Other Hispanic' THEN 'others'
+    WHEN f.""race_hispanic_origin"" = 'Other Race - Including Multi-Racial' THEN 'others'
+    ELSE 'others' -- Catch any other values not explicitly mapped
+  END AS ""race_hispanic_origin""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.4 Predictor: glycohemoglobin (hba1c) (%)
+CREATE TEMP TABLE temp_glycohemoglobin_hba1c AS
+SELECT
+  c.""respondent_sequence_number"",
+  f.""glycohemoglobin"" AS ""glycohemoglobin_hba1c""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.5 Outcome: animal fluency score
+CREATE TEMP TABLE temp_animal_fluency_score AS
+SELECT
+  c.""respondent_sequence_number"",
+  f.""animal_fluency_score_total"" AS ""animal_fluency_score""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- ========== STEP 5: Final Table ==========
+CREATE TEMP TABLE temp_final_table AS
+SELECT
+  c.""respondent_sequence_number"",
+  age.""age_in_years_at_screening"",
+  gen.""gender"",
+  race.""race_hispanic_origin"",
+  hba1c.""glycohemoglobin_hba1c"",
+  afs.""animal_fluency_score""
+FROM temp_cohort c
+LEFT JOIN temp_age_in_years_at_screening age ON c.""respondent_sequence_number"" = age.""respondent_sequence_number""
+LEFT JOIN temp_gender gen ON c.""respondent_sequence_number"" = gen.""respondent_sequence_number""
+LEFT JOIN temp_race_hispanic_origin race ON c.""respondent_sequence_number"" = race.""respondent_sequence_number""
+LEFT JOIN temp_glycohemoglobin_hba1c hba1c ON c.""respondent_sequence_number"" = hba1c.""respondent_sequence_number""
+LEFT JOIN temp_animal_fluency_score afs ON c.""respondent_sequence_number"" = afs.""respondent_sequence_number"";
+
+-- ========== STEP 6: Final Output ==========
+SELECT * FROM temp_final_table;
+
+-- STEP: Create merged final table with design variables + in_analysis flag
+DROP TABLE IF EXISTS temp_final_with_weights;
+
+CREATE TEMP TABLE temp_final_with_weights AS
+SELECT 
+    wd.""respondent_sequence_number"",
+    wd.""masked_variance_pseudo_psu"",
+    wd.""masked_variance_pseudo_stratum"",
+    wd.""survey_weight"",
+    CASE WHEN ft.""respondent_sequence_number"" IS NOT NULL THEN 1 ELSE 0 END AS ""in_analysis"",
+    ft.""age_in_years_at_screening"",
+    ft.""gender"",
+    ft.""race_hispanic_origin"",
+    ft.""glycohemoglobin_hba1c"",
+    ft.""animal_fluency_score""
+FROM weight_design wd
+LEFT JOIN temp_final_table ft
+  ON wd.""respondent_sequence_number"" = ft.""respondent_sequence_number"";
+  
+-- Preview the result
+SELECT * FROM temp_final_with_weights;
+","    step_num                                                                                   step  remaining_after_step  excluded_at_step
+0          0                                      Total unique participants pooled from all sources                 19931               NaN
+1          1                      Participants with a valid survey weight (after initial filtering)                  6166           13765.0
+2          2  STEP 1.1: Includes all patients whose age in years at screening is 60 years and older                  1627            4539.0
+3          3     STEP 2.1: Exclude patients with missing digit symbol substitution test (DSST) data                  1435             192.0
+4          4                      STEP 2.2: Exclude patients with missing animal fluency score data                  1402              33.0
+5          5                STEP 2.3: Exclude patients with missing CERAD Score Trial 1 recall data                  1397               5.0
+6          6                STEP 2.4: Exclude patients with missing CERAD Score Trial 2 recall data                  1397               0.0
+7          7                STEP 2.5: Exclude patients with missing CERAD Score Trial 3 recall data                  1397               0.0
+8          8                 STEP 2.6: Exclude patients with missing delayed word recall tasks data                  1396               1.0
+9          9             STEP 2.7: Exclude patients with missing doctor told you have diabetes data                  1395               1.0
+10        10               STEP 2.8: Exclude patients with missing glycohemoglobin (HbA1c) (%) data                  1361              34.0
+11        11      STEP 2.9: Exclude patients with missing fasting plasma glucose (FPG) (mg/dL) data                  1351              10.0
+12        12                    The final temp table in the exclusion sequence becomes temp_cohort.                  1351               0.0
+13        13                                              ========== STEP 5: Final Table ==========                  1351               0.0","(6166, 10)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""respondent_sequence_number"")
+    outcome_vars <- c(""animal_fluency_score"")
+    weight_vars <- c(""survey_weight"",""masked_variance_pseudo_psu"",""masked_variance_pseudo_stratum"",""in_analysis"")
+
+    cohort <- df[df$in_analysis == 1, names(df) != ""in_analysis""]
+
+
+    outcome_roles <- c()
+    outcome_roles[""animal_fluency_score""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else if (name %in% weight_vars) {
+        category <- ""weight""
+        summary_info <- ""Weight variable"" 
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    weight_vars <- report$variable[report$category == ""weight""]; cat(""Weight Variables: ""); print(weight_vars); psu_var <- weight_vars[grepl(""psu"", weight_vars, ignore.case = TRUE)][1]; cat(""PSU:"", psu_var); stratum_var <- weight_vars[grepl(""stratum"", weight_vars, ignore.case = TRUE)][1]; cat(""Stratum:"", stratum_var); weight_var <- weight_vars[grepl(""weight"", weight_vars, ignore.case = TRUE)][1]; cat(""Weight:"", weight_var); in_analysis_var <- weight_vars[grepl(""in_analysis"", weight_vars, ignore.case = TRUE)][1]; cat(""In Analysis:"", in_analysis_var)
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+    library(survey)
+    options(survey.lonely.psu = ""adjust"")
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    formula <- as.formula(paste0(outcome_var, "" ~ "", paste(predictor_vars, collapse = "" + "")))
+
+            
+    
+    survey_design <- svydesign(
+        ids     = as.formula(paste0(""~"", psu_var)),
+        strata  = as.formula(paste0(""~"", stratum_var)),
+        weights = as.formula(paste0(""~"", weight_var)),
+        data    = df,
+        nest    = TRUE
+        )
+    survey_design <- subset(survey_design, in_analysis ==1)
+        
+    
+            model <- svyglm(formula,
+    design = survey_design,
+    family = gaussian()) 
+            
+    
+    result_table <- tidy(model, conf.int = TRUE) %>%
+            select(term, estimate, p.value, conf.low, conf.high)
+            
+    ","[{'variable': 'respondent_sequence_number', 'category': 'identifier', 'n_unique': 1351, 'na_count': 0, 'summary': 'Total rows = 1351'}, {'variable': 'masked_variance_pseudo_psu', 'category': 'weight', 'n_unique': 3, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'masked_variance_pseudo_stratum', 'category': 'weight', 'n_unique': 29, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'survey_weight', 'category': 'weight', 'n_unique': 1276, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'age_in_years_at_screening', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': '<70: 53.1%; ≥70: 46.9%'}, {'variable': 'gender', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'Female: 50.8%; Male: 49.2%'}, {'variable': 'race_hispanic_origin', 'category': 'categorical', 'n_unique': 4, 'na_count': 0, 'summary': 'black: 20.4%; mexican-american: 8.8%; non-hispanic white: 50.5%; others: 20.4%'}, {'variable': 'glycohemoglobin_hba1c', 'category': 'numerical', 'n_unique': 67, 'na_count': 0, 'summary': 'mean = 6.06, sd = 1.06'}, {'variable': 'animal_fluency_score', 'category': 'outcome', 'n_unique': 35, 'na_count': 0, 'summary': 'mean = 16.682, sd = 5.441'}]","[{'term': '(Intercept)', 'estimate': 23.266884014269152, 'p.value': 1.898424216922864e-14, 'conf.low': 20.119821094193604, 'conf.high': 26.4139469343447}, {'term': 'age_in_years_at_screening≥70', 'estimate': -3.2349523318132816, 'p.value': 3.154200898059175e-11, 'conf.low': -3.8427010494419815, 'conf.high': -2.6272036141845816}, {'term': 'genderMale', 'estimate': 0.3468812345506019, 'p.value': 0.3813703724426538, 'conf.low': -0.4538311237960952, 'conf.high': 1.147593592897299}, {'term': 'race_hispanic_originblack', 'estimate': -3.8937834005705643, 'p.value': 1.11808922811611e-09, 'conf.low': -4.761858465722374, 'conf.high': -3.025708335418755}, {'term': 'race_hispanic_originmexican-american', 'estimate': -2.943888794226657, 'p.value': 1.002596908116041e-05, 'conf.low': -4.052196061293591, 'conf.high': -1.8355815271597236}, {'term': 'race_hispanic_originothers', 'estimate': -2.966711244572022, 'p.value': 0.00019663211479747678, 'conf.low': -4.3749073822936415, 'conf.high': -1.558515106850402}, {'term': 'glycohemoglobin_hba1c', 'estimate': -0.5499008451240112, 'p.value': 0.029432366995138137, 'conf.low': -1.0403772408315775, 'conf.high': -0.05942444941644481}]",,,,weighted linear regression,2011-2014,"[[2011, 2012], [2013, 2014]]",google_gemini-2.5-flash,Pass,[],,152.450312,"[[{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 682, 'output_tokens': 1, 'total_cost': 0.0002071, 'formatted_total_cost': '$0.000207'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 1889, 'output_tokens': 232, 'total_cost': 0.0011467, 'formatted_total_cost': '$0.001147'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 2627, 'output_tokens': 817, 'total_cost': 0.0028306, 'formatted_total_cost': '$0.002831'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3364, 'output_tokens': 84, 'total_cost': 0.0012191999999999997, 'formatted_total_cost': '$0.001219'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3364, 'output_tokens': 84, 'total_cost': 0.0012191999999999997, 'formatted_total_cost': '$0.001219'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3273, 'output_tokens': 84, 'total_cost': 0.0011918999999999999, 'formatted_total_cost': '$0.001192'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3273, 'output_tokens': 84, 'total_cost': 0.0011918999999999999, 'formatted_total_cost': '$0.001192'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 317, 'output_tokens': 3, 'total_cost': 0.0001026, 'formatted_total_cost': '$0.000103'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3303, 'output_tokens': 78, 'total_cost': 0.0011859, 'formatted_total_cost': '$0.001186'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3303, 'output_tokens': 78, 'total_cost': 0.0011859, 'formatted_total_cost': '$0.001186'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3524, 'output_tokens': 78, 'total_cost': 0.0012522, 'formatted_total_cost': '$0.001252'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3524, 'output_tokens': 78, 'total_cost': 0.0012522, 'formatted_total_cost': '$0.001252'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 314, 'output_tokens': 3, 'total_cost': 0.0001017, 'formatted_total_cost': '$0.000102'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3517, 'output_tokens': 103, 'total_cost': 0.0013126, 'formatted_total_cost': '$0.001313'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3517, 'output_tokens': 103, 'total_cost': 0.0013126, 'formatted_total_cost': '$0.001313'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3499, 'output_tokens': 103, 'total_cost': 0.0013072, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3499, 'output_tokens': 103, 'total_cost': 0.0013072, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 319, 'output_tokens': 3, 'total_cost': 0.0001032, 'formatted_total_cost': '$0.000103'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3419, 'output_tokens': 79, 'total_cost': 0.0012232, 'formatted_total_cost': '$0.001223'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3419, 'output_tokens': 79, 'total_cost': 0.0012232, 'formatted_total_cost': '$0.001223'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3369, 'output_tokens': 79, 'total_cost': 0.0012082, 'formatted_total_cost': '$0.001208'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3369, 'output_tokens': 79, 'total_cost': 0.0012082, 'formatted_total_cost': '$0.001208'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 310, 'output_tokens': 3, 'total_cost': 0.0001005, 'formatted_total_cost': '$0.000101'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3492, 'output_tokens': 83, 'total_cost': 0.0012550999999999999, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3492, 'output_tokens': 83, 'total_cost': 0.0012550999999999999, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3475, 'output_tokens': 85, 'total_cost': 0.0012549999999999998, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3475, 'output_tokens': 85, 'total_cost': 0.0012549999999999998, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 315, 'output_tokens': 3, 'total_cost': 0.00010200000000000001, 'formatted_total_cost': '$0.000102'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3472, 'output_tokens': 73, 'total_cost': 0.0012240999999999999, 'formatted_total_cost': '$0.001224'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 561, 'output_tokens': 59, 'total_cost': 0.0003158, 'formatted_total_cost': '$0.000316'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 561, 'output_tokens': 59, 'total_cost': 0.0003158, 'formatted_total_cost': '$0.000316'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3487, 'output_tokens': 73, 'total_cost': 0.0012285999999999998, 'formatted_total_cost': '$0.001229'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 569, 'output_tokens': 75, 'total_cost': 0.0003581999999999999, 'formatted_total_cost': '$0.000358'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 569, 'output_tokens': 75, 'total_cost': 0.0003581999999999999, 'formatted_total_cost': '$0.000358'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 253, 'output_tokens': 3, 'total_cost': 8.340000000000001e-05, 'formatted_total_cost': '$0.000083'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3401, 'output_tokens': 84, 'total_cost': 0.0012303, 'formatted_total_cost': '$0.001230'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3401, 'output_tokens': 84, 'total_cost': 0.0012303, 'formatted_total_cost': '$0.001230'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3269, 'output_tokens': 84, 'total_cost': 0.0011906999999999998, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3269, 'output_tokens': 84, 'total_cost': 0.0011906999999999998, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 317, 'output_tokens': 3, 'total_cost': 0.0001026, 'formatted_total_cost': '$0.000103'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3333, 'output_tokens': 84, 'total_cost': 0.0012098999999999999, 'formatted_total_cost': '$0.001210'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3333, 'output_tokens': 84, 'total_cost': 0.0012098999999999999, 'formatted_total_cost': '$0.001210'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3270, 'output_tokens': 84, 'total_cost': 0.0011909999999999998, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3270, 'output_tokens': 84, 'total_cost': 0.0011909999999999998, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 317, 'output_tokens': 3, 'total_cost': 0.0001026, 'formatted_total_cost': '$0.000103'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3957, 'output_tokens': 76, 'total_cost': 0.0013770999999999998, 'formatted_total_cost': '$0.001377'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3957, 'output_tokens': 76, 'total_cost': 0.0013770999999999998, 'formatted_total_cost': '$0.001377'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3846, 'output_tokens': 76, 'total_cost': 0.0013438, 'formatted_total_cost': '$0.001344'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3846, 'output_tokens': 76, 'total_cost': 0.0013438, 'formatted_total_cost': '$0.001344'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 311, 'output_tokens': 3, 'total_cost': 0.00010080000000000001, 'formatted_total_cost': '$0.000101'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4166, 'output_tokens': 127, 'total_cost': 0.0015673000000000002, 'formatted_total_cost': '$0.001567'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4166, 'output_tokens': 127, 'total_cost': 0.0015673000000000002, 'formatted_total_cost': '$0.001567'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4229, 'output_tokens': 125, 'total_cost': 0.0015812, 'formatted_total_cost': '$0.001581'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4229, 'output_tokens': 125, 'total_cost': 0.0015812, 'formatted_total_cost': '$0.001581'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 283, 'output_tokens': 3, 'total_cost': 9.24e-05, 'formatted_total_cost': '$0.000092'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3452, 'output_tokens': 78, 'total_cost': 0.0012306, 'formatted_total_cost': '$0.001231'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3452, 'output_tokens': 78, 'total_cost': 0.0012306, 'formatted_total_cost': '$0.001231'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3273, 'output_tokens': 78, 'total_cost': 0.0011769, 'formatted_total_cost': '$0.001177'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3273, 'output_tokens': 78, 'total_cost': 0.0011769, 'formatted_total_cost': '$0.001177'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 315, 'output_tokens': 3, 'total_cost': 0.00010200000000000001, 'formatted_total_cost': '$0.000102'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3421, 'output_tokens': 84, 'total_cost': 0.0012362999999999999, 'formatted_total_cost': '$0.001236'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3421, 'output_tokens': 84, 'total_cost': 0.0012362999999999999, 'formatted_total_cost': '$0.001236'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3553, 'output_tokens': 80, 'total_cost': 0.0012659000000000001, 'formatted_total_cost': '$0.001266'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3553, 'output_tokens': 80, 'total_cost': 0.0012659000000000001, 'formatted_total_cost': '$0.001266'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 332, 'output_tokens': 3, 'total_cost': 0.0001071, 'formatted_total_cost': '$0.000107'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7385, 'output_tokens': 2009, 'total_cost': 0.007238, 'formatted_total_cost': '$0.007238'}]]",False,0,,,
+77996,nhanes,"This study will examine the relationship between glycohemoglobin (HbA1c) (%) levels and cognitive performance using a weighted linear regression analysis.
+The analysis will use NHANES data from the 2011-2014 period. The study population is limited to participants whose age in years at screening is 60 years and older. 
+Individuals will be excluded if they have missing data for any of the specified cognitive assessments: digit symbol substitution test (DSST), animal fluency score, and CERAD Score Trial 1 recall, CERAD Score Trial 2 recall, CERAD Score Trial 3 recall, and delayed word recall tasks. 
+Furthermore, participants with missing data on doctor told you have diabetes, glycohemoglobin (HbA1c) (%), or fasting plasma glucose (FPG) (mg/dL) will be excluded.
+The primary outcome of interest is the animal fluency score and the predictor is glycohemoglobin (HbA1c) percentage. 
+The analysis will adjust for several covariates: age (categorized as <70 or ≥70 years), gender, and race/Hispanic origin (categorized as Non-Hispanic White, Black, Non-Hispanic Asian, Mexican-American, and others).","Analysis Type: weighted linear regression
+
+Dataset: NHANES
+
+Period of Interest: 2011-2014
+
+Inclusion Criteria:
+- age in years at screening >= 60
+
+Exclusion Criteria:
+- missing digit symbol substitution test (DSST)
+- missing animal fluency score
+- missing CERAD Score Trial 1 recall
+- missing CERAD Score Trial 2 recall
+- missing CERAD Score Trial 3 recall
+- missing delayed word recall tasks
+- missing doctor told you have diabetes
+- missing glycohemoglobin (HbA1c) (%)
+- missing fasting plasma glucose (FPG) (mg/dL)
+
+Covariates:
+- age (in years) categorized as:
+  <70 years
+  >=70 years
+- gender
+- race/Hispanic origin categorized as:
+  Non-Hispanic White
+  Black
+  Non-Hispanic Asian
+  Mexican-American
+  others
+
+Predictor:
+- glycohemoglobin (HbA1c) (%)
+
+Outcome:
+- animal fluency score","{'dataset': 'NHANES', 'inclusion': [{'keyword': 'age in years at screening', 'derived': False, 'condition': '>= 60', 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}], 'exclusion': [{'keyword': 'digit symbol substitution test (dsst)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'digit_symbol_score', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'animal fluency score', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'animal_fluency_score_total', 'examples': ['3.0', '7.0', '33.0', '34.0', '35.0']}, {'keyword': 'cerad score trial 1 recall', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cerad_score_trial_1_recall', 'examples': ['0.0', '3.0', '5.0', '7.0', '8.0']}, {'keyword': 'cerad score trial 2 recall', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cerad_score_trial_2_recall', 'examples': ['0.0', '3.0', '5.0', '7.0', '8.0']}, {'keyword': 'cerad score trial 3 recall', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cerad_score_trial_3_recall', 'examples': ['0.0', '3.0', '5.0', '7.0', '8.0']}, {'keyword': 'delayed word recall tasks', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'cerad_score_delayed_recall', 'examples': ['0.0', '3.0', '5.0', '7.0', '8.0']}, {'keyword': 'doctor told you have diabetes', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '12.4', '13.2']}, {'keyword': 'fasting plasma glucose (fpg) (mg/dl)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'fasting_glucose_mg_dl', 'examples': ['76.0', '96.0', '154.0', '162.0', '174.0']}], 'covariates': [{'keyword': 'age (in years)', 'derived': True, 'depends_on': [{'keyword': 'age (in years)', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'labels': ['<70 years', '>=70 years']}}], 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}, {'keyword': 'gender', 'derived': False, 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['non-hispanic white', 'black', 'non-hispanic asian', 'mexican-american', 'others']}}], 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'predictor': [{'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '12.4', '13.2']}], 'outcome': [{'keyword': 'animal fluency score', 'derived': False, 'table': 'final_master_table', 'column': 'animal_fluency_score_total', 'examples': ['3.0', '7.0', '33.0', '34.0', '35.0']}]}","{'analysis_type': 'weighted linear regression', 'dataset': 'NHANES', 'period_of_interest': '2011-2014', 'inclusion': [{'keyword': 'age in years at screening', 'derived': False, 'condition': '>= 60', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}], 'exclusion': [{'keyword': 'digit symbol substitution test (dsst)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'digit_symbol_score', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'digit_symbol_score', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'animal fluency score', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'animal_fluency_score_total', 'example_values': ['3.0', '7.0', '33.0', '34.0', '35.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'animal_fluency_score_total', 'example_values': ['3.0', '7.0', '33.0', '34.0', '35.0']}]}, {'keyword': 'cerad score trial 1 recall', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'cerad_score_trial_1_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'cerad_score_trial_1_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}]}, {'keyword': 'cerad score trial 2 recall', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'cerad_score_trial_2_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'cerad_score_trial_2_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}]}, {'keyword': 'cerad score trial 3 recall', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'cerad_score_trial_3_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'cerad_score_trial_3_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}]}, {'keyword': 'delayed word recall tasks', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'cerad_score_delayed_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'cerad_score_delayed_recall', 'example_values': ['0.0', '3.0', '7.0', '8.0', '5.0']}]}, {'keyword': 'doctor told you have diabetes', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}]}, {'keyword': 'fasting plasma glucose (fpg) (mg/dl)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.glu_g', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '217.0', '76.0']}, {'cycle': '2013-2014', 'table': 'nhanes.glu_h', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '76.0', '96.0']}]}], 'covariates': [{'keyword': 'age (in years)', 'derived': True, 'depends_on': [{'keyword': 'age (in years)', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'labels': ['<70 years', '>=70 years']}}], 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'gender', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['non-hispanic white', 'black', 'non-hispanic asian', 'mexican-american', 'others']}}], 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'predictor': [{'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}]}], 'outcome': [{'keyword': 'animal fluency score', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.cfq_g', 'column': 'animal_fluency_score_total', 'example_values': ['3.0', '7.0', '33.0', '34.0', '35.0']}, {'cycle': '2013-2014', 'table': 'nhanes.cfq_h', 'column': 'animal_fluency_score_total', 'example_values': ['3.0', '7.0', '33.0', '34.0', '35.0']}]}]}",fasting,"-- STEP 1: Create temp_master_weight
+
+-- TEMP TABLE FOR weight
+DROP TABLE IF EXISTS temp_master_weight;
+
+CREATE TEMP TABLE temp_master_weight AS
+SELECT respondent_sequence_number, 
+       (fasting_subsample_2_year_mec_weight * 2.0 / 4.0) AS survey_weight
+FROM nhanes.glu_g
+WHERE fasting_subsample_2_year_mec_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (fasting_subsample_2_year_mec_weight * 2.0 / 4.0) AS survey_weight
+FROM nhanes.glu_h
+WHERE fasting_subsample_2_year_mec_weight IS NOT NULL;
+
+
+-- STEP 2: Create temp_psu_stratum
+
+-- TEMP TABLE FOR PSU and Stratum
+DROP TABLE IF EXISTS temp_psu_stratum;
+CREATE TEMP TABLE temp_psu_stratum AS
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_h;
+
+
+-- STEP 3: Create final weight+design table
+DROP TABLE IF EXISTS weight_design;
+CREATE TABLE weight_design AS
+SELECT 
+    s.respondent_sequence_number,
+    s.masked_variance_pseudo_psu,
+    s.masked_variance_pseudo_stratum,
+    w.survey_weight
+FROM temp_psu_stratum s
+INNER JOIN temp_master_weight w
+  ON s.respondent_sequence_number = w.respondent_sequence_number;
+
+
+
+
+-- TEMP TABLE FOR ""age (in years)"", ""age (in years)"", ""age in years at screening""
+DROP TABLE IF EXISTS temp_master_age_in_years_at_screening;
+CREATE TEMP TABLE temp_master_age_in_years_at_screening AS
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_in_years_at_screening ON temp_master_age_in_years_at_screening (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""digit symbol substitution test (dsst)""
+DROP TABLE IF EXISTS temp_master_digit_symbol_score;
+CREATE TEMP TABLE temp_master_digit_symbol_score AS
+SELECT respondent_sequence_number, ""digit_symbol_score"" AS ""digit_symbol_score""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""digit_symbol_score"" AS ""digit_symbol_score""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_digit_symbol_score ON temp_master_digit_symbol_score (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""animal fluency score"", ""animal fluency score""
+DROP TABLE IF EXISTS temp_master_animal_fluency_score_total;
+CREATE TEMP TABLE temp_master_animal_fluency_score_total AS
+SELECT respondent_sequence_number, ""animal_fluency_score_total"" AS ""animal_fluency_score_total""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""animal_fluency_score_total"" AS ""animal_fluency_score_total""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_animal_fluency_score_total ON temp_master_animal_fluency_score_total (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""cerad score trial 1 recall""
+DROP TABLE IF EXISTS temp_master_cerad_score_trial_1_recall;
+CREATE TEMP TABLE temp_master_cerad_score_trial_1_recall AS
+SELECT respondent_sequence_number, ""cerad_score_trial_1_recall"" AS ""cerad_score_trial_1_recall""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""cerad_score_trial_1_recall"" AS ""cerad_score_trial_1_recall""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cerad_score_trial_1_recall ON temp_master_cerad_score_trial_1_recall (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""cerad score trial 2 recall""
+DROP TABLE IF EXISTS temp_master_cerad_score_trial_2_recall;
+CREATE TEMP TABLE temp_master_cerad_score_trial_2_recall AS
+SELECT respondent_sequence_number, ""cerad_score_trial_2_recall"" AS ""cerad_score_trial_2_recall""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""cerad_score_trial_2_recall"" AS ""cerad_score_trial_2_recall""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cerad_score_trial_2_recall ON temp_master_cerad_score_trial_2_recall (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""cerad score trial 3 recall""
+DROP TABLE IF EXISTS temp_master_cerad_score_trial_3_recall;
+CREATE TEMP TABLE temp_master_cerad_score_trial_3_recall AS
+SELECT respondent_sequence_number, ""cerad_score_trial_3_recall"" AS ""cerad_score_trial_3_recall""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""cerad_score_trial_3_recall"" AS ""cerad_score_trial_3_recall""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cerad_score_trial_3_recall ON temp_master_cerad_score_trial_3_recall (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""delayed word recall tasks""
+DROP TABLE IF EXISTS temp_master_cerad_score_delayed_recall;
+CREATE TEMP TABLE temp_master_cerad_score_delayed_recall AS
+SELECT respondent_sequence_number, ""cerad_score_delayed_recall"" AS ""cerad_score_delayed_recall""
+FROM nhanes.cfq_g
+UNION ALL
+SELECT respondent_sequence_number, ""cerad_score_delayed_recall"" AS ""cerad_score_delayed_recall""
+FROM nhanes.cfq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_cerad_score_delayed_recall ON temp_master_cerad_score_delayed_recall (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""doctor told you have diabetes""
+DROP TABLE IF EXISTS temp_master_doctor_told_you_have_diabetes;
+CREATE TEMP TABLE temp_master_doctor_told_you_have_diabetes AS
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_doctor_told_you_have_diabetes ON temp_master_doctor_told_you_have_diabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""glycohemoglobin (hba1c) (%)"", ""glycohemoglobin (hba1c) (%)""
+DROP TABLE IF EXISTS temp_master_glycohemoglobin;
+CREATE TEMP TABLE temp_master_glycohemoglobin AS
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_g
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_glycohemoglobin ON temp_master_glycohemoglobin (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""fasting plasma glucose (fpg) (mg/dl)""
+DROP TABLE IF EXISTS temp_master_fasting_glucose_mg_dl;
+CREATE TEMP TABLE temp_master_fasting_glucose_mg_dl AS
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_g
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_fasting_glucose_mg_dl ON temp_master_fasting_glucose_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""gender""
+DROP TABLE IF EXISTS temp_master_gender;
+CREATE TEMP TABLE temp_master_gender AS
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_gender ON temp_master_gender (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""race/hispanic origin"", ""race/hispanic origin""
+DROP TABLE IF EXISTS temp_master_race_hispanic_origin;
+CREATE TEMP TABLE temp_master_race_hispanic_origin AS
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_h;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_race_hispanic_origin ON temp_master_race_hispanic_origin (respondent_sequence_number);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT respondent_sequence_number FROM temp_master_age_in_years_at_screening
+UNION
+SELECT respondent_sequence_number FROM temp_master_digit_symbol_score
+UNION
+SELECT respondent_sequence_number FROM temp_master_animal_fluency_score_total
+UNION
+SELECT respondent_sequence_number FROM temp_master_cerad_score_trial_1_recall
+UNION
+SELECT respondent_sequence_number FROM temp_master_cerad_score_trial_2_recall
+UNION
+SELECT respondent_sequence_number FROM temp_master_cerad_score_trial_3_recall
+UNION
+SELECT respondent_sequence_number FROM temp_master_cerad_score_delayed_recall
+UNION
+SELECT respondent_sequence_number FROM temp_master_doctor_told_you_have_diabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_glycohemoglobin
+UNION
+SELECT respondent_sequence_number FROM temp_master_fasting_glucose_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_gender
+UNION
+SELECT respondent_sequence_number FROM temp_master_race_hispanic_origin;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_respondent_sequence_number ON temp_all_ids (respondent_sequence_number);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.respondent_sequence_number,
+    t0.""age_in_years_at_screening"",
+    t1.""digit_symbol_score"",
+    t2.""animal_fluency_score_total"",
+    t3.""cerad_score_trial_1_recall"",
+    t4.""cerad_score_trial_2_recall"",
+    t5.""cerad_score_trial_3_recall"",
+    t6.""cerad_score_delayed_recall"",
+    t7.""doctor_told_you_have_diabetes"",
+    t8.""glycohemoglobin"",
+    t9.""fasting_glucose_mg_dl"",
+    t10.""gender"",
+    t11.""race_hispanic_origin""
+FROM temp_all_ids a
+LEFT JOIN temp_master_age_in_years_at_screening t0 ON a.respondent_sequence_number = t0.respondent_sequence_number 
+LEFT JOIN temp_master_digit_symbol_score t1 ON a.respondent_sequence_number = t1.respondent_sequence_number 
+LEFT JOIN temp_master_animal_fluency_score_total t2 ON a.respondent_sequence_number = t2.respondent_sequence_number 
+LEFT JOIN temp_master_cerad_score_trial_1_recall t3 ON a.respondent_sequence_number = t3.respondent_sequence_number 
+LEFT JOIN temp_master_cerad_score_trial_2_recall t4 ON a.respondent_sequence_number = t4.respondent_sequence_number 
+LEFT JOIN temp_master_cerad_score_trial_3_recall t5 ON a.respondent_sequence_number = t5.respondent_sequence_number 
+LEFT JOIN temp_master_cerad_score_delayed_recall t6 ON a.respondent_sequence_number = t6.respondent_sequence_number 
+LEFT JOIN temp_master_doctor_told_you_have_diabetes t7 ON a.respondent_sequence_number = t7.respondent_sequence_number 
+LEFT JOIN temp_master_glycohemoglobin t8 ON a.respondent_sequence_number = t8.respondent_sequence_number 
+LEFT JOIN temp_master_fasting_glucose_mg_dl t9 ON a.respondent_sequence_number = t9.respondent_sequence_number 
+LEFT JOIN temp_master_gender t10 ON a.respondent_sequence_number = t10.respondent_sequence_number 
+LEFT JOIN temp_master_race_hispanic_origin t11 ON a.respondent_sequence_number = t11.respondent_sequence_number;
+
+CREATE INDEX idx_final_master_respondent_sequence_number    
+    ON final_master_table (respondent_sequence_number);
+
+
+-- Clean up final_master_table
+DELETE FROM final_master_table
+WHERE respondent_sequence_number NOT IN (
+    SELECT respondent_sequence_number FROM weight_design
+);
+
+
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Includes all patients whose age in years at screening is 60 years and older
+CREATE TEMP TABLE temp_inclusion_step1 AS
+SELECT ""respondent_sequence_number""
+FROM final_master_table
+WHERE ""age_in_years_at_screening"" >= 60;
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude patients with missing digit symbol substitution test (DSST)
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""digit_symbol_score"" IS NOT NULL;
+
+-- STEP 2.2: Exclude patients with missing animal fluency score
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""animal_fluency_score_total"" IS NOT NULL;
+
+-- STEP 2.3: Exclude patients with missing CERAD Score Trial 1 recall
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""cerad_score_trial_1_recall"" IS NOT NULL;
+
+-- STEP 2.4: Exclude patients with missing CERAD Score Trial 2 recall
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step3 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""cerad_score_trial_2_recall"" IS NOT NULL;
+
+-- STEP 2.5: Exclude patients with missing CERAD Score Trial 3 recall
+CREATE TEMP TABLE temp_exclusion_step5 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step4 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""cerad_score_trial_3_recall"" IS NOT NULL;
+
+-- STEP 2.6: Exclude patients with missing delayed word recall tasks
+CREATE TEMP TABLE temp_exclusion_step6 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step5 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""cerad_score_delayed_recall"" IS NOT NULL;
+
+-- STEP 2.7: Exclude patients with missing doctor told you have diabetes
+CREATE TEMP TABLE temp_exclusion_step7 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step6 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""doctor_told_you_have_diabetes"" IS NOT NULL;
+
+-- STEP 2.8: Exclude patients with missing glycohemoglobin (HbA1c) (%)
+CREATE TEMP TABLE temp_exclusion_step8 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step7 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""glycohemoglobin"" IS NOT NULL;
+
+-- STEP 2.9: Exclude patients with missing fasting plasma glucose (FPG) (mg/dL)
+CREATE TEMP TABLE temp_exclusion_step9 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step8 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""fasting_glucose_mg_dl"" IS NOT NULL;
+
+-- ========== STEP 3: Final Cohort ==========
+
+-- The final temp table in the exclusion sequence becomes temp_cohort.
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""respondent_sequence_number""
+FROM temp_exclusion_step9;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Age (in years)
+-- Extract raw age for cohort
+CREATE TEMP TABLE temp_age_raw AS
+SELECT c.""respondent_sequence_number"",
+       f.""age_in_years_at_screening""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Bin age into custom categories
+CREATE TEMP TABLE temp_age_binned AS
+SELECT ""respondent_sequence_number"",
+       CASE
+           WHEN ""age_in_years_at_screening"" < 70 THEN '<70 years'
+           WHEN ""age_in_years_at_screening"" >= 70 THEN '>=70 years'
+           ELSE NULL
+       END AS ""age_in_years""
+FROM temp_age_raw;
+
+-- 4.2 Gender
+-- Extract gender for cohort
+CREATE TEMP TABLE temp_gender AS
+SELECT c.""respondent_sequence_number"",
+       f.""gender""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.3 Race/Hispanic origin
+-- Map race/hispanic origin to specified categories
+CREATE TEMP TABLE temp_race_hispanic_origin_mapped AS
+SELECT c.""respondent_sequence_number"",
+       CASE
+           WHEN f.""race_hispanic_origin"" = 'Non-Hispanic White' THEN 'non-hispanic white'
+           WHEN f.""race_hispanic_origin"" = 'Non-Hispanic Black' THEN 'black'
+           WHEN f.""race_hispanic_origin"" = 'Mexican American' THEN 'mexican-american'
+           WHEN f.""race_hispanic_origin"" = 'Other Hispanic' THEN 'others'
+           WHEN f.""race_hispanic_origin"" = 'Other Race - Including Multi-Racial' THEN 'others'
+           ELSE NULL
+       END AS ""race_hispanic_origin""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.4 Glycohemoglobin (HbA1c) (%)
+-- Extract glycohemoglobin for cohort
+CREATE TEMP TABLE temp_glycohemoglobin AS
+SELECT c.""respondent_sequence_number"",
+       f.""glycohemoglobin"" AS ""glycohemoglobin_hba1c""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.5 Animal fluency score
+-- Extract animal fluency score for cohort
+CREATE TEMP TABLE temp_animal_fluency_score AS
+SELECT c.""respondent_sequence_number"",
+       f.""animal_fluency_score_total"" AS ""animal_fluency_score""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- ========== STEP 5: Final Table ==========
+CREATE TEMP TABLE temp_final_table AS
+SELECT
+  c.""respondent_sequence_number"",
+  age.""age_in_years"",
+  g.""gender"",
+  rho.""race_hispanic_origin"",
+  gh.""glycohemoglobin_hba1c"",
+  afs.""animal_fluency_score""
+FROM temp_cohort c
+LEFT JOIN temp_age_binned age ON c.""respondent_sequence_number"" = age.""respondent_sequence_number""
+LEFT JOIN temp_gender g ON c.""respondent_sequence_number"" = g.""respondent_sequence_number""
+LEFT JOIN temp_race_hispanic_origin_mapped rho ON c.""respondent_sequence_number"" = rho.""respondent_sequence_number""
+LEFT JOIN temp_glycohemoglobin gh ON c.""respondent_sequence_number"" = gh.""respondent_sequence_number""
+LEFT JOIN temp_animal_fluency_score afs ON c.""respondent_sequence_number"" = afs.""respondent_sequence_number"";
+
+-- ========== STEP 6: Final Output ==========
+SELECT * FROM temp_final_table;
+
+-- STEP: Create merged final table with design variables + in_analysis flag
+DROP TABLE IF EXISTS temp_final_with_weights;
+
+CREATE TEMP TABLE temp_final_with_weights AS
+SELECT 
+    wd.""respondent_sequence_number"",
+    wd.""masked_variance_pseudo_psu"",
+    wd.""masked_variance_pseudo_stratum"",
+    wd.""survey_weight"",
+    CASE WHEN ft.""respondent_sequence_number"" IS NOT NULL THEN 1 ELSE 0 END AS ""in_analysis"",
+    ft.""age_in_years"",
+    ft.""gender"",
+    ft.""race_hispanic_origin"",
+    ft.""glycohemoglobin_hba1c"",
+    ft.""animal_fluency_score""
+FROM weight_design wd
+LEFT JOIN temp_final_table ft
+  ON wd.""respondent_sequence_number"" = ft.""respondent_sequence_number"";
+  
+-- Preview the result
+SELECT * FROM temp_final_with_weights;
+","    step_num                                                                                   step  remaining_after_step  excluded_at_step
+0          0                                      Total unique participants pooled from all sources                 19931               NaN
+1          1                      Participants with a valid survey weight (after initial filtering)                  6166           13765.0
+2          2  STEP 1.1: Includes all patients whose age in years at screening is 60 years and older                  1627            4539.0
+3          3          STEP 2.1: Exclude patients with missing digit symbol substitution test (DSST)                  1435             192.0
+4          4                           STEP 2.2: Exclude patients with missing animal fluency score                  1402              33.0
+5          5                     STEP 2.3: Exclude patients with missing CERAD Score Trial 1 recall                  1397               5.0
+6          6                     STEP 2.4: Exclude patients with missing CERAD Score Trial 2 recall                  1397               0.0
+7          7                     STEP 2.5: Exclude patients with missing CERAD Score Trial 3 recall                  1397               0.0
+8          8                      STEP 2.6: Exclude patients with missing delayed word recall tasks                  1396               1.0
+9          9                  STEP 2.7: Exclude patients with missing doctor told you have diabetes                  1395               1.0
+10        10                    STEP 2.8: Exclude patients with missing glycohemoglobin (HbA1c) (%)                  1361              34.0
+11        11           STEP 2.9: Exclude patients with missing fasting plasma glucose (FPG) (mg/dL)                  1351              10.0
+12        12                    The final temp table in the exclusion sequence becomes temp_cohort.                  1351               0.0
+13        13                                              ========== STEP 5: Final Table ==========                  1351               0.0","(6166, 10)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""respondent_sequence_number"")
+    outcome_vars <- c(""animal_fluency_score"")
+    weight_vars <- c(""survey_weight"",""masked_variance_pseudo_psu"",""masked_variance_pseudo_stratum"",""in_analysis"")
+
+    cohort <- df[df$in_analysis == 1, names(df) != ""in_analysis""]
+
+
+    outcome_roles <- c()
+    outcome_roles[""animal_fluency_score""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else if (name %in% weight_vars) {
+        category <- ""weight""
+        summary_info <- ""Weight variable"" 
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    weight_vars <- report$variable[report$category == ""weight""]; cat(""Weight Variables: ""); print(weight_vars); psu_var <- weight_vars[grepl(""psu"", weight_vars, ignore.case = TRUE)][1]; cat(""PSU:"", psu_var); stratum_var <- weight_vars[grepl(""stratum"", weight_vars, ignore.case = TRUE)][1]; cat(""Stratum:"", stratum_var); weight_var <- weight_vars[grepl(""weight"", weight_vars, ignore.case = TRUE)][1]; cat(""Weight:"", weight_var); in_analysis_var <- weight_vars[grepl(""in_analysis"", weight_vars, ignore.case = TRUE)][1]; cat(""In Analysis:"", in_analysis_var)
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+    library(survey)
+    options(survey.lonely.psu = ""adjust"")
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    formula <- as.formula(paste0(outcome_var, "" ~ "", paste(predictor_vars, collapse = "" + "")))
+
+            
+    
+    survey_design <- svydesign(
+        ids     = as.formula(paste0(""~"", psu_var)),
+        strata  = as.formula(paste0(""~"", stratum_var)),
+        weights = as.formula(paste0(""~"", weight_var)),
+        data    = df,
+        nest    = TRUE
+        )
+    survey_design <- subset(survey_design, in_analysis ==1)
+        
+    
+            model <- svyglm(formula,
+    design = survey_design,
+    family = gaussian()) 
+            
+    
+    result_table <- tidy(model, conf.int = TRUE) %>%
+            select(term, estimate, p.value, conf.low, conf.high)
+            
+    ","[{'variable': 'respondent_sequence_number', 'category': 'identifier', 'n_unique': 1351, 'na_count': 0, 'summary': 'Total rows = 1351'}, {'variable': 'masked_variance_pseudo_psu', 'category': 'weight', 'n_unique': 3, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'masked_variance_pseudo_stratum', 'category': 'weight', 'n_unique': 29, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'survey_weight', 'category': 'weight', 'n_unique': 1276, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'age_in_years', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': '<70 years: 53.1%; >=70 years: 46.9%'}, {'variable': 'gender', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'Female: 50.8%; Male: 49.2%'}, {'variable': 'race_hispanic_origin', 'category': 'categorical', 'n_unique': 4, 'na_count': 0, 'summary': 'black: 20.4%; mexican-american: 8.8%; non-hispanic white: 50.5%; others: 20.4%'}, {'variable': 'glycohemoglobin_hba1c', 'category': 'numerical', 'n_unique': 67, 'na_count': 0, 'summary': 'mean = 6.06, sd = 1.06'}, {'variable': 'animal_fluency_score', 'category': 'outcome', 'n_unique': 35, 'na_count': 0, 'summary': 'mean = 16.682, sd = 5.441'}]","[{'term': '(Intercept)', 'estimate': 23.266884014269152, 'p.value': 1.898424216922864e-14, 'conf.low': 20.119821094193604, 'conf.high': 26.4139469343447}, {'term': 'age_in_years>=70 years', 'estimate': -3.2349523318132816, 'p.value': 3.154200898059175e-11, 'conf.low': -3.8427010494419815, 'conf.high': -2.6272036141845816}, {'term': 'genderMale', 'estimate': 0.3468812345506019, 'p.value': 0.3813703724426538, 'conf.low': -0.4538311237960952, 'conf.high': 1.147593592897299}, {'term': 'race_hispanic_originblack', 'estimate': -3.8937834005705643, 'p.value': 1.11808922811611e-09, 'conf.low': -4.761858465722374, 'conf.high': -3.025708335418755}, {'term': 'race_hispanic_originmexican-american', 'estimate': -2.943888794226657, 'p.value': 1.002596908116041e-05, 'conf.low': -4.052196061293591, 'conf.high': -1.8355815271597236}, {'term': 'race_hispanic_originothers', 'estimate': -2.966711244572022, 'p.value': 0.00019663211479747678, 'conf.low': -4.3749073822936415, 'conf.high': -1.558515106850402}, {'term': 'glycohemoglobin_hba1c', 'estimate': -0.5499008451240112, 'p.value': 0.029432366995138137, 'conf.low': -1.0403772408315775, 'conf.high': -0.05942444941644481}]",,,,weighted linear regression,2011-2014,"[[2011, 2012], [2013, 2014]]",google_gemini-2.5-flash,Pass,[],,171.212109,"[[{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 682, 'output_tokens': 1, 'total_cost': 0.0002071, 'formatted_total_cost': '$0.000207'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 1889, 'output_tokens': 229, 'total_cost': 0.0011392, 'formatted_total_cost': '$0.001139'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 2624, 'output_tokens': 819, 'total_cost': 0.0028347, 'formatted_total_cost': '$0.002835'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3492, 'output_tokens': 83, 'total_cost': 0.0012550999999999999, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3492, 'output_tokens': 83, 'total_cost': 0.0012550999999999999, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3475, 'output_tokens': 83, 'total_cost': 0.0012499999999999998, 'formatted_total_cost': '$0.001250'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3475, 'output_tokens': 83, 'total_cost': 0.0012499999999999998, 'formatted_total_cost': '$0.001250'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 315, 'output_tokens': 3, 'total_cost': 0.00010200000000000001, 'formatted_total_cost': '$0.000102'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3401, 'output_tokens': 84, 'total_cost': 0.0012303, 'formatted_total_cost': '$0.001230'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3401, 'output_tokens': 84, 'total_cost': 0.0012303, 'formatted_total_cost': '$0.001230'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3269, 'output_tokens': 84, 'total_cost': 0.0011906999999999998, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3269, 'output_tokens': 84, 'total_cost': 0.0011906999999999998, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 317, 'output_tokens': 3, 'total_cost': 0.0001026, 'formatted_total_cost': '$0.000103'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3472, 'output_tokens': 75, 'total_cost': 0.0012291, 'formatted_total_cost': '$0.001229'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 570, 'output_tokens': 59, 'total_cost': 0.0003185, 'formatted_total_cost': '$0.000318'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 570, 'output_tokens': 59, 'total_cost': 0.0003185, 'formatted_total_cost': '$0.000318'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3487, 'output_tokens': 73, 'total_cost': 0.0012285999999999998, 'formatted_total_cost': '$0.001229'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 566, 'output_tokens': 59, 'total_cost': 0.00031729999999999996, 'formatted_total_cost': '$0.000317'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 566, 'output_tokens': 59, 'total_cost': 0.00031729999999999996, 'formatted_total_cost': '$0.000317'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 253, 'output_tokens': 3, 'total_cost': 8.340000000000001e-05, 'formatted_total_cost': '$0.000083'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3303, 'output_tokens': 78, 'total_cost': 0.0011859, 'formatted_total_cost': '$0.001186'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3303, 'output_tokens': 78, 'total_cost': 0.0011859, 'formatted_total_cost': '$0.001186'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3524, 'output_tokens': 78, 'total_cost': 0.0012522, 'formatted_total_cost': '$0.001252'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3524, 'output_tokens': 78, 'total_cost': 0.0012522, 'formatted_total_cost': '$0.001252'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 314, 'output_tokens': 3, 'total_cost': 0.0001017, 'formatted_total_cost': '$0.000102'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3642, 'output_tokens': 103, 'total_cost': 0.0013501, 'formatted_total_cost': '$0.001350'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3642, 'output_tokens': 103, 'total_cost': 0.0013501, 'formatted_total_cost': '$0.001350'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3728, 'output_tokens': 101, 'total_cost': 0.0013709, 'formatted_total_cost': '$0.001371'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3728, 'output_tokens': 101, 'total_cost': 0.0013709, 'formatted_total_cost': '$0.001371'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 318, 'output_tokens': 3, 'total_cost': 0.0001029, 'formatted_total_cost': '$0.000103'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3421, 'output_tokens': 84, 'total_cost': 0.0012362999999999999, 'formatted_total_cost': '$0.001236'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3421, 'output_tokens': 84, 'total_cost': 0.0012362999999999999, 'formatted_total_cost': '$0.001236'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3553, 'output_tokens': 82, 'total_cost': 0.0012709000000000002, 'formatted_total_cost': '$0.001271'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3553, 'output_tokens': 82, 'total_cost': 0.0012709000000000002, 'formatted_total_cost': '$0.001271'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 332, 'output_tokens': 3, 'total_cost': 0.0001071, 'formatted_total_cost': '$0.000107'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3628, 'output_tokens': 76, 'total_cost': 0.0012784, 'formatted_total_cost': '$0.001278'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3628, 'output_tokens': 76, 'total_cost': 0.0012784, 'formatted_total_cost': '$0.001278'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3658, 'output_tokens': 78, 'total_cost': 0.0012924, 'formatted_total_cost': '$0.001292'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3658, 'output_tokens': 78, 'total_cost': 0.0012924, 'formatted_total_cost': '$0.001292'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 314, 'output_tokens': 3, 'total_cost': 0.0001017, 'formatted_total_cost': '$0.000102'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3452, 'output_tokens': 78, 'total_cost': 0.0012306, 'formatted_total_cost': '$0.001231'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3452, 'output_tokens': 78, 'total_cost': 0.0012306, 'formatted_total_cost': '$0.001231'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3273, 'output_tokens': 78, 'total_cost': 0.0011769, 'formatted_total_cost': '$0.001177'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3273, 'output_tokens': 78, 'total_cost': 0.0011769, 'formatted_total_cost': '$0.001177'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 315, 'output_tokens': 3, 'total_cost': 0.00010200000000000001, 'formatted_total_cost': '$0.000102'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3333, 'output_tokens': 84, 'total_cost': 0.0012098999999999999, 'formatted_total_cost': '$0.001210'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3333, 'output_tokens': 84, 'total_cost': 0.0012098999999999999, 'formatted_total_cost': '$0.001210'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3270, 'output_tokens': 84, 'total_cost': 0.0011909999999999998, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3270, 'output_tokens': 84, 'total_cost': 0.0011909999999999998, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 317, 'output_tokens': 3, 'total_cost': 0.0001026, 'formatted_total_cost': '$0.000103'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4166, 'output_tokens': 127, 'total_cost': 0.0015673000000000002, 'formatted_total_cost': '$0.001567'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4166, 'output_tokens': 127, 'total_cost': 0.0015673000000000002, 'formatted_total_cost': '$0.001567'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4229, 'output_tokens': 125, 'total_cost': 0.0015812, 'formatted_total_cost': '$0.001581'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4229, 'output_tokens': 125, 'total_cost': 0.0015812, 'formatted_total_cost': '$0.001581'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 283, 'output_tokens': 3, 'total_cost': 9.24e-05, 'formatted_total_cost': '$0.000092'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3419, 'output_tokens': 79, 'total_cost': 0.0012232, 'formatted_total_cost': '$0.001223'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3419, 'output_tokens': 79, 'total_cost': 0.0012232, 'formatted_total_cost': '$0.001223'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3369, 'output_tokens': 79, 'total_cost': 0.0012082, 'formatted_total_cost': '$0.001208'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3369, 'output_tokens': 79, 'total_cost': 0.0012082, 'formatted_total_cost': '$0.001208'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 310, 'output_tokens': 3, 'total_cost': 0.0001005, 'formatted_total_cost': '$0.000101'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3517, 'output_tokens': 103, 'total_cost': 0.0013126, 'formatted_total_cost': '$0.001313'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3517, 'output_tokens': 103, 'total_cost': 0.0013126, 'formatted_total_cost': '$0.001313'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3499, 'output_tokens': 103, 'total_cost': 0.0013072, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3499, 'output_tokens': 103, 'total_cost': 0.0013072, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 319, 'output_tokens': 3, 'total_cost': 0.0001032, 'formatted_total_cost': '$0.000103'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3364, 'output_tokens': 86, 'total_cost': 0.0012242, 'formatted_total_cost': '$0.001224'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3364, 'output_tokens': 86, 'total_cost': 0.0012242, 'formatted_total_cost': '$0.001224'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3273, 'output_tokens': 84, 'total_cost': 0.0011918999999999999, 'formatted_total_cost': '$0.001192'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3273, 'output_tokens': 84, 'total_cost': 0.0011918999999999999, 'formatted_total_cost': '$0.001192'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 317, 'output_tokens': 3, 'total_cost': 0.0001026, 'formatted_total_cost': '$0.000103'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 7384, 'output_tokens': 1970, 'total_cost': 0.007140199999999999, 'formatted_total_cost': '$0.007140'}]]",False,0,,,

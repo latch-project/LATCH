@@ -1,0 +1,1028 @@
+Title,Schema,Question,Structured Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log
+82941,nhanes,"We will plan to do a weighted logistic regression using exam weights from NHANES data from 2007-2018. 
+We will include participants who has diabetes when diabetes is defined as meeting any of the following requirements: reported ""yes"" when asked ""doctor told you have diabetes"", or fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L, or glycohemoglobin (HbA1c) (%) ≥6.5%, or who takes diabetic pills to lower blood sugar.
+We will exclude participants whose age at screening is less than 20, who were pregnant at the time of the exam, and had missing values of weight (kg), waist circumference (cm).
+We will exclude participants who are missing gender, race/Hispanic origin, urine albumin (mg/L), or urine creatinine (mg/dL), serum creatinine (mg/dl). 
+The predictor is weight-adjusted-waist (wwi) ratio which is calculated as waist circumference (cm) divided by the square root of weight(kg), categorized as quartiles(%) Q1: ≤25, Q2: >25 and ≤50, Q3: >50 and ≤75, Q4: >75.
+The outcome of interest is the presence of kidney disease, defined as either an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or a urine albumin-to-creatinine ratio (UACR) (mg/g) of 30 mg/g or greater. 
+eGFR can be calculated using gender, serum creatinine (mg/dl), age at screening, race/Hispanic origin information for 4 different cases: 
+1. if gender is female and race/Hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+2. if gender is female and race/Hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+3. if gender is male and race/Hispanic origin is Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+4. if gender is male and race/Hispanic origin is not Non-Hispanic Black : 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+urine albumin-to-creatinine ratio (mg/g) is calculated as 100*(urine albumin mg/L / urine creatinine mg/dL).
+Adjust the analysis for race/Hispanic origin (white and non white), gender, and age at screening (<60 and >=60).","Analysis Type: weighted logistic regression (exam)
+
+Dataset: NHANES
+
+Period of Interest: 2007-2018
+
+Inclusion Criteria:
+- diabetes defined as meeting any of the following:
+    - reported ""yes"" to ""doctor told you have diabetes""
+    - fasting plasma glucose (FPG, mmol/L) ≥7.0 mmol/L
+    - glycohemoglobin (HbA1c) (%) ≥6.5%
+    - takes diabetic pills to lower blood sugar
+
+Exclusion Criteria:
+- age at screening < 20
+- pregnant at the time of the exam
+- missing weight (kg)
+- missing waist circumference (cm)
+- missing gender
+- missing race/Hispanic origin
+- missing urine albumin (mg/L)
+- missing urine creatinine (mg/dL)
+- missing serum creatinine (mg/dl)
+
+Covariates:
+- race/Hispanic origin categorized as:
+    - white
+    - non white
+- gender
+- age at screening categorized as:
+    - <60
+    - ≥60
+
+Predictor:
+- weight-adjusted-waist (wwi) ratio calculated as:
+    wwi = waist circumference (cm) / sqrt(weight (kg))
+  categorized as quartiles:
+    Q1: ≤25%
+    Q2: >25% and ≤50%
+    Q3: >50% and ≤75%
+    Q4: >75%
+
+Outcome:
+- presence of kidney disease (binary: 1 if present, 0 if not), defined as meeting either of the following:
+    (1) estimated glomerular filtration rate (eGFR) < 60 mL/min/1.73m^2
+        - eGFR calculated as:
+            1. if gender = female and race/Hispanic origin = Non-Hispanic Black:
+                eGFR = 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159
+            2. if gender = female and race/Hispanic origin ≠ Non-Hispanic Black:
+                eGFR = 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018
+            3. if gender = male and race/Hispanic origin = Non-Hispanic Black:
+                eGFR = 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159
+            4. if gender = male and race/Hispanic origin ≠ Non-Hispanic Black:
+                eGFR = 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)
+    OR
+    (2) urine albumin-to-creatinine ratio (UACR) (mg/g) ≥ 30 mg/g
+        - UACR (mg/g) calculated as:
+            UACR = 100 * (urine albumin (mg/L) / urine creatinine (mg/dL))","{'dataset': 'nhanes', 'inclusion': [{'keyword': 'diabetes', 'derived': True, 'depends_on': [{'keyword': 'doctor told you have diabetes', 'derived': False, 'condition': '=yes', 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'fasting plasma glucose (fpg, mmol/l)', 'derived': False, 'condition': '>=7.0', 'table': 'final_master_table', 'column': 'fasting_glucose_mmol_l', 'examples': ['3.497', '5.162', '5.33', '5.38', '7.16']}, {'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'condition': '>=6.5', 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '12.4', '13.2']}, {'keyword': 'takes diabetic pills to lower blood sugar', 'derived': False, 'condition': '=yes', 'table': 'final_master_table', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'examples': ['No', 'Yes']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['doctor told you have diabetes = yes', 'fasting plasma glucose (fpg, mmol/l) >= 7.0', 'glycohemoglobin (hba1c) (%) >= 6.5', 'takes diabetic pills to lower blood sugar = yes']}}]}], 'exclusion': [{'keyword': 'age at screening', 'derived': False, 'condition': '< 20', 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'pregnant at the time of the exam', 'derived': False, 'table': 'final_master_table', 'column': 'pregnancy_status_at_exam', 'examples': ['Cannot ascertain if SP is pregnant at exam', 'Cannot ascertain if the participant is pregnant at exam', 'SP not pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'keyword': 'weight (kg)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'weight_kg', 'examples': ['14.1', '24.6', '44.6', '60.5', '79.2']}, {'keyword': 'waist circumference (cm)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'waist_circumference_cm', 'examples': ['44.6', '60.5', '79.2', '121.7', '132.7']}, {'keyword': 'gender', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/hispanic origin', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'keyword': 'urine albumin (mg/l)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'albumin_urine_mg_l', 'examples': ['0.8', '4.8', '14.1', '24.2', '24.6']}, {'keyword': 'urine creatinine (mg/dl)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'creatinine_urine_mg_dl', 'examples': ['96.0', '154.0', '174.0', '322.0', '346.0']}, {'keyword': 'serum creatinine (mg/dl)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'creatinine_mg_dl', 'examples': ['0.54', '0.58', '0.66', '0.7', '0.76']}], 'covariates': [{'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['white', 'non white']}}], 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'keyword': 'gender', 'derived': False, 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'age at screening', 'derived': True, 'depends_on': [{'keyword': 'age at screening', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'cutpoints', 'labels': ['<60', '≥60']}}], 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}], 'predictor': [{'keyword': 'weight-adjusted-waist (wwi) ratio', 'derived': True, 'depends_on': [{'keyword': 'waist circumference (cm)', 'derived': False, 'table': 'final_master_table', 'column': 'waist_circumference_cm', 'examples': ['44.6', '60.5', '79.2', '121.7', '132.7']}, {'keyword': 'weight (kg)', 'derived': False, 'table': 'final_master_table', 'column': 'weight_kg', 'examples': ['14.1', '24.6', '44.6', '60.5', '79.2']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'wwi = waist circumference (cm) / sqrt(weight (kg))'}}, {'step': 2, 'derivation_method': {'type': 'binning', 'strategy': 'quantiles', 'num_bins': 4, 'labels': ['q1: ≤25%', 'q2: >25% and ≤50%', 'q3: >50% and ≤75%', 'q4: >75%']}}]}], 'outcome': [{'keyword': 'presence of kidney disease', 'derived': True, 'depends_on': [{'keyword': 'serum creatinine (mg/dl)', 'derived': False, 'table': 'final_master_table', 'column': 'creatinine_mg_dl', 'examples': ['0.54', '0.58', '0.66', '0.7', '0.76']}, {'keyword': 'gender', 'derived': False, 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/hispanic origin', 'derived': False, 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'keyword': 'age at screening', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '3.0', '61.0', '62.0', '63.0']}, {'keyword': 'urine albumin (mg/l)', 'derived': False, 'table': 'final_master_table', 'column': 'albumin_urine_mg_l', 'examples': ['0.8', '4.8', '14.1', '24.2', '24.6']}, {'keyword': 'urine creatinine (mg/dl)', 'derived': False, 'table': 'final_master_table', 'column': 'creatinine_urine_mg_dl', 'examples': ['96.0', '154.0', '174.0', '322.0', '346.0']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'egfr calculated by CKD-EPI equation with gender and race/hispanic origin specific coefficients', 'logic': [{'condition': 'gender = female and race/hispanic origin = non-hispanic black', 'formula': 'egfr = 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159'}, {'condition': 'gender = female and race/hispanic origin ≠ non-hispanic black', 'formula': 'egfr = 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018'}, {'condition': 'gender = male and race/hispanic origin = non-hispanic black', 'formula': 'egfr = 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159'}, {'condition': 'gender = male and race/hispanic origin ≠ non-hispanic black', 'formula': 'egfr = 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)'}], 'output': 'egfr'}}, {'step': 2, 'derivation_method': {'type': 'formula', 'description': 'uacr (mg/g) = 100 * (urine albumin (mg/l) / urine creatinine (mg/dl))'}}, {'step': 3, 'derivation_method': {'type': 'boolean_or', 'criteria': [{'condition': 'egfr < 60'}, {'condition': 'uacr (mg/g) ≥ 30'}]}}, {'step': 4, 'derivation_method': {'type': 'mapping', 'labels': ['1', '0']}}]}]}","{'analysis_type': 'weighted logistic regression (exam)', 'dataset': 'nhanes', 'period_of_interest': '2007-2018', 'inclusion': [{'keyword': 'diabetes', 'derived': True, 'depends_on': [{'keyword': 'doctor told you have diabetes', 'derived': False, 'condition': '=yes', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2017-2018', 'table': 'nhanes.diq_j', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'fasting plasma glucose (fpg, mmol/l)', 'derived': False, 'condition': '>=7.0', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.glu_g', 'column': 'fasting_glucose_mmol_l', 'example_values': ['5.162', '7.161', '8.937', '7.327', '17.819']}, {'cycle': '2013-2014', 'table': 'nhanes.glu_h', 'column': 'fasting_glucose_mmol_l', 'example_values': ['10.769', '14.1', '5.162', '8.937', '7.161']}, {'cycle': '2007-2008', 'table': 'nhanes.glu_e', 'column': 'fasting_glucose_mmol_l', 'example_values': ['5.162', '7.161', '7.327', '10.325', '23.425']}, {'cycle': '2009-2010', 'table': 'nhanes.glu_f', 'column': 'fasting_glucose_mmol_l', 'example_values': ['5.162', '7.161', '8.937', '7.327', '3.497']}, {'cycle': '2015-2016', 'table': 'nhanes.glu_i', 'column': 'fasting_glucose_mmol_l', 'example_values': ['5.38', '12.4', '8.38', '14.7', '5.33']}, {'cycle': '2017-2018', 'table': 'nhanes.glu_j', 'column': 'fasting_glucose_mmol_l', 'example_values': ['5.38', '12.4', '8.38', '13.2', '7.16']}]}, {'keyword': 'glycohemoglobin (hba1c) (%)', 'derived': False, 'condition': '>=6.5', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}, {'cycle': '2007-2008', 'table': 'nhanes.ghb_e', 'column': 'glycohemoglobin', 'example_values': ['12.4', '14.7', '13.2', '5.8', '4.8']}, {'cycle': '2009-2010', 'table': 'nhanes.ghb_f', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2015-2016', 'table': 'nhanes.ghb_i', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2017-2018', 'table': 'nhanes.ghb_j', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}]}, {'keyword': 'takes diabetic pills to lower blood sugar', 'derived': False, 'condition': '=yes', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2007-2008', 'table': 'nhanes.diq_e', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2009-2010', 'table': 'nhanes.diq_f', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2017-2018', 'table': 'nhanes.diq_j', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['doctor told you have diabetes = yes', 'fasting plasma glucose (fpg, mmol/l) >= 7.0', 'glycohemoglobin (hba1c) (%) >= 6.5', 'takes diabetic pills to lower blood sugar = yes']}}]}], 'exclusion': [{'keyword': 'age at screening', 'derived': False, 'condition': '< 20', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}]}, {'keyword': 'pregnant at the time of the exam', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if the participant is pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if the participant is pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if SP is pregnant at exam', 'SP not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if SP is pregnant at exam', 'SP not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if the participant is pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if the participant is pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}]}, {'keyword': 'weight (kg)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.bmx_g', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}, {'cycle': '2013-2014', 'table': 'nhanes.bmx_h', 'column': 'weight_kg', 'example_values': ['14.1', '121.7', '60.5', '79.2', '44.6']}, {'cycle': '2007-2008', 'table': 'nhanes.bmx_e', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '211.7', '79.2']}, {'cycle': '2009-2010', 'table': 'nhanes.bmx_f', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}, {'cycle': '2015-2016', 'table': 'nhanes.bmx_i', 'column': 'weight_kg', 'example_values': ['24.6', '192.3', '121.7', '14.1', '60.5']}, {'cycle': '2017-2018', 'table': 'nhanes.bmx_j', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}]}, {'keyword': 'waist circumference (cm)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.bmx_g', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2013-2014', 'table': 'nhanes.bmx_h', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2007-2008', 'table': 'nhanes.bmx_e', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2009-2010', 'table': 'nhanes.bmx_f', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2015-2016', 'table': 'nhanes.bmx_i', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '132.7', '136.2']}, {'cycle': '2017-2018', 'table': 'nhanes.bmx_j', 'column': 'waist_circumference_cm', 'example_values': ['153.2', '121.7', '60.5', '79.2', '44.6']}]}, {'keyword': 'gender', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/hispanic origin', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}, {'keyword': 'urine albumin (mg/l)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.alb_cr_g', 'column': 'albumin_urine_mg_l', 'example_values': ['7410.0', '57.0', '145.4', '31.5', '24.2']}, {'cycle': '2013-2014', 'table': 'nhanes.alb_cr_h', 'column': 'albumin_urine_mg_l', 'example_values': ['154.0', '717.5', '1640.0', '96.0', '4.8']}, {'cycle': '2007-2008', 'table': 'nhanes.alb_cr_e', 'column': 'albumin_urine_mg_l', 'example_values': ['24.6', '0.8', '797.0', '14.1', '1868.0']}, {'cycle': '2009-2010', 'table': 'nhanes.alb_cr_f', 'column': 'albumin_urine_mg_l', 'example_values': ['153.2', '14.1', '60.5', '4.8', '61.0']}, {'cycle': '2015-2016', 'table': 'nhanes.alb_cr_i', 'column': 'albumin_urine_mg_l', 'example_values': ['79.2', '44.6', '136.2', '76.1', '4.8']}, {'cycle': '2017-2018', 'table': 'nhanes.alb_cr_j', 'column': 'albumin_urine_mg_l', 'example_values': ['14.1', '60.5', '1860.0', '79.2', '44.6']}]}, {'keyword': 'urine creatinine (mg/dl)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.alb_cr_g', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '96.0', '322.0']}, {'cycle': '2013-2014', 'table': 'nhanes.um_h', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '96.0', '322.0']}, {'cycle': '2007-2008', 'table': 'nhanes.alb_cr_e', 'column': 'creatinine_urine_mg_dl', 'example_values': ['519.0', '154.0', '346.0', '174.0', '96.0']}, {'cycle': '2009-2010', 'table': 'nhanes.alb_cr_f', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '547.0', '96.0']}, {'cycle': '2015-2016', 'table': 'nhanes.alb_cr_i', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '96.0', '322.0']}, {'cycle': '2017-2018', 'table': 'nhanes.alb_cr_j', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '615.0', '346.0', '174.0', '96.0']}]}, {'keyword': 'serum creatinine (mg/dl)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'creatinine_mg_dl', 'example_values': ['0.66', '1.36', '1.15', '2.11', '4.27']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'creatinine_mg_dl', 'example_values': ['1.45', '2.16', '2.06', '4.35', '0.58']}, {'cycle': '2007-2008', 'table': 'nhanes.biopro_e', 'column': 'creatinine_mg_dl', 'example_values': ['2.79', '0.54', '2.1', '2.12', '2.06']}, {'cycle': '2009-2010', 'table': 'nhanes.biopro_f', 'column': 'creatinine_mg_dl', 'example_values': ['0.54', '1.45', '2.1', '2.12', '2.06']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'creatinine_mg_dl', 'example_values': ['0.7', '0.76', '1.18', '0.94', '0.93']}, {'cycle': '2017-2018', 'table': 'nhanes.biopro_j', 'column': 'creatinine_mg_dl', 'example_values': ['6.19', '0.66', '1.36', '1.15', '6.75']}]}], 'covariates': [{'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['white', 'non white']}}], 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}, {'keyword': 'gender', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'age at screening', 'derived': True, 'depends_on': [{'keyword': 'age at screening', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'cutpoints', 'labels': ['<60', '≥60']}}], 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}]}], 'predictor': [{'keyword': 'weight-adjusted-waist (wwi) ratio', 'derived': True, 'depends_on': [{'keyword': 'waist circumference (cm)', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.bmx_g', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2013-2014', 'table': 'nhanes.bmx_h', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2007-2008', 'table': 'nhanes.bmx_e', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2009-2010', 'table': 'nhanes.bmx_f', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '44.6', '132.7']}, {'cycle': '2015-2016', 'table': 'nhanes.bmx_i', 'column': 'waist_circumference_cm', 'example_values': ['121.7', '60.5', '79.2', '132.7', '136.2']}, {'cycle': '2017-2018', 'table': 'nhanes.bmx_j', 'column': 'waist_circumference_cm', 'example_values': ['153.2', '121.7', '60.5', '79.2', '44.6']}]}, {'keyword': 'weight (kg)', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.bmx_g', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}, {'cycle': '2013-2014', 'table': 'nhanes.bmx_h', 'column': 'weight_kg', 'example_values': ['14.1', '121.7', '60.5', '79.2', '44.6']}, {'cycle': '2007-2008', 'table': 'nhanes.bmx_e', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '211.7', '79.2']}, {'cycle': '2009-2010', 'table': 'nhanes.bmx_f', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}, {'cycle': '2015-2016', 'table': 'nhanes.bmx_i', 'column': 'weight_kg', 'example_values': ['24.6', '192.3', '121.7', '14.1', '60.5']}, {'cycle': '2017-2018', 'table': 'nhanes.bmx_j', 'column': 'weight_kg', 'example_values': ['121.7', '14.1', '60.5', '79.2', '44.6']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'wwi = waist circumference (cm) / sqrt(weight (kg))'}}, {'step': 2, 'derivation_method': {'type': 'binning', 'strategy': 'quantiles', 'num_bins': 4, 'labels': ['q1: ≤25%', 'q2: >25% and ≤50%', 'q3: >50% and ≤75%', 'q4: >75%']}}]}], 'outcome': [{'keyword': 'presence of kidney disease', 'derived': True, 'depends_on': [{'keyword': 'serum creatinine (mg/dl)', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.biopro_g', 'column': 'creatinine_mg_dl', 'example_values': ['0.66', '1.36', '1.15', '2.11', '4.27']}, {'cycle': '2013-2014', 'table': 'nhanes.biopro_h', 'column': 'creatinine_mg_dl', 'example_values': ['1.45', '2.16', '2.06', '4.35', '0.58']}, {'cycle': '2007-2008', 'table': 'nhanes.biopro_e', 'column': 'creatinine_mg_dl', 'example_values': ['2.79', '0.54', '2.1', '2.12', '2.06']}, {'cycle': '2009-2010', 'table': 'nhanes.biopro_f', 'column': 'creatinine_mg_dl', 'example_values': ['0.54', '1.45', '2.1', '2.12', '2.06']}, {'cycle': '2015-2016', 'table': 'nhanes.biopro_i', 'column': 'creatinine_mg_dl', 'example_values': ['0.7', '0.76', '1.18', '0.94', '0.93']}, {'cycle': '2017-2018', 'table': 'nhanes.biopro_j', 'column': 'creatinine_mg_dl', 'example_values': ['6.19', '0.66', '1.36', '1.15', '6.75']}]}, {'keyword': 'gender', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/hispanic origin', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}, {'keyword': 'age at screening', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2007-2008', 'table': 'nhanes.demo_e', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}, {'cycle': '2009-2010', 'table': 'nhanes.demo_f', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2017-2018', 'table': 'nhanes.demo_j', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '3.0']}]}, {'keyword': 'urine albumin (mg/l)', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.alb_cr_g', 'column': 'albumin_urine_mg_l', 'example_values': ['7410.0', '57.0', '145.4', '31.5', '24.2']}, {'cycle': '2013-2014', 'table': 'nhanes.alb_cr_h', 'column': 'albumin_urine_mg_l', 'example_values': ['154.0', '717.5', '1640.0', '96.0', '4.8']}, {'cycle': '2007-2008', 'table': 'nhanes.alb_cr_e', 'column': 'albumin_urine_mg_l', 'example_values': ['24.6', '0.8', '797.0', '14.1', '1868.0']}, {'cycle': '2009-2010', 'table': 'nhanes.alb_cr_f', 'column': 'albumin_urine_mg_l', 'example_values': ['153.2', '14.1', '60.5', '4.8', '61.0']}, {'cycle': '2015-2016', 'table': 'nhanes.alb_cr_i', 'column': 'albumin_urine_mg_l', 'example_values': ['79.2', '44.6', '136.2', '76.1', '4.8']}, {'cycle': '2017-2018', 'table': 'nhanes.alb_cr_j', 'column': 'albumin_urine_mg_l', 'example_values': ['14.1', '60.5', '1860.0', '79.2', '44.6']}]}, {'keyword': 'urine creatinine (mg/dl)', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.alb_cr_g', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '96.0', '322.0']}, {'cycle': '2013-2014', 'table': 'nhanes.um_h', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '96.0', '322.0']}, {'cycle': '2007-2008', 'table': 'nhanes.alb_cr_e', 'column': 'creatinine_urine_mg_dl', 'example_values': ['519.0', '154.0', '346.0', '174.0', '96.0']}, {'cycle': '2009-2010', 'table': 'nhanes.alb_cr_f', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '547.0', '96.0']}, {'cycle': '2015-2016', 'table': 'nhanes.alb_cr_i', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '96.0', '322.0']}, {'cycle': '2017-2018', 'table': 'nhanes.alb_cr_j', 'column': 'creatinine_urine_mg_dl', 'example_values': ['154.0', '615.0', '346.0', '174.0', '96.0']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'formula', 'description': 'egfr calculated by CKD-EPI equation with gender and race/hispanic origin specific coefficients', 'logic': [{'condition': 'gender = female and race/hispanic origin = non-hispanic black', 'formula': 'egfr = 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018 * 1.159'}, {'condition': 'gender = female and race/hispanic origin ≠ non-hispanic black', 'formula': 'egfr = 141 * min(serum creatinine (mg/dl) / 0.7, 1) ** -0.329 * max(serum creatinine (mg/dl) / 0.7, 1) ** -1.209 * (0.993 ** age at screening) * 1.018'}, {'condition': 'gender = male and race/hispanic origin = non-hispanic black', 'formula': 'egfr = 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening) * 1.159'}, {'condition': 'gender = male and race/hispanic origin ≠ non-hispanic black', 'formula': 'egfr = 141 * min(serum creatinine (mg/dl) / 0.9, 1) ** -0.411 * max(serum creatinine (mg/dl) / 0.9, 1) ** -1.209 * (0.993 ** age at screening)'}], 'output': 'egfr'}}, {'step': 2, 'derivation_method': {'type': 'formula', 'description': 'uacr (mg/g) = 100 * (urine albumin (mg/l) / urine creatinine (mg/dl))'}}, {'step': 3, 'derivation_method': {'type': 'boolean_or', 'criteria': [{'condition': 'egfr < 60'}, {'condition': 'uacr (mg/g) ≥ 30'}]}}, {'step': 4, 'derivation_method': {'type': 'mapping', 'labels': ['1', '0']}}]}]}",exam,"-- STEP 1: Create temp_master_weight
+
+-- TEMP TABLE FOR weight
+DROP TABLE IF EXISTS temp_master_weight;
+
+CREATE TEMP TABLE temp_master_weight AS
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 12.0) AS survey_weight
+FROM nhanes.demo_e
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 12.0) AS survey_weight
+FROM nhanes.demo_f
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 12.0) AS survey_weight
+FROM nhanes.demo_g
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 12.0) AS survey_weight
+FROM nhanes.demo_h
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 12.0) AS survey_weight
+FROM nhanes.demo_i
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 12.0) AS survey_weight
+FROM nhanes.demo_j
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL;
+
+
+-- STEP 2: Create temp_psu_stratum
+
+-- TEMP TABLE FOR PSU and Stratum
+DROP TABLE IF EXISTS temp_psu_stratum;
+CREATE TEMP TABLE temp_psu_stratum AS
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_j;
+
+
+-- STEP 3: Create final weight+design table
+DROP TABLE IF EXISTS weight_design;
+CREATE TABLE weight_design AS
+SELECT 
+    s.respondent_sequence_number,
+    s.masked_variance_pseudo_psu,
+    s.masked_variance_pseudo_stratum,
+    w.survey_weight
+FROM temp_psu_stratum s
+INNER JOIN temp_master_weight w
+  ON s.respondent_sequence_number = w.respondent_sequence_number;
+
+
+
+
+-- TEMP TABLE FOR ""doctor told you have diabetes""
+DROP TABLE IF EXISTS temp_master_doctor_told_you_have_diabetes;
+CREATE TEMP TABLE temp_master_doctor_told_you_have_diabetes AS
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_e
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_i
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_doctor_told_you_have_diabetes ON temp_master_doctor_told_you_have_diabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""fasting plasma glucose (fpg, mmol/l)""
+DROP TABLE IF EXISTS temp_master_fasting_glucose_mmol_l;
+CREATE TEMP TABLE temp_master_fasting_glucose_mmol_l AS
+SELECT respondent_sequence_number, ""fasting_glucose_mmol_l"" AS ""fasting_glucose_mmol_l""
+FROM nhanes.glu_g
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mmol_l"" AS ""fasting_glucose_mmol_l""
+FROM nhanes.glu_h
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mmol_l"" AS ""fasting_glucose_mmol_l""
+FROM nhanes.glu_e
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mmol_l"" AS ""fasting_glucose_mmol_l""
+FROM nhanes.glu_f
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mmol_l"" AS ""fasting_glucose_mmol_l""
+FROM nhanes.glu_i
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mmol_l"" AS ""fasting_glucose_mmol_l""
+FROM nhanes.glu_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_fasting_glucose_mmol_l ON temp_master_fasting_glucose_mmol_l (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""glycohemoglobin (hba1c) (%)""
+DROP TABLE IF EXISTS temp_master_glycohemoglobin;
+CREATE TEMP TABLE temp_master_glycohemoglobin AS
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_g
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_h
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_e
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_f
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_i
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_glycohemoglobin ON temp_master_glycohemoglobin (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""takes diabetic pills to lower blood sugar""
+DROP TABLE IF EXISTS temp_master_take_diabetic_pills_to_lower_blood_sugar;
+CREATE TEMP TABLE temp_master_take_diabetic_pills_to_lower_blood_sugar AS
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_e
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_f
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_i
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_take_diabetic_pills_to_lower_blood_sugar ON temp_master_take_diabetic_pills_to_lower_blood_sugar (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""age at screening"", ""age at screening"", ""age at screening"", ""age at screening""
+DROP TABLE IF EXISTS temp_master_age_in_years_at_screening;
+CREATE TEMP TABLE temp_master_age_in_years_at_screening AS
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_in_years_at_screening ON temp_master_age_in_years_at_screening (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""pregnant at the time of the exam""
+DROP TABLE IF EXISTS temp_master_pregnancy_status_at_exam;
+CREATE TEMP TABLE temp_master_pregnancy_status_at_exam AS
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_pregnancy_status_at_exam ON temp_master_pregnancy_status_at_exam (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""weight (kg)"", ""weight (kg)""
+DROP TABLE IF EXISTS temp_master_weight_kg;
+CREATE TEMP TABLE temp_master_weight_kg AS
+SELECT respondent_sequence_number, ""weight_kg"" AS ""weight_kg""
+FROM nhanes.bmx_g
+UNION ALL
+SELECT respondent_sequence_number, ""weight_kg"" AS ""weight_kg""
+FROM nhanes.bmx_h
+UNION ALL
+SELECT respondent_sequence_number, ""weight_kg"" AS ""weight_kg""
+FROM nhanes.bmx_e
+UNION ALL
+SELECT respondent_sequence_number, ""weight_kg"" AS ""weight_kg""
+FROM nhanes.bmx_f
+UNION ALL
+SELECT respondent_sequence_number, ""weight_kg"" AS ""weight_kg""
+FROM nhanes.bmx_i
+UNION ALL
+SELECT respondent_sequence_number, ""weight_kg"" AS ""weight_kg""
+FROM nhanes.bmx_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_weight_kg ON temp_master_weight_kg (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""waist circumference (cm)"", ""waist circumference (cm)""
+DROP TABLE IF EXISTS temp_master_waist_circumference_cm;
+CREATE TEMP TABLE temp_master_waist_circumference_cm AS
+SELECT respondent_sequence_number, ""waist_circumference_cm"" AS ""waist_circumference_cm""
+FROM nhanes.bmx_g
+UNION ALL
+SELECT respondent_sequence_number, ""waist_circumference_cm"" AS ""waist_circumference_cm""
+FROM nhanes.bmx_h
+UNION ALL
+SELECT respondent_sequence_number, ""waist_circumference_cm"" AS ""waist_circumference_cm""
+FROM nhanes.bmx_e
+UNION ALL
+SELECT respondent_sequence_number, ""waist_circumference_cm"" AS ""waist_circumference_cm""
+FROM nhanes.bmx_f
+UNION ALL
+SELECT respondent_sequence_number, ""waist_circumference_cm"" AS ""waist_circumference_cm""
+FROM nhanes.bmx_i
+UNION ALL
+SELECT respondent_sequence_number, ""waist_circumference_cm"" AS ""waist_circumference_cm""
+FROM nhanes.bmx_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_waist_circumference_cm ON temp_master_waist_circumference_cm (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""gender"", ""gender"", ""gender""
+DROP TABLE IF EXISTS temp_master_gender;
+CREATE TEMP TABLE temp_master_gender AS
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_gender ON temp_master_gender (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""race/hispanic origin"", ""race/hispanic origin"", ""race/hispanic origin"", ""race/hispanic origin""
+DROP TABLE IF EXISTS temp_master_race_hispanic_origin;
+CREATE TEMP TABLE temp_master_race_hispanic_origin AS
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_e
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_f
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_i
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_race_hispanic_origin ON temp_master_race_hispanic_origin (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""urine albumin (mg/l)"", ""urine albumin (mg/l)""
+DROP TABLE IF EXISTS temp_master_albumin_urine_mg_l;
+CREATE TEMP TABLE temp_master_albumin_urine_mg_l AS
+SELECT respondent_sequence_number, ""albumin_urine_mg_l"" AS ""albumin_urine_mg_l""
+FROM nhanes.alb_cr_g
+UNION ALL
+SELECT respondent_sequence_number, ""albumin_urine_mg_l"" AS ""albumin_urine_mg_l""
+FROM nhanes.alb_cr_h
+UNION ALL
+SELECT respondent_sequence_number, ""albumin_urine_mg_l"" AS ""albumin_urine_mg_l""
+FROM nhanes.alb_cr_e
+UNION ALL
+SELECT respondent_sequence_number, ""albumin_urine_mg_l"" AS ""albumin_urine_mg_l""
+FROM nhanes.alb_cr_f
+UNION ALL
+SELECT respondent_sequence_number, ""albumin_urine_mg_l"" AS ""albumin_urine_mg_l""
+FROM nhanes.alb_cr_i
+UNION ALL
+SELECT respondent_sequence_number, ""albumin_urine_mg_l"" AS ""albumin_urine_mg_l""
+FROM nhanes.alb_cr_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_albumin_urine_mg_l ON temp_master_albumin_urine_mg_l (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""urine creatinine (mg/dl)"", ""urine creatinine (mg/dl)""
+DROP TABLE IF EXISTS temp_master_creatinine_urine_mg_dl;
+CREATE TEMP TABLE temp_master_creatinine_urine_mg_dl AS
+SELECT respondent_sequence_number, ""creatinine_urine_mg_dl"" AS ""creatinine_urine_mg_dl""
+FROM nhanes.alb_cr_g
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_urine_mg_dl"" AS ""creatinine_urine_mg_dl""
+FROM nhanes.um_h
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_urine_mg_dl"" AS ""creatinine_urine_mg_dl""
+FROM nhanes.alb_cr_e
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_urine_mg_dl"" AS ""creatinine_urine_mg_dl""
+FROM nhanes.alb_cr_f
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_urine_mg_dl"" AS ""creatinine_urine_mg_dl""
+FROM nhanes.alb_cr_i
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_urine_mg_dl"" AS ""creatinine_urine_mg_dl""
+FROM nhanes.alb_cr_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_creatinine_urine_mg_dl ON temp_master_creatinine_urine_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""serum creatinine (mg/dl)"", ""serum creatinine (mg/dl)""
+DROP TABLE IF EXISTS temp_master_creatinine_mg_dl;
+CREATE TEMP TABLE temp_master_creatinine_mg_dl AS
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_g
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_h
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_e
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_f
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_i
+UNION ALL
+SELECT respondent_sequence_number, ""creatinine_mg_dl"" AS ""creatinine_mg_dl""
+FROM nhanes.biopro_j;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_creatinine_mg_dl ON temp_master_creatinine_mg_dl (respondent_sequence_number);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT respondent_sequence_number FROM temp_master_doctor_told_you_have_diabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_fasting_glucose_mmol_l
+UNION
+SELECT respondent_sequence_number FROM temp_master_glycohemoglobin
+UNION
+SELECT respondent_sequence_number FROM temp_master_take_diabetic_pills_to_lower_blood_sugar
+UNION
+SELECT respondent_sequence_number FROM temp_master_age_in_years_at_screening
+UNION
+SELECT respondent_sequence_number FROM temp_master_pregnancy_status_at_exam
+UNION
+SELECT respondent_sequence_number FROM temp_master_weight_kg
+UNION
+SELECT respondent_sequence_number FROM temp_master_waist_circumference_cm
+UNION
+SELECT respondent_sequence_number FROM temp_master_gender
+UNION
+SELECT respondent_sequence_number FROM temp_master_race_hispanic_origin
+UNION
+SELECT respondent_sequence_number FROM temp_master_albumin_urine_mg_l
+UNION
+SELECT respondent_sequence_number FROM temp_master_creatinine_urine_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_creatinine_mg_dl;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_respondent_sequence_number ON temp_all_ids (respondent_sequence_number);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.respondent_sequence_number,
+    t0.""doctor_told_you_have_diabetes"",
+    t1.""fasting_glucose_mmol_l"",
+    t2.""glycohemoglobin"",
+    t3.""take_diabetic_pills_to_lower_blood_sugar"",
+    t4.""age_in_years_at_screening"",
+    t5.""pregnancy_status_at_exam"",
+    t6.""weight_kg"",
+    t7.""waist_circumference_cm"",
+    t8.""gender"",
+    t9.""race_hispanic_origin"",
+    t10.""albumin_urine_mg_l"",
+    t11.""creatinine_urine_mg_dl"",
+    t12.""creatinine_mg_dl""
+FROM temp_all_ids a
+LEFT JOIN temp_master_doctor_told_you_have_diabetes t0 ON a.respondent_sequence_number = t0.respondent_sequence_number 
+LEFT JOIN temp_master_fasting_glucose_mmol_l t1 ON a.respondent_sequence_number = t1.respondent_sequence_number 
+LEFT JOIN temp_master_glycohemoglobin t2 ON a.respondent_sequence_number = t2.respondent_sequence_number 
+LEFT JOIN temp_master_take_diabetic_pills_to_lower_blood_sugar t3 ON a.respondent_sequence_number = t3.respondent_sequence_number 
+LEFT JOIN temp_master_age_in_years_at_screening t4 ON a.respondent_sequence_number = t4.respondent_sequence_number 
+LEFT JOIN temp_master_pregnancy_status_at_exam t5 ON a.respondent_sequence_number = t5.respondent_sequence_number 
+LEFT JOIN temp_master_weight_kg t6 ON a.respondent_sequence_number = t6.respondent_sequence_number 
+LEFT JOIN temp_master_waist_circumference_cm t7 ON a.respondent_sequence_number = t7.respondent_sequence_number 
+LEFT JOIN temp_master_gender t8 ON a.respondent_sequence_number = t8.respondent_sequence_number 
+LEFT JOIN temp_master_race_hispanic_origin t9 ON a.respondent_sequence_number = t9.respondent_sequence_number 
+LEFT JOIN temp_master_albumin_urine_mg_l t10 ON a.respondent_sequence_number = t10.respondent_sequence_number 
+LEFT JOIN temp_master_creatinine_urine_mg_dl t11 ON a.respondent_sequence_number = t11.respondent_sequence_number 
+LEFT JOIN temp_master_creatinine_mg_dl t12 ON a.respondent_sequence_number = t12.respondent_sequence_number;
+
+CREATE INDEX idx_final_master_respondent_sequence_number    
+    ON final_master_table (respondent_sequence_number);
+
+
+-- Clean up final_master_table
+DELETE FROM final_master_table
+WHERE respondent_sequence_number NOT IN (
+    SELECT respondent_sequence_number FROM weight_design
+);
+
+
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Include participants with diabetes by any of the following:
+-- doctor told you have diabetes = 'Yes'
+-- OR fasting plasma glucose (mmol/L) >= 7.0
+-- OR glycohemoglobin (HbA1c) (%) >= 6.5
+-- OR takes diabetic pills to lower blood sugar = 'Yes'
+CREATE TEMP TABLE temp_inclusion AS
+SELECT ""respondent_sequence_number""
+FROM final_master_table
+WHERE 
+  (""doctor_told_you_have_diabetes"" = 'Yes'
+   OR ""fasting_glucose_mmol_l"" >= 7.0
+   OR ""glycohemoglobin"" >= 6.5
+   OR ""take_diabetic_pills_to_lower_blood_sugar"" = 'Yes'
+  );
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude participants whose age at screening is less than 20
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""age_in_years_at_screening"" >= 20;
+
+-- STEP 2.2: Exclude participants who were pregnant at the time of the exam
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""pregnancy_status_at_exam"" IS NULL
+   OR f.""pregnancy_status_at_exam"" NOT IN (
+     'Yes, positive lab pregnancy test or self-reported pregnant at exam',
+     'Cannot ascertain if SP is pregnant at exam',
+     'Cannot ascertain if the participant is pregnant at exam'
+   );
+
+-- STEP 2.3: Exclude participants with missing weight (kg)
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""weight_kg"" IS NOT NULL;
+
+-- STEP 2.4: Exclude participants with missing waist circumference (cm)
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step3 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""waist_circumference_cm"" IS NOT NULL;
+
+-- STEP 2.5: Exclude participants with missing gender
+CREATE TEMP TABLE temp_exclusion_step5 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step4 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""gender"" IS NOT NULL;
+
+-- STEP 2.6: Exclude participants with missing race/hispanic origin
+CREATE TEMP TABLE temp_exclusion_step6 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step5 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""race_hispanic_origin"" IS NOT NULL;
+
+-- STEP 2.7: Exclude participants with missing urine albumin (mg/L)
+CREATE TEMP TABLE temp_exclusion_step7 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step6 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""albumin_urine_mg_l"" IS NOT NULL;
+
+-- STEP 2.8: Exclude participants with missing urine creatinine (mg/dL)
+CREATE TEMP TABLE temp_exclusion_step8 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step7 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""creatinine_urine_mg_dl"" IS NOT NULL;
+
+-- STEP 2.9: Exclude participants with missing serum creatinine (mg/dL)
+CREATE TEMP TABLE temp_exclusion_step9 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step8 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""creatinine_mg_dl"" IS NOT NULL;
+
+-- ========== STEP 3: Cohort ==========
+
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""respondent_sequence_number""
+FROM temp_exclusion_step9;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Race/Hispanic Origin (white vs non white)
+CREATE TEMP TABLE temp_race_hispanic_origin AS
+SELECT c.""respondent_sequence_number"",
+  CASE
+    WHEN f.""race_hispanic_origin"" = 'Non-Hispanic White' THEN 'white'
+    WHEN f.""race_hispanic_origin"" IN (
+      'Mexican American',
+      'Non-Hispanic Black',
+      'Other Hispanic',
+      'Other Race - Including Multi-Racial'
+    ) THEN 'non white'
+    ELSE NULL
+  END AS ""race_hispanic_origin""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.2 Gender
+CREATE TEMP TABLE temp_gender AS
+SELECT c.""respondent_sequence_number"", f.""gender""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.3 Age at screening (<60, >=60)
+CREATE TEMP TABLE temp_age_at_screening AS
+SELECT c.""respondent_sequence_number"",
+  CASE
+    WHEN f.""age_in_years_at_screening"" < 60 THEN '<60'
+    WHEN f.""age_in_years_at_screening"" >= 60 THEN '≥60'
+    ELSE NULL
+  END AS ""age_at_screening""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.4 Weight-adjusted-waist (wwi) ratio (waist circumference (cm) / sqrt(weight (kg)))
+CREATE TEMP TABLE temp_wwi_raw AS
+SELECT c.""respondent_sequence_number"",
+       (f.""waist_circumference_cm"" / SQRT(f.""weight_kg"")) AS ""wwi""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Compute quartile cutoffs for wwi within cohort
+CREATE TEMP TABLE temp_wwi_quartile_cutoffs AS
+SELECT
+  PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY ""wwi"") AS q1,
+  PERCENTILE_CONT(0.5)  WITHIN GROUP (ORDER BY ""wwi"") AS q2,
+  PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY ""wwi"") AS q3
+FROM temp_wwi_raw;
+
+-- Assign wwi quartile group
+CREATE TEMP TABLE temp_wwi_quartiles AS
+SELECT ""respondent_sequence_number"",
+  CASE
+    WHEN ""wwi"" IS NULL THEN NULL
+    WHEN ""wwi"" <= (SELECT q1 FROM temp_wwi_quartile_cutoffs) THEN 'Q1: ≤25%'
+    WHEN ""wwi"" <= (SELECT q2 FROM temp_wwi_quartile_cutoffs) THEN 'Q2: >25% and ≤50%'
+    WHEN ""wwi"" <= (SELECT q3 FROM temp_wwi_quartile_cutoffs) THEN 'Q3: >50% and ≤75%'
+    ELSE 'Q4: >75%'
+  END AS ""weight_adjusted_waist_wwi_ratio""
+FROM temp_wwi_raw;
+
+-- 4.5 Presence of kidney disease
+-- Step 1: Calculate eGFR using CKD-EPI equation
+CREATE TEMP TABLE temp_egfr AS
+SELECT
+  c.""respondent_sequence_number"",
+  CASE
+    WHEN f.""gender"" = 'Female' AND f.""race_hispanic_origin"" = 'Non-Hispanic Black'
+      THEN 141 * 
+           POWER(LEAST(f.""creatinine_mg_dl"" / 0.7, 1), -0.329) *
+           POWER(GREATEST(f.""creatinine_mg_dl"" / 0.7, 1), -1.209) *
+           POWER(0.993, f.""age_in_years_at_screening"") *
+           1.018 * 1.159
+    WHEN f.""gender"" = 'Female' AND f.""race_hispanic_origin"" <> 'Non-Hispanic Black'
+      THEN 141 * 
+           POWER(LEAST(f.""creatinine_mg_dl"" / 0.7, 1), -0.329) *
+           POWER(GREATEST(f.""creatinine_mg_dl"" / 0.7, 1), -1.209) *
+           POWER(0.993, f.""age_in_years_at_screening"") *
+           1.018
+    WHEN f.""gender"" = 'Male' AND f.""race_hispanic_origin"" = 'Non-Hispanic Black'
+      THEN 141 * 
+           POWER(LEAST(f.""creatinine_mg_dl"" / 0.9, 1), -0.411) *
+           POWER(GREATEST(f.""creatinine_mg_dl"" / 0.9, 1), -1.209) *
+           POWER(0.993, f.""age_in_years_at_screening"") *
+           1.159
+    WHEN f.""gender"" = 'Male' AND f.""race_hispanic_origin"" <> 'Non-Hispanic Black'
+      THEN 141 * 
+           POWER(LEAST(f.""creatinine_mg_dl"" / 0.9, 1), -0.411) *
+           POWER(GREATEST(f.""creatinine_mg_dl"" / 0.9, 1), -1.209) *
+           POWER(0.993, f.""age_in_years_at_screening"")
+    ELSE NULL
+  END AS ""egfr""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Step 2: Calculate UACR (mg/g) = 100 * (urine albumin (mg/L) / urine creatinine (mg/dL))
+CREATE TEMP TABLE temp_uacr AS
+SELECT c.""respondent_sequence_number"",
+       100.0 * (f.""albumin_urine_mg_l"" / f.""creatinine_urine_mg_dl"") AS ""uacr""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Step 3: Presence of kidney disease (egfr < 60 OR uacr >= 30)
+CREATE TEMP TABLE temp_presence_of_kidney_disease AS
+SELECT c.""respondent_sequence_number"",
+  CASE
+    WHEN e.""egfr"" < 60 OR u.""uacr"" >= 30 THEN 1
+    ELSE 0
+  END AS ""presence_of_kidney_disease""
+FROM temp_cohort c
+JOIN temp_egfr e ON c.""respondent_sequence_number"" = e.""respondent_sequence_number""
+JOIN temp_uacr u ON c.""respondent_sequence_number"" = u.""respondent_sequence_number"";
+
+-- ========== STEP 5: Final Output ==========
+
+CREATE TEMP TABLE temp_final_table AS
+SELECT 
+  c.""respondent_sequence_number"",
+  r.""race_hispanic_origin"",
+  g.""gender"",
+  a.""age_at_screening"",
+  w.""weight_adjusted_waist_wwi_ratio"",
+  k.""presence_of_kidney_disease""
+FROM temp_cohort c
+JOIN temp_race_hispanic_origin r ON c.""respondent_sequence_number"" = r.""respondent_sequence_number""
+JOIN temp_gender g ON c.""respondent_sequence_number"" = g.""respondent_sequence_number""
+JOIN temp_age_at_screening a ON c.""respondent_sequence_number"" = a.""respondent_sequence_number""
+JOIN temp_wwi_quartiles w ON c.""respondent_sequence_number"" = w.""respondent_sequence_number""
+JOIN temp_presence_of_kidney_disease k ON c.""respondent_sequence_number"" = k.""respondent_sequence_number"";
+
+-- ========== STEP 6: View Output ==========
+
+SELECT * FROM temp_final_table;
+
+-- STEP: Create merged final table with design variables + in_analysis flag
+DROP TABLE IF EXISTS temp_final_with_weights;
+
+CREATE TEMP TABLE temp_final_with_weights AS
+SELECT 
+    wd.""respondent_sequence_number"",
+    wd.""masked_variance_pseudo_psu"",
+    wd.""masked_variance_pseudo_stratum"",
+    wd.""survey_weight"",
+    CASE WHEN ft.""respondent_sequence_number"" IS NOT NULL THEN 1 ELSE 0 END AS ""in_analysis"",
+    ft.""race_hispanic_origin"",
+    ft.""gender"",
+    ft.""age_at_screening"",
+    ft.""weight_adjusted_waist_wwi_ratio"",
+    ft.""presence_of_kidney_disease""
+FROM weight_design wd
+LEFT JOIN temp_final_table ft
+  ON wd.""respondent_sequence_number"" = ft.""respondent_sequence_number"";
+  
+-- Preview the result
+SELECT * FROM temp_final_with_weights;
+","    step_num                                                                      step  remaining_after_step  excluded_at_step
+0          0                         Total unique participants pooled from all sources                 59842               NaN
+1          1         Participants with a valid survey weight (after initial filtering)                 58503            1339.0
+2          2                      OR takes diabetic pills to lower blood sugar = 'Yes'                  6248           52255.0
+3          3     STEP 2.1: Exclude participants whose age at screening is less than 20                  6135             113.0
+4          4  STEP 2.2: Exclude participants who were pregnant at the time of the exam                  6109              26.0
+5          5                   STEP 2.3: Exclude participants with missing weight (kg)                  5901             208.0
+6          6      STEP 2.4: Exclude participants with missing waist circumference (cm)                  5499             402.0
+7          7                        STEP 2.5: Exclude participants with missing gender                  5499               0.0
+8          8          STEP 2.6: Exclude participants with missing race/hispanic origin                  5499               0.0
+9          9          STEP 2.7: Exclude participants with missing urine albumin (mg/L)                  5416              83.0
+10        10      STEP 2.8: Exclude participants with missing urine creatinine (mg/dL)                  4828             588.0
+11        11      STEP 2.9: Exclude participants with missing serum creatinine (mg/dL)                  4582             246.0
+12        12                                      ========== STEP 3: Cohort ==========                  4582               0.0
+13        13                                ========== STEP 5: Final Output ==========                  4582               0.0","(58503, 10)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""respondent_sequence_number"")
+    outcome_vars <- c(""presence_of_kidney_disease"")
+    weight_vars <- c(""survey_weight"",""masked_variance_pseudo_psu"",""masked_variance_pseudo_stratum"",""in_analysis"")
+
+    cohort <- df[df$in_analysis == 1, names(df) != ""in_analysis""]
+
+
+    outcome_roles <- c()
+    outcome_roles[""presence_of_kidney_disease""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else if (name %in% weight_vars) {
+        category <- ""weight""
+        summary_info <- ""Weight variable"" 
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    weight_vars <- report$variable[report$category == ""weight""]; cat(""Weight Variables: ""); print(weight_vars); psu_var <- weight_vars[grepl(""psu"", weight_vars, ignore.case = TRUE)][1]; cat(""PSU:"", psu_var); stratum_var <- weight_vars[grepl(""stratum"", weight_vars, ignore.case = TRUE)][1]; cat(""Stratum:"", stratum_var); weight_var <- weight_vars[grepl(""weight"", weight_vars, ignore.case = TRUE)][1]; cat(""Weight:"", weight_var); in_analysis_var <- weight_vars[grepl(""in_analysis"", weight_vars, ignore.case = TRUE)][1]; cat(""In Analysis:"", in_analysis_var)
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+    library(survey)
+    options(survey.lonely.psu = ""adjust"")
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    x_raw <- df[[outcome_var]]
+    x_chr <- trimws(tolower(as.character(x_raw)))
+
+    none_tokens <- c(""none"", ""nan"", ""na"", """", ""null"", ""nil"", ""missing"")
+    x_chr[x_chr %in% none_tokens] <- NA_character_
+    y <- rep(NA_integer_, length(x_chr))
+    y[x_chr %in% c(""yes"", ""y"", ""true"", ""t"")]  <- 1L
+    y[x_chr %in% c(""no"",  ""n"", ""false"", ""f"")] <- 0L
+    x_num <- suppressWarnings(as.numeric(x_chr))
+    y[is.na(y) & !is.na(x_num) & x_num == 1] <- 1L
+    y[is.na(y) & !is.na(x_num) & x_num == 0] <- 0L
+    idx <- is.na(y) & !is.na(x_chr)
+    if (any(idx)) {
+    vals <- sort(unique(x_chr[idx]))
+    if (length(vals) != 2) {
+        stop(sprintf(
+        ""Outcome '%s' must have exactly 2 non-missing classes after excluding none. Found: %s"",
+        outcome_var, paste(vals, collapse = "", "")
+        ))
+    }
+    tab <- table(x_chr[idx])
+    minority <- names(tab)[which.min(tab)]
+    majority <- setdiff(vals, minority)
+    cat(sprintf(
+        ""Outcome '%s' recoding: 1 = %s (minority)  0 = %s (majority)"",
+        outcome_var, minority, majority
+    ))
+    y[idx] <- as.integer(x_chr[idx] == minority)
+    }
+    df[[outcome_var]] <- y
+    u <- sort(unique(df[[outcome_var]][!is.na(df[[outcome_var]])]))
+    if (!(length(u) == 2 && all(u == c(0, 1)))) {
+    stop(sprintf(
+        ""After recoding, '%s' must contain both 0 and 1 (plus NA for none). Found: %s"",
+        outcome_var,
+        ifelse(length(u) == 0, ""<no non-missing values>"", paste(u, collapse = "", ""))
+    ))
+    }
+    formula <- as.formula(paste0(outcome_var, "" ~ "", paste(predictor_vars, collapse = "" + "")))
+            
+    
+    survey_design <- svydesign(
+        ids     = as.formula(paste0(""~"", psu_var)),
+        strata  = as.formula(paste0(""~"", stratum_var)),
+        weights = as.formula(paste0(""~"", weight_var)),
+        data    = df,
+        nest    = TRUE
+        )
+    survey_design <- subset(survey_design, in_analysis ==1)
+        
+    
+    model <- svyglm(formula,design = survey_design, family = quasibinomial()) 
+            
+    
+    result_table <- tidy(model, conf.int = TRUE, exponentiate = TRUE) %>%
+            select(term, estimate, p.value, conf.low, conf.high)
+            
+    ","[{'variable': 'respondent_sequence_number', 'category': 'identifier', 'n_unique': 4582, 'na_count': 0, 'summary': 'Total rows = 4582'}, {'variable': 'masked_variance_pseudo_psu', 'category': 'weight', 'n_unique': 3, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'masked_variance_pseudo_stratum', 'category': 'weight', 'n_unique': 90, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'survey_weight', 'category': 'weight', 'n_unique': 4242, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'race_hispanic_origin', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'non white: 66.6%; white: 33.4%'}, {'variable': 'gender', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'Female: 47.2%; Male: 52.8%'}, {'variable': 'age_at_screening', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': '<60: 40.4%; ≥60: 59.6%'}, {'variable': 'weight_adjusted_waist_wwi_ratio', 'category': 'categorical', 'n_unique': 4, 'na_count': 0, 'summary': 'Q1: ≤25%: 25%; Q2: >25% and ≤50%: 25%; Q3: >50% and ≤75%: 25%; Q4: >75%: 25%'}, {'variable': 'presence_of_kidney_disease', 'category': 'outcome', 'n_unique': 2, 'na_count': 0, 'summary': '0: 61.6%; 1: 38.4%'}]","[{'term': '(Intercept)', 'estimate': 0.27468630463885013, 'p.value': 1.3110319678667671e-17, 'conf.low': 0.2160948738618849, 'conf.high': 0.34916407135308547}, {'term': 'race_hispanic_originwhite', 'estimate': 0.8564782752136599, 'p.value': 0.07732417456563702, 'conf.low': 0.7209514003677939, 'conf.high': 1.0174819489063232}, {'term': 'genderFemale', 'estimate': 0.9051331435151019, 'p.value': 0.28081585616290056, 'conf.low': 0.7541163623540016, 'conf.high': 1.086392032301436}, {'term': 'age_at_screening≥60', 'estimate': 2.6701562612031147, 'p.value': 3.798832671701064e-15, 'conf.low': 2.17434372791771, 'conf.high': 3.279028227091806}, {'term': 'weight_adjusted_waist_wwi_ratioQ2: >25% and ≤50%', 'estimate': 1.1589147296587432, 'p.value': 0.28859253927228123, 'conf.low': 0.8807032271002115, 'conf.high': 1.525012409733312}, {'term': 'weight_adjusted_waist_wwi_ratioQ3: >50% and ≤75%', 'estimate': 1.4775253717341916, 'p.value': 0.005451829398032016, 'conf.low': 1.1253816220286983, 'conf.high': 1.939858605637147}, {'term': 'weight_adjusted_waist_wwi_ratioQ4: >75%', 'estimate': 1.672475276887899, 'p.value': 0.0025547257785799395, 'conf.low': 1.203467744907557, 'conf.high': 2.3242613386502655}]",,,,weighted logistic regression (exam),2007-2018,"[[2007, 2008], [2009, 2010], [2011, 2012], [2013, 2014], [2015, 2016], [2017, 2018]]",openai_gpt-4.1-2025-04-14,Pass,[],,355.968549,"[[{'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 1183, 'output_tokens': 2, 'total_cost': 0.002382, 'formatted_total_cost': '$0.002382'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 2274, 'output_tokens': 813, 'total_cost': 0.011052, 'formatted_total_cost': '$0.011052'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 2880, 'output_tokens': 1855, 'total_cost': 0.0206, 'formatted_total_cost': '$0.020600'}], [{'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3611, 'output_tokens': 82, 'total_cost': 0.007878, 'formatted_total_cost': '$0.007878'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3611, 'output_tokens': 82, 'total_cost': 0.007878, 'formatted_total_cost': '$0.007878'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3707, 'output_tokens': 82, 'total_cost': 0.008069999999999999, 'formatted_total_cost': '$0.008070'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3707, 'output_tokens': 82, 'total_cost': 0.008069999999999999, 'formatted_total_cost': '$0.008070'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3516, 'output_tokens': 89, 'total_cost': 0.007744, 'formatted_total_cost': '$0.007744'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3516, 'output_tokens': 89, 'total_cost': 0.007744, 'formatted_total_cost': '$0.007744'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3504, 'output_tokens': 89, 'total_cost': 0.00772, 'formatted_total_cost': '$0.007720'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3504, 'output_tokens': 89, 'total_cost': 0.00772, 'formatted_total_cost': '$0.007720'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3698, 'output_tokens': 82, 'total_cost': 0.008052, 'formatted_total_cost': '$0.008052'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3698, 'output_tokens': 82, 'total_cost': 0.008052, 'formatted_total_cost': '$0.008052'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3513, 'output_tokens': 82, 'total_cost': 0.0076820000000000005, 'formatted_total_cost': '$0.007682'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3513, 'output_tokens': 82, 'total_cost': 0.0076820000000000005, 'formatted_total_cost': '$0.007682'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 584, 'output_tokens': 5, 'total_cost': 0.001208, 'formatted_total_cost': '$0.001208'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3214, 'output_tokens': 65, 'total_cost': 0.006947999999999999, 'formatted_total_cost': '$0.006948'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3214, 'output_tokens': 65, 'total_cost': 0.006947999999999999, 'formatted_total_cost': '$0.006948'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3224, 'output_tokens': 72, 'total_cost': 0.007024, 'formatted_total_cost': '$0.007024'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3224, 'output_tokens': 72, 'total_cost': 0.007024, 'formatted_total_cost': '$0.007024'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3343, 'output_tokens': 65, 'total_cost': 0.007206, 'formatted_total_cost': '$0.007206'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3343, 'output_tokens': 65, 'total_cost': 0.007206, 'formatted_total_cost': '$0.007206'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3324, 'output_tokens': 72, 'total_cost': 0.007224, 'formatted_total_cost': '$0.007224'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3324, 'output_tokens': 72, 'total_cost': 0.007224, 'formatted_total_cost': '$0.007224'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3224, 'output_tokens': 65, 'total_cost': 0.006967999999999999, 'formatted_total_cost': '$0.006968'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3224, 'output_tokens': 65, 'total_cost': 0.006967999999999999, 'formatted_total_cost': '$0.006968'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3212, 'output_tokens': 65, 'total_cost': 0.006944, 'formatted_total_cost': '$0.006944'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3212, 'output_tokens': 65, 'total_cost': 0.006944, 'formatted_total_cost': '$0.006944'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 545, 'output_tokens': 5, 'total_cost': 0.0011300000000000001, 'formatted_total_cost': '$0.001130'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3315, 'output_tokens': 58, 'total_cost': 0.007094, 'formatted_total_cost': '$0.007094'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3315, 'output_tokens': 58, 'total_cost': 0.007094, 'formatted_total_cost': '$0.007094'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3311, 'output_tokens': 58, 'total_cost': 0.007086, 'formatted_total_cost': '$0.007086'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3311, 'output_tokens': 58, 'total_cost': 0.007086, 'formatted_total_cost': '$0.007086'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3238, 'output_tokens': 58, 'total_cost': 0.00694, 'formatted_total_cost': '$0.006940'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3238, 'output_tokens': 58, 'total_cost': 0.00694, 'formatted_total_cost': '$0.006940'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3300, 'output_tokens': 58, 'total_cost': 0.007064, 'formatted_total_cost': '$0.007064'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3300, 'output_tokens': 58, 'total_cost': 0.007064, 'formatted_total_cost': '$0.007064'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3247, 'output_tokens': 58, 'total_cost': 0.006958, 'formatted_total_cost': '$0.006958'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3247, 'output_tokens': 58, 'total_cost': 0.006958, 'formatted_total_cost': '$0.006958'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3315, 'output_tokens': 58, 'total_cost': 0.007094, 'formatted_total_cost': '$0.007094'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3315, 'output_tokens': 58, 'total_cost': 0.007094, 'formatted_total_cost': '$0.007094'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 520, 'output_tokens': 5, 'total_cost': 0.00108, 'formatted_total_cost': '$0.001080'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3566, 'output_tokens': 75, 'total_cost': 0.007732, 'formatted_total_cost': '$0.007732'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3566, 'output_tokens': 75, 'total_cost': 0.007732, 'formatted_total_cost': '$0.007732'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3665, 'output_tokens': 72, 'total_cost': 0.007906, 'formatted_total_cost': '$0.007906'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3665, 'output_tokens': 72, 'total_cost': 0.007906, 'formatted_total_cost': '$0.007906'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3520, 'output_tokens': 82, 'total_cost': 0.007696000000000001, 'formatted_total_cost': '$0.007696'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3520, 'output_tokens': 82, 'total_cost': 0.007696000000000001, 'formatted_total_cost': '$0.007696'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3529, 'output_tokens': 75, 'total_cost': 0.007658, 'formatted_total_cost': '$0.007658'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3529, 'output_tokens': 75, 'total_cost': 0.007658, 'formatted_total_cost': '$0.007658'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3654, 'output_tokens': 79, 'total_cost': 0.007940000000000001, 'formatted_total_cost': '$0.007940'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3654, 'output_tokens': 79, 'total_cost': 0.007940000000000001, 'formatted_total_cost': '$0.007940'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3616, 'output_tokens': 79, 'total_cost': 0.007864, 'formatted_total_cost': '$0.007864'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3616, 'output_tokens': 79, 'total_cost': 0.007864, 'formatted_total_cost': '$0.007864'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 550, 'output_tokens': 5, 'total_cost': 0.0011400000000000002, 'formatted_total_cost': '$0.001140'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3356, 'output_tokens': 74, 'total_cost': 0.007304, 'formatted_total_cost': '$0.007304'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3356, 'output_tokens': 74, 'total_cost': 0.007304, 'formatted_total_cost': '$0.007304'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3404, 'output_tokens': 67, 'total_cost': 0.007344, 'formatted_total_cost': '$0.007344'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3404, 'output_tokens': 67, 'total_cost': 0.007344, 'formatted_total_cost': '$0.007344'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3343, 'output_tokens': 67, 'total_cost': 0.007222, 'formatted_total_cost': '$0.007222'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3343, 'output_tokens': 67, 'total_cost': 0.007222, 'formatted_total_cost': '$0.007222'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3324, 'output_tokens': 74, 'total_cost': 0.00724, 'formatted_total_cost': '$0.007240'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3324, 'output_tokens': 74, 'total_cost': 0.00724, 'formatted_total_cost': '$0.007240'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3345, 'output_tokens': 77, 'total_cost': 0.007306, 'formatted_total_cost': '$0.007306'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3345, 'output_tokens': 77, 'total_cost': 0.007306, 'formatted_total_cost': '$0.007306'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3300, 'output_tokens': 70, 'total_cost': 0.00716, 'formatted_total_cost': '$0.007160'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3300, 'output_tokens': 70, 'total_cost': 0.00716, 'formatted_total_cost': '$0.007160'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 542, 'output_tokens': 5, 'total_cost': 0.001124, 'formatted_total_cost': '$0.001124'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3407, 'output_tokens': 73, 'total_cost': 0.007398, 'formatted_total_cost': '$0.007398'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3407, 'output_tokens': 73, 'total_cost': 0.007398, 'formatted_total_cost': '$0.007398'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3678, 'output_tokens': 73, 'total_cost': 0.00794, 'formatted_total_cost': '$0.007940'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3678, 'output_tokens': 73, 'total_cost': 0.00794, 'formatted_total_cost': '$0.007940'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3434, 'output_tokens': 73, 'total_cost': 0.007452, 'formatted_total_cost': '$0.007452'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3434, 'output_tokens': 73, 'total_cost': 0.007452, 'formatted_total_cost': '$0.007452'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3435, 'output_tokens': 73, 'total_cost': 0.0074540000000000006, 'formatted_total_cost': '$0.007454'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3435, 'output_tokens': 73, 'total_cost': 0.0074540000000000006, 'formatted_total_cost': '$0.007454'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3647, 'output_tokens': 73, 'total_cost': 0.007878, 'formatted_total_cost': '$0.007878'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3647, 'output_tokens': 73, 'total_cost': 0.007878, 'formatted_total_cost': '$0.007878'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3361, 'output_tokens': 73, 'total_cost': 0.007306, 'formatted_total_cost': '$0.007306'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3361, 'output_tokens': 73, 'total_cost': 0.007306, 'formatted_total_cost': '$0.007306'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 540, 'output_tokens': 5, 'total_cost': 0.0011200000000000001, 'formatted_total_cost': '$0.001120'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 4027, 'output_tokens': 116, 'total_cost': 0.008982, 'formatted_total_cost': '$0.008982'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 4027, 'output_tokens': 116, 'total_cost': 0.008982, 'formatted_total_cost': '$0.008982'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 4094, 'output_tokens': 116, 'total_cost': 0.009116, 'formatted_total_cost': '$0.009116'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 4094, 'output_tokens': 116, 'total_cost': 0.009116, 'formatted_total_cost': '$0.009116'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3898, 'output_tokens': 109, 'total_cost': 0.008668, 'formatted_total_cost': '$0.008668'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3898, 'output_tokens': 109, 'total_cost': 0.008668, 'formatted_total_cost': '$0.008668'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3971, 'output_tokens': 109, 'total_cost': 0.008813999999999999, 'formatted_total_cost': '$0.008814'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3971, 'output_tokens': 109, 'total_cost': 0.008813999999999999, 'formatted_total_cost': '$0.008814'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 4102, 'output_tokens': 116, 'total_cost': 0.009132, 'formatted_total_cost': '$0.009132'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 4102, 'output_tokens': 116, 'total_cost': 0.009132, 'formatted_total_cost': '$0.009132'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 4068, 'output_tokens': 116, 'total_cost': 0.009064, 'formatted_total_cost': '$0.009064'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 4068, 'output_tokens': 116, 'total_cost': 0.009064, 'formatted_total_cost': '$0.009064'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 456, 'output_tokens': 5, 'total_cost': 0.000952, 'formatted_total_cost': '$0.000952'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3361, 'output_tokens': 83, 'total_cost': 0.007385999999999999, 'formatted_total_cost': '$0.007386'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 1648, 'output_tokens': 76, 'total_cost': 0.003904, 'formatted_total_cost': '$0.003904'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 1648, 'output_tokens': 76, 'total_cost': 0.003904, 'formatted_total_cost': '$0.003904'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3514, 'output_tokens': 83, 'total_cost': 0.007692, 'formatted_total_cost': '$0.007692'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 1639, 'output_tokens': 79, 'total_cost': 0.00391, 'formatted_total_cost': '$0.003910'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 1639, 'output_tokens': 79, 'total_cost': 0.00391, 'formatted_total_cost': '$0.003910'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3316, 'output_tokens': 83, 'total_cost': 0.0072959999999999995, 'formatted_total_cost': '$0.007296'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 1569, 'output_tokens': 76, 'total_cost': 0.003746, 'formatted_total_cost': '$0.003746'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 1569, 'output_tokens': 76, 'total_cost': 0.003746, 'formatted_total_cost': '$0.003746'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3299, 'output_tokens': 83, 'total_cost': 0.007261999999999999, 'formatted_total_cost': '$0.007262'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 1319, 'output_tokens': 76, 'total_cost': 0.003246, 'formatted_total_cost': '$0.003246'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 1319, 'output_tokens': 76, 'total_cost': 0.003246, 'formatted_total_cost': '$0.003246'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3574, 'output_tokens': 83, 'total_cost': 0.0078119999999999995, 'formatted_total_cost': '$0.007812'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3574, 'output_tokens': 83, 'total_cost': 0.0078119999999999995, 'formatted_total_cost': '$0.007812'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3393, 'output_tokens': 83, 'total_cost': 0.00745, 'formatted_total_cost': '$0.007450'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3393, 'output_tokens': 83, 'total_cost': 0.00745, 'formatted_total_cost': '$0.007450'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 564, 'output_tokens': 5, 'total_cost': 0.0011680000000000002, 'formatted_total_cost': '$0.001168'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3456, 'output_tokens': 87, 'total_cost': 0.007608, 'formatted_total_cost': '$0.007608'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3456, 'output_tokens': 87, 'total_cost': 0.007608, 'formatted_total_cost': '$0.007608'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3430, 'output_tokens': 94, 'total_cost': 0.007612, 'formatted_total_cost': '$0.007612'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3430, 'output_tokens': 94, 'total_cost': 0.007612, 'formatted_total_cost': '$0.007612'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3450, 'output_tokens': 96, 'total_cost': 0.0076679999999999995, 'formatted_total_cost': '$0.007668'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3450, 'output_tokens': 96, 'total_cost': 0.0076679999999999995, 'formatted_total_cost': '$0.007668'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3500, 'output_tokens': 96, 'total_cost': 0.007768000000000001, 'formatted_total_cost': '$0.007768'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3500, 'output_tokens': 96, 'total_cost': 0.007768000000000001, 'formatted_total_cost': '$0.007768'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3435, 'output_tokens': 94, 'total_cost': 0.007622, 'formatted_total_cost': '$0.007622'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3435, 'output_tokens': 94, 'total_cost': 0.007622, 'formatted_total_cost': '$0.007622'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3581, 'output_tokens': 87, 'total_cost': 0.007858, 'formatted_total_cost': '$0.007858'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3581, 'output_tokens': 87, 'total_cost': 0.007858, 'formatted_total_cost': '$0.007858'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 538, 'output_tokens': 5, 'total_cost': 0.001116, 'formatted_total_cost': '$0.001116'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3426, 'output_tokens': 69, 'total_cost': 0.007403999999999999, 'formatted_total_cost': '$0.007404'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 570, 'output_tokens': 62, 'total_cost': 0.0016359999999999999, 'formatted_total_cost': '$0.001636'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 570, 'output_tokens': 62, 'total_cost': 0.0016359999999999999, 'formatted_total_cost': '$0.001636'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3445, 'output_tokens': 69, 'total_cost': 0.007442000000000001, 'formatted_total_cost': '$0.007442'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 580, 'output_tokens': 63, 'total_cost': 0.0016640000000000001, 'formatted_total_cost': '$0.001664'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 580, 'output_tokens': 63, 'total_cost': 0.0016640000000000001, 'formatted_total_cost': '$0.001664'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3340, 'output_tokens': 62, 'total_cost': 0.007176, 'formatted_total_cost': '$0.007176'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 583, 'output_tokens': 64, 'total_cost': 0.0016779999999999998, 'formatted_total_cost': '$0.001678'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 583, 'output_tokens': 64, 'total_cost': 0.0016779999999999998, 'formatted_total_cost': '$0.001678'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3416, 'output_tokens': 62, 'total_cost': 0.007328, 'formatted_total_cost': '$0.007328'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 569, 'output_tokens': 64, 'total_cost': 0.00165, 'formatted_total_cost': '$0.001650'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 569, 'output_tokens': 64, 'total_cost': 0.00165, 'formatted_total_cost': '$0.001650'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3446, 'output_tokens': 62, 'total_cost': 0.007388, 'formatted_total_cost': '$0.007388'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 581, 'output_tokens': 63, 'total_cost': 0.001666, 'formatted_total_cost': '$0.001666'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 581, 'output_tokens': 63, 'total_cost': 0.001666, 'formatted_total_cost': '$0.001666'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3476, 'output_tokens': 62, 'total_cost': 0.007448, 'formatted_total_cost': '$0.007448'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3476, 'output_tokens': 62, 'total_cost': 0.007448, 'formatted_total_cost': '$0.007448'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 386, 'output_tokens': 5, 'total_cost': 0.000812, 'formatted_total_cost': '$0.000812'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3496, 'output_tokens': 70, 'total_cost': 0.007552, 'formatted_total_cost': '$0.007552'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3496, 'output_tokens': 70, 'total_cost': 0.007552, 'formatted_total_cost': '$0.007552'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3486, 'output_tokens': 70, 'total_cost': 0.007532, 'formatted_total_cost': '$0.007532'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3486, 'output_tokens': 70, 'total_cost': 0.007532, 'formatted_total_cost': '$0.007532'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3421, 'output_tokens': 70, 'total_cost': 0.007402, 'formatted_total_cost': '$0.007402'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3421, 'output_tokens': 70, 'total_cost': 0.007402, 'formatted_total_cost': '$0.007402'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3556, 'output_tokens': 77, 'total_cost': 0.0077280000000000005, 'formatted_total_cost': '$0.007728'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 640, 'output_tokens': 70, 'total_cost': 0.00184, 'formatted_total_cost': '$0.001840'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 640, 'output_tokens': 70, 'total_cost': 0.00184, 'formatted_total_cost': '$0.001840'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3417, 'output_tokens': 70, 'total_cost': 0.0073939999999999995, 'formatted_total_cost': '$0.007394'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3417, 'output_tokens': 70, 'total_cost': 0.0073939999999999995, 'formatted_total_cost': '$0.007394'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3655, 'output_tokens': 78, 'total_cost': 0.007934, 'formatted_total_cost': '$0.007934'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3655, 'output_tokens': 78, 'total_cost': 0.007934, 'formatted_total_cost': '$0.007934'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 570, 'output_tokens': 5, 'total_cost': 0.00118, 'formatted_total_cost': '$0.001180'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3852, 'output_tokens': 92, 'total_cost': 0.00844, 'formatted_total_cost': '$0.008440'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3852, 'output_tokens': 92, 'total_cost': 0.00844, 'formatted_total_cost': '$0.008440'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3953, 'output_tokens': 99, 'total_cost': 0.008698, 'formatted_total_cost': '$0.008698'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3953, 'output_tokens': 99, 'total_cost': 0.008698, 'formatted_total_cost': '$0.008698'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3782, 'output_tokens': 92, 'total_cost': 0.0083, 'formatted_total_cost': '$0.008300'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3782, 'output_tokens': 92, 'total_cost': 0.0083, 'formatted_total_cost': '$0.008300'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3774, 'output_tokens': 92, 'total_cost': 0.008284, 'formatted_total_cost': '$0.008284'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3774, 'output_tokens': 92, 'total_cost': 0.008284, 'formatted_total_cost': '$0.008284'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3903, 'output_tokens': 92, 'total_cost': 0.008542, 'formatted_total_cost': '$0.008542'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3903, 'output_tokens': 92, 'total_cost': 0.008542, 'formatted_total_cost': '$0.008542'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3955, 'output_tokens': 92, 'total_cost': 0.008646000000000001, 'formatted_total_cost': '$0.008646'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3955, 'output_tokens': 92, 'total_cost': 0.008646000000000001, 'formatted_total_cost': '$0.008646'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 458, 'output_tokens': 5, 'total_cost': 0.000956, 'formatted_total_cost': '$0.000956'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3370, 'output_tokens': 80, 'total_cost': 0.00738, 'formatted_total_cost': '$0.007380'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3370, 'output_tokens': 80, 'total_cost': 0.00738, 'formatted_total_cost': '$0.007380'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3528, 'output_tokens': 80, 'total_cost': 0.007696, 'formatted_total_cost': '$0.007696'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3528, 'output_tokens': 80, 'total_cost': 0.007696, 'formatted_total_cost': '$0.007696'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3336, 'output_tokens': 80, 'total_cost': 0.007312, 'formatted_total_cost': '$0.007312'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3336, 'output_tokens': 80, 'total_cost': 0.007312, 'formatted_total_cost': '$0.007312'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3319, 'output_tokens': 80, 'total_cost': 0.007278, 'formatted_total_cost': '$0.007278'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3319, 'output_tokens': 80, 'total_cost': 0.007278, 'formatted_total_cost': '$0.007278'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3537, 'output_tokens': 80, 'total_cost': 0.007714, 'formatted_total_cost': '$0.007714'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3537, 'output_tokens': 80, 'total_cost': 0.007714, 'formatted_total_cost': '$0.007714'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3371, 'output_tokens': 73, 'total_cost': 0.007326, 'formatted_total_cost': '$0.007326'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 3371, 'output_tokens': 73, 'total_cost': 0.007326, 'formatted_total_cost': '$0.007326'}, {'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 563, 'output_tokens': 5, 'total_cost': 0.0011660000000000002, 'formatted_total_cost': '$0.001166'}], [{'model_name': 'openai_gpt-4.1-2025-04-14', 'input_tokens': 8203, 'output_tokens': 2705, 'total_cost': 0.038045999999999996, 'formatted_total_cost': '$0.038046'}]]",False,0,,/home/nayoonkim/LATCH/analyses/results/fig_22_11_openai_gpt-4.1-2025-04-14_result_log.csv,

@@ -1,0 +1,5 @@
+Do logistic regression using NHANES data from 2007-2020.
+Include participants who reported to have diabetes.
+Exclude participants who had missing diabetes status or missing status on diabetic retinopathy or participant who did not report to have diabetes or missing values in Systolic blood pressure (mmHg, first measurement).
+Predictor will be Systolic blood pressure (mmHg, first measurement): categorize as <140 (reference; group1), ≥140 (hypertensive; group2). Outcome will be diabetic retinopathy presence. Consider age at screening in the analysis.
+    
