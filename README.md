@@ -12,7 +12,6 @@ Install the following tools before setting up the project:
 
 * [Conda or Miniconda](https://docs.conda.io/)
 * [Docker](https://www.docker.com/)
-* [Docker Compose](https://docs.docker.com/compose/)
 * PostgreSQL (provided via Docker)
 
 ---
@@ -75,7 +74,7 @@ Publicly available from official NHANES sources.
 Artificial Intelligence Ready and Exploratory Atlas for Diabetes Insights
 Access requires a request via:
 
-👉 [https://aireadi.org/dataset](https://aireadi.org/dataset)
+[https://aireadi.org/dataset](https://aireadi.org/dataset)
 
 ---
 
