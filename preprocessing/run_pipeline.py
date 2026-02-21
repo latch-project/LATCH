@@ -46,10 +46,23 @@ def main():
     # 1) NHANES FIRST
     # =========================
     nhanes_converted_dir = nhanes_dir / "converted_tables"
-    if not is_dir_missing_or_empty(nhanes_converted_dir):
-        print(
-            f"\n--- Skipping NHANES: {nhanes_converted_dir} already exists and is not empty ---"
-        )
+
+    if nhanes_converted_dir.exists():
+        csv_files = list(nhanes_converted_dir.rglob("*.csv"))
+        if csv_files:
+            print(
+                f"\n--- Skipping NHANES: CSV files already exist in {nhanes_converted_dir} ---"
+            )
+        else:
+            run_command(
+                [
+                    sys.executable,
+                    script_dir / "final_nhanes.py",
+                    "--datafolder",
+                    nhanes_dir,
+                ],
+                "NHANES Full Pipeline",
+            )
     else:
         run_command(
             [
@@ -62,9 +75,16 @@ def main():
         )
 
     nhanes_weights_dir = nhanes_dir / "weights"
-    if not is_dir_missing_or_empty(nhanes_weights_dir):
+
+    csv_files = (
+        list(nhanes_weights_dir.rglob("*.csv"))
+        if nhanes_weights_dir.exists()
+        else []
+    )
+
+    if csv_files:
         print(
-            f"\n--- Skipping NHANES Weights: {nhanes_weights_dir} already exists and is not empty ---"
+            f"\n--- Skipping NHANES Weights: CSV files already exist in {nhanes_weights_dir} ---"
         )
     else:
         run_command(

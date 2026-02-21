@@ -10,7 +10,8 @@ from pathlib import Path
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path.cwd().parents[0]))
+# sys.path.append(str(Path.cwd().parents[0]))
+sys.path.append(str(Path.cwd()))
 from config import other_config, data_config, config
 
 

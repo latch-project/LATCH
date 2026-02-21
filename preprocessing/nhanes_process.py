@@ -15,7 +15,8 @@ from pathlib import Path
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path.cwd().parents[0]))
+# sys.path.append(str(Path.cwd().parents[0]))
+sys.path.append(str(Path.cwd()))
 from config import other_config, data_config, config
 
 
@@ -111,7 +112,8 @@ def nhanes_codebook_from_url(url):
         var_info = get_var_names(soup)
         colnames = var_info.get("VarNames", [])
     except Exception as e:
-        print(f"Error parsing variable names: {e}")
+        # print(f"Error parsing variable names: {e}")
+        print("")
         return None
 
     if not colnames:
@@ -270,7 +272,8 @@ def nhanes_from_url(
         return df
 
     except Exception as e:
-        print(f"Error downloading {url}: {e}")
+        print("")
+        # print(f"Error downloading {url}: {e}")
         return None
 
 
@@ -324,10 +327,12 @@ def count_xpt_files(category):
         return xpt_count
 
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching URL: {e}")
+        print("")
+        # print(f"Error fetching URL: {e}")
         return None
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print("")
+        # print(f"An unexpected error occurred: {e}")
         return None
 
 
@@ -467,9 +472,10 @@ def extract_schema_and_samples(engine, table, schema_name):
                     ]
                 except Exception as e:
                     sample_values = [f"[Error: {e}]"]
-                    print(
-                        f"Error fetching sample values for column '{col_name}' in table '{table}': {e}"
-                    )
+                    print("")
+                    # print(
+                    #     f"Error fetching sample values for column '{col_name}' in table '{table}': {e}"
+                    # )
 
                 # Pad to exactly 10 items if needed
                 while len(sample_values) < 10:
@@ -483,7 +489,8 @@ def extract_schema_and_samples(engine, table, schema_name):
             schema_data.append(table_schema)
 
         except Exception as e:
-            print(f"Error processing table {table}: {e}")
+            print("")
+            # print(f"Error processing table {table}: {e}")
 
     return schema_data
 
@@ -534,6 +541,7 @@ def april_3_save_extract_schema_and_samples(engine, table, schema_name):
 
             schema_data.append(table_schema)
         except Exception as e:
-            print(f"Error processing table {table}: {e}")
+            print("")
+            # print(f"Error processing table {table}: {e}")
 
     return schema_data
