@@ -2,11 +2,11 @@ We plan to conduct a weighted logistic regression analysis to examine the relati
 The study will include all individuals whose age in years at screening was 30 years or older who have complete data on both serum albumin (g/dL) and diabetic retinopathy status.
 Participants will be excluded if their age in years at screening is less than 30 years old, or age when first told the patient had diabetes was before age 30, or had uncertain diabetes status. 
 Uncertainty is based on their answer to the question “Has a doctor ever told you that you have diabetes?” and if they answer as "borderline" and  either have a missing glycohemoglobin (HbA1c) value or an glycohemoglobin (HbA1c) below 6.5%. 
-We will also exclude anyone with missing data on serum albumin or on the outcome measure.
+We will also exclude anyone with missing data on serum albumin (g/dL) or on the outcome measure.
 The main predictor in the analysis will be serum albumin (g/dL), categorized into quartiles Q1: <25%, Q2: ≥25 and <50, Q3: ≥50 and <75%, Q4: ≥75%. 
 The outcome variable will be the presence or absence of diabetic retinopathy, based on responses to the question “diabetes affected eyes had retinopathy?”, coded as 1 for "Yes" and 0 for "No".
 We will adjust the analysis for potential confounding factors including gender, age in years at screening, and race/Hispanic origin, which will be categorized as White, Black, Mexican American, or Other, 
-We will also adjust for kidney disease status, which is defined as havinig an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or urine albumin-to-creatinine ratio (UACR) of 30 mg/g or greater. It will be categorized as yes, no, and unknown.
+We will also adjust for kidney disease status, which is defined as havinig an estimated glomerular filtration rate (eGFR) below 60 mL/min/1.73m^2 or urine albumin-to-creatinine ratio (UACR) of 30 mg/g or greater. Categorize kidney disease status as unknown if necessary information is missing, then categorize the rest as yes or no. 
 eGFR is defined for 4 cases:
 if gender is female and serum_creatinine <= 0.7 (mg/dl): 142 * (serum_creatinine(mg/dl) / 0.7)**(-0.241) * (0.9938)**age at screening * 1.012
 if gender is female and serum_creatinine > 0.7 (mg/dl): 142 * (serum_creatinine(mg/dl) / 0.7)**(-1.2) * (0.9938)**age at screening* 1.012

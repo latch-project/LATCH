@@ -473,8 +473,8 @@ def read_one_var(input_file):
             vars_data = evaluate.read_variables(vars_data)
             print(vars_data.to_string())
 
-            # vars_data = (str(row["SQL"]))
-            # print(vars_data)
+            vars_data = (str(row["SQL"]))
+            print(vars_data)
 
             # Variables
             print("1) VARIABLES")
