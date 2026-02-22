@@ -375,12 +375,14 @@ def check_nhanes_files_from_tablename_year(df):
         try:
             codebook = nhanes_codebook_from_url(codebookurl)
             if codebook is None:
-                print(f"Codebook URL exists, but returned None: {codebookurl}")
+                print("")
+                # print(f"Codebook URL exists, but returned None: {codebookurl}")
                 codebook_exists = False
                 codebook_error_urls.append(codebookurl)
                 codebook_error_count += 1
         except Exception as e:
-            print(f"Codebook URL does not exist or error: {codebookurl}, {e}")
+            print("")
+            # print(f"Codebook URL does not exist or error: {codebookurl}, {e}")
             codebook_exists = False
             codebook_error_urls.append(codebookurl)
             codebook_error_count += 1
@@ -388,12 +390,14 @@ def check_nhanes_files_from_tablename_year(df):
         try:
             data_df = nhanes_from_url(dataurl)
             if data_df is None:
-                print(f"Data URL exists, but returned None: {dataurl}")
+                print("")
+                # print(f"Data URL exists, but returned None: {dataurl}")
                 data_exists = False
                 data_error_urls.append(dataurl)
                 data_error_count += 1
         except Exception as e:
-            print(f"Data URL does not exist or error: {dataurl}, {e}")
+            print("")
+            # print(f"Data URL does not exist or error: {dataurl}, {e}")
             data_exists = False
             data_error_urls.append(dataurl)
             data_error_count += 1

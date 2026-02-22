@@ -402,7 +402,7 @@ def build_weights(nhanes_path: str):
     with open(exam_tables_path, "w") as f:
         json.dump(exam_lab_tables, f, indent=4)
 
-    print("✅ Weight artifacts created:")
+    print("Weight artifacts created:")
     print(f" - {subset_weights_path}")
     print(f" - {exam_tables_path}")
 

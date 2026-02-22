@@ -282,7 +282,8 @@ def analyze_csv_for_sql(filename, df):
                     sql_type = "TEXT (fallback due to unknown type)"
 
         except Exception as e:
-            print(f"\nError processing column '{col}' in file '{filename}': {e}")
+            print("")
+            # print(f"\nError processing column '{col}' in file '{filename}': {e}")
 
 
 import pandas as pd
@@ -335,4 +336,5 @@ def convert(filepath, conversionpath, logpath, dictionary_path):
         )
 
     except Exception as e:
-        print(f"Error processing {filepath}: {e}")
+        print("")
+        # print(f"Error processing {filepath}: {e}")

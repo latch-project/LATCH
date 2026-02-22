@@ -63,13 +63,15 @@ def download_metatdata(datafolder):
             before = len(df)
             df = df.drop_duplicates()
             after = len(df)
+            print("")
 
-            print(f"{key}: {before} rows → {after} rows after dropping duplicates.")
+            # print(f"{key}: {before} rows → {after} rows after dropping duplicates.")
 
             # Optionally save cleaned file (overwrite original)
             df.to_csv(var_path, index=False)
         except Exception as e:
-            print(f"Error processing {key}: {e}")
+            print("")
+            # print(f"Error processing {key}: {e}")
 
 
 def clean_html_formatting(text):
@@ -111,7 +113,8 @@ def get_codebook_with_error_handling(codebookurl, metadatapath):
     except Exception as e:
         with open(error_file, "a") as f:
             f.write(f"Error retrieving codebook from {codebookurl}: {e}\n")
-        print(f"Error retrieving codebook from {codebookurl}: {e}")
+        print("")
+        # print(f"Error retrieving codebook from {codebookurl}: {e}")
         return None
 
 
@@ -192,7 +195,8 @@ def download_codebooks(datafolder):
 
             df.to_csv(var_path, index=False)
         except Exception as e:
-            print(f"Error processing {key}: {e}")
+            print("")
+            # print(f"Error processing {key}: {e}")
 
 
 def merge_metadata(datafolder):
@@ -215,7 +219,8 @@ def merge_metadata(datafolder):
             print(f"Merged and saved: {output_path}")
 
         except Exception as e:
-            print(f"Failed for {keyword}: {e}")
+            print("")
+            # print(f"Failed for {keyword}: {e}")
 
     merged_files = [
         f"{metadatapath}/{k}_combined_variable_codebook.csv" for k in keywords
@@ -228,7 +233,8 @@ def merge_metadata(datafolder):
             df = pd.read_csv(file)
             all_dfs.append(df)
         except Exception as e:
-            print(f"Failed to read {file}: {e}")
+            print("")
+            # print(f"Failed to read {file}: {e}")
 
     if all_dfs:
         df_all = pd.concat(all_dfs, ignore_index=True)
@@ -464,10 +470,12 @@ def count_xpt_files(url):
         return xpt_count
 
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching URL: {e}")
+        print("")
+        # print(f"Error fetching URL: {e}")
         return None
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print("")
+        # print(f"An unexpected error occurred: {e}")
         return None
 
 
@@ -508,12 +516,15 @@ def download_xpt_files(url, datapath, keyword):
                             f.write(chunk)
                 print(f"Downloaded: {file_name}")
             except Exception as e:
-                print(f"Failed to download {file_name}: {e}")
+                print("")
+                # print(f"Failed to download {file_name}: {e}")
 
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching URL: {e}")
+        print("")
+        # print(f"Error fetching URL: {e}")
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print("")
+        # print(f"An unexpected error occurred: {e}")
 
 
 def download_nhanes_data(datapath):
@@ -562,7 +573,8 @@ def are_csvs_equal(file1, file2):
         df1 = pd.read_csv(file1)
         df2 = pd.read_csv(file2)
     except Exception as e:
-        print(f"Error reading files: {e}")
+        print("")
+        # print(f"Error reading files: {e}")
         return False
 
     return df1.equals(df2)
@@ -605,7 +617,8 @@ def convert_xpt_to_csv(datafolder):
                     file_path, output_folder, log_folder, dictionary_path
                 )
             except Exception as e:
-                print(f"Failed: {os.path.basename(file_path)} — {str(e)}")
+                print("")
+                # print(f"Failed: {os.path.basename(file_path)} — {str(e)}")
                 failed_files.append(os.path.basename(file_path))
 
     for keyword in ["Examination"]:
@@ -640,7 +653,8 @@ def convert_xpt_to_csv(datafolder):
         try:
             convert_utils.convert(file_path, output_folder, log_folder, dictionary_path)
         except Exception as e:
-            print(f"Failed: {os.path.basename(file_path)} — {str(e)}")
+            print("")
+            # print(f"Failed: {os.path.basename(file_path)} — {str(e)}")
             failed_files.append(os.path.basename(file_path))
 
 
@@ -1057,15 +1071,16 @@ def final_schema(datafolder):
                     )
 
         except (FileNotFoundError, json.JSONDecodeError) as e:
-            print(f"  -> Error processing file {file_path}: {e}")
+            print("")
+            # print(f"  -> Error processing file {file_path}: {e}")
 
     # --- 5. CLEANUP AND VERIFY ---
     # Drop the temporary cleaned columns
     df.drop(columns=["cleaned_sas_label", "cleaned_data_file"], inplace=True)
 
     print("\n--- Update Complete ---")
-    print("Displaying a sample of updated rows:")
-    print(df[df["Data Type"].notna()].head().to_string())
+    # print("Displaying a sample of updated rows:")
+    # print(df[df["Data Type"].notna()].head().to_string())
 
     # Drop specified columns if they exist
     columns_to_drop = ["Data Type", "Table Name", "Column Name"]
