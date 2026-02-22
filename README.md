@@ -177,8 +177,8 @@ If you use LATCH in your research, please cite:
   author  = {Gim, Nayoon and Gim, In and Jiang, Yu and Kihara, Yuka and Blazes, Marian and Wu, Yue and Lee, Cecilia S. and Lee, Aaron Y.},
   journal = {medRxiv},
   year    = {2026},
-  doi     = {10.11xxxxxxx},
-  url     = {https://doi.org/1xxxxxxxx}
+  doi     = {10.64898/2026.02.10.26346008},
+  url     = {https://doi.org/10.64898/2026.02.10.26346008}
 }
 ```
 
