@@ -172,7 +172,7 @@ These directories contain datasets, experiment code, and results used to evaluat
 If you use LATCH in your research, please cite:
 
 ```bibtex
-@article{example2026medrxiv,
+@article{gim2026medrxiv,
   title   = {An LLM-assisted framework for accelerated and verifiable clinical hypothesis testing from electronic health records},
   author  = {Gim, Nayoon and Gim, In and Jiang, Yu and Kihara, Yuka and Blazes, Marian and Wu, Yue and Lee, Cecilia S. and Lee, Aaron Y.},
   journal = {medRxiv},
