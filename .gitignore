@@ -29,6 +29,7 @@ MANIFEST
 # Data
 archive/
 figures/
+test/
 
 # PyInstaller
 #   Usually these files are written by a python script from a template
@@ -86,6 +87,11 @@ target/
 profile_default/
 ipython_config.py
 
+# Others
+test.ipynb
+test2.ipynb
+test3.ipynb
+test_keyword.ipynb
 # pyenv
 #   For a library or package, you might want to ignore these files since the code is
 #   intended to run in multiple environments; otherwise, check them in:

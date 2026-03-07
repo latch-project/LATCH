@@ -2001,6 +2001,19 @@ def make_multiple_dictionaries_grouped(
                     candidates["Similarity Score"] = 1 - (distances[0] / 2)
                     columns_to_keep = config_variabile["columns_to_keep"]
                     candidates = candidates[columns_to_keep]
+
+                    # Filter terms (e.g., arsenic, pesticides) that may trigger commercial LLM safety filters
+                    # and cause the model to refuse or block responses during automated queries.
+
+                    words_to_drop = ["arsenic", "pesticides", "insecticides"]
+                    pattern = "|".join(words_to_drop)
+                    rows_with_forbidden_words = (
+                        candidates.select_dtypes(include="object")
+                        .apply(lambda col: col.str.contains(pattern, case=False, na=False))
+                        .any(axis=1)
+                    )
+                    candidates = candidates[~rows_with_forbidden_words]
+
                     # print(candidates.to_string())
                     candidates = candidates.to_dict(orient="records")
 
