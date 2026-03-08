@@ -483,7 +483,10 @@ def download_xpt_files(url, datapath, keyword):
     """Downloads all .XPT files from a given NHANES data page."""
     output_dir = f"{datapath}/{keyword}"
 
-    with open("./nhanes_file_list.json") as f:
+    base = os.path.dirname(os.path.dirname(os.path.dirname(datapath)))
+    nhanes_tables_list = os.path.join(base, "preprocessing", "nhanes_file_list.json")
+
+    with open(nhanes_tables_list) as f:
         files_by_category = json.load(f)
 
     try:
