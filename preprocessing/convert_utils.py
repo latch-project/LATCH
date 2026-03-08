@@ -137,7 +137,6 @@ def troubleshoot_column(filepath, column, metadatapath):
 def convert_log_as_you_go(filepath, folder, dictionary_path):
     filename = os.path.splitext(os.path.basename(filepath))
     file_base = filename[0]
-
     log_filepath = f"{folder}/{file_base}.tsv"
 
     metadata_df = pd.read_csv(dictionary_path)
@@ -156,6 +155,15 @@ def convert_log_as_you_go(filepath, folder, dictionary_path):
 
     df = pd.read_sas(filepath, format="xport")
     df.replace(5.397605346934028e-79, 0, inplace=True)
+    
+    # file change by the official website but inconsistent with other years - customized edit for consistency
+    if "biopro_l" in file_base.lower():
+        df.columns = [col.lower() for col in df.columns]
+
+    if "wtph2yr" in df.columns:
+        df = df.drop(columns=["wtph2yr"])
+    ###
+
     df.columns = [col.lower() for col in df.columns]
 
     if log_filepath:

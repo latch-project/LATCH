@@ -482,6 +482,10 @@ def count_xpt_files(url):
 def download_xpt_files(url, datapath, keyword):
     """Downloads all .XPT files from a given NHANES data page."""
     output_dir = f"{datapath}/{keyword}"
+
+    with open("./nhanes_file_list.json") as f:
+        files_by_category = json.load(f)
+
     try:
         os.makedirs(output_dir, exist_ok=True)
 
@@ -495,6 +499,12 @@ def download_xpt_files(url, datapath, keyword):
             link.get("href")
             for link in links
             if link.get("href") and link.get("href").lower().endswith(".xpt")
+        ]
+
+        xpt_links = [
+            href
+            for href in xpt_links
+            if os.path.basename(href).upper() in files_by_category[keyword]
         ]
 
         if not xpt_links:
