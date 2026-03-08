@@ -19,7 +19,11 @@ def run_command(command, description):
 
 
 def is_dir_missing_or_empty(p: Path) -> bool:
-    return (not p.exists()) or (not p.is_dir()) or (not any(p.iterdir()))
+    return (
+        (not p.exists())
+        or (not p.is_dir())
+        or (not any(f for f in p.iterdir() if f.name != ".gitignore"))
+    )
 
 
 def main():
