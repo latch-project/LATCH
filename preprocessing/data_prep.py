@@ -15,6 +15,7 @@ import data_prep
 from pathlib import Path
 import urllib.request
 import json
+import time
 
 
 def create_project_subfolders(base_folder):
@@ -492,7 +493,7 @@ def download_xpt_files(url, datapath, keyword):
     try:
         os.makedirs(output_dir, exist_ok=True)
 
-        response = requests.get(url)
+        response = requests.get(url, timeout=(30, 60))
         response.raise_for_status()
 
         soup = BeautifulSoup(response.content, "html.parser")
@@ -519,26 +520,35 @@ def download_xpt_files(url, datapath, keyword):
         for href in xpt_links:
             full_url = urljoin(url, href)
             file_name = os.path.basename(href)
+            file_path = os.path.join(output_dir, file_name)
 
-            try:
-                file_path = os.path.join(output_dir, file_name)
-                with requests.get(full_url, stream=True) as r:
-                    r.raise_for_status()
-                    with open(file_path, "wb") as f:
-                        for chunk in r.iter_content(chunk_size=8192):
-                            f.write(chunk)
-                print(f"Downloaded: {file_name}")
-            except Exception as e:
-                print("")
-                # print(f"Failed to download {file_name}: {e}")
+            for attempt in range(1, 4):
+                try:
+                    with requests.get(full_url, stream=True, timeout=(30, 60)) as r:
+                        r.raise_for_status()
+                        with open(file_path, "wb") as f:
+                            for chunk in r.iter_content(chunk_size=8192):
+                                f.write(chunk)
+                    print(f"Downloaded: {file_name}")
+                    break
+                except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+                    if attempt == 3:                        
+                        print(f"Failed to download {file_name} after 3 attempts: {e}")
+                        try:
+                            os.remove(file_path)
+                        except OSError:
+                            pass
+                    else:
+                        print(f"Retry {attempt}/3 for {file_name}: {e}")
+                        time.sleep(2 ** attempt)
+                except Exception as e:
+                    print(f"Failed to download {file_name}: {e}")
+                    break
 
     except requests.exceptions.RequestException as e:
-        print("")
-        # print(f"Error fetching URL: {e}")
+        print(f"Error fetching URL {url}: {e}")
     except Exception as e:
-        print("")
-        # print(f"An unexpected error occurred: {e}")
-
+        print(f"Unexpected error fetching {url}: {e}")
 
 def download_nhanes_data(datapath):
     nhansedatapath = f"{datapath}/tables"
