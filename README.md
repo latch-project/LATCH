@@ -176,7 +176,7 @@ After completing the environment and database setup above, run:
 ```bash
 PYTHONPATH="$PWD:$PWD/src" python src/run_latch.py \
   --result-folder analyses/results/fig2_reproduction \
-  --analysis-name test_fig_2_2_3 \
+  --analysis-name fig_2_2_3 \
   --llm-provider google_gemini-2.5-flash \
   --question "$(cat analyses/prompts/fig2_reproduction/2_3.txt)"
 ```
