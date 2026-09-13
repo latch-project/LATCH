@@ -30,6 +30,12 @@ MANIFEST
 archive/
 figures/
 test/
+*test*/
+fig2_reproduction_one_step_planner
+fig2_reproduction_may
+fig3_extension_may
+fig4_new_insights_may
+
 
 # PyInstaller
 #   Usually these files are written by a python script from a template
@@ -88,6 +94,7 @@ profile_default/
 ipython_config.py
 
 # Others
+*test*.ipynb
 test.ipynb
 test2.ipynb
 test3.ipynb
