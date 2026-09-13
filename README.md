@@ -4,6 +4,18 @@
 
 ---
 
+## Versioned Releases
+
+Versioned releases of LATCH are available through GitHub Releases.
+
+Current stable release: `v1.0.0`
+
+Users seeking a fixed version of the code should use a tagged release rather than the continuously updated `main` branch.
+
+Because LATCH includes stochastic LLM-assisted components, exact generated outputs may differ across reruns.
+
+---
+
 ## Getting Started
 
 ### Prerequisites
@@ -121,9 +133,9 @@ analyses/
 
 Executable workflows for:
 
-* **Study replication** — replication of published results
-* **Study extension** — expand existing studies
-* **New insights** — exploratory analyses
+- **Study reproduction** — reproduction of previously published analyses
+- **Study extension** — targeted extensions of existing analyses
+- **Hypothesis-generating studies** — exploratory analyses beginning from investigator-formulated research questions
 
 Each script can be run independently and may reference prompts from `analyses/prompts/`.
 
@@ -146,6 +158,36 @@ Stores generated outputs (processed data, figures, logs) for reproducibility and
 1. Edit or create a prompt in `analyses/prompts/`
 2. Run a script from `analyses/scripts/`
 3. Inspect outputs in `analyses/results/`
+
+---
+
+## Representative End-to-End Example
+
+The repository contains the prompts, analysis scripts, and generated outputs for the study-reproduction analyses.
+
+For a representative end-to-end example, see the following NHANES reproduction analysis:
+
+- **Input prompt:** `analyses/prompts/fig2_reproduction/2_3.txt`
+- **Analysis script:** `src/run_latch.py`
+- **Generated output:** `analyses/results/fig2_reproduction/fig_2_2_3_google_gemini-2.5-flash_result_log.csv`
+
+After completing the environment and database setup above, run:
+
+```bash
+PYTHONPATH="$PWD:$PWD/src" python src/run_latch.py \
+  --result-folder analyses/results/fig2_reproduction \
+  --analysis-name test_fig_2_2_3 \
+  --llm-provider google_gemini-2.5-flash \
+  --question "$(cat analyses/prompts/fig2_reproduction/2_3.txt)"
+```
+
+Then inspect the generated output in:
+
+```text
+analyses/results/fig2_reproduction/fig_2_2_3_google_gemini-2.5-flash_result_log.csv
+```
+
+This example demonstrates the workflow from the natural-language research prompt through study specification, variable mapping, analysis generation, statistical analysis, safeguards, and result logging.
 
 ---
 
