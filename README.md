@@ -12,8 +12,6 @@ Current stable release: `v1.0.0`
 
 Users seeking a fixed version of the code should use a tagged release rather than the continuously updated `main` branch.
 
-Because LATCH includes stochastic LLM-assisted components, exact generated outputs may differ across reruns.
-
 ---
 
 ## Getting Started
@@ -212,6 +210,14 @@ evaluation/
 ```
 
 These directories contain datasets, experiment code, and results used to evaluate LATCH performance.
+
+---
+
+## Notes
+
+These scripts are provided to document the workflow used in the study. LATCH includes stochastic LLM-assisted components, and exact generated outputs may differ across reruns. 
+
+NHANES data are retrieved from external source URLs maintained by NHANES. Because these upstream resources may change over time, future reruns may be affected by changes in file availability, URLs, or source organization.
 
 ---
 

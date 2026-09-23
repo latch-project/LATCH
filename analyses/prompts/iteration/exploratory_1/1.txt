@@ -1,0 +1,1 @@
+How common  diabetes, defined by diagnosis or glycohemoglobin level,  across visual acuity categories in NHANES 1999–2008 among adults aged 20 or more? Exclude participants with missing values.

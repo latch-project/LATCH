@@ -1,0 +1,1 @@
+Does retinal layer thickness explain why numerical visual acuity  differs between diabetes severity groups even after considering demographic variables and other ophthalmic diseases  based on AIREADI 2023-2025 data among adults aged 20 or more? Exclude participants with missing values.

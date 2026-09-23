@@ -1,0 +1,1 @@
+Is diabetes severity group associated with retinal layer average after adjusting for demographic variables  and other ophthalmic diseases based on AIREADI 2023-2025 data among adults aged 20 or more? Exclude participants with missing values.
