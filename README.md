@@ -189,6 +189,12 @@ analyses/results/fig2_reproduction/fig_2_2_3_google_gemini-2.5-flash_result_log.
 
 This example demonstrates the workflow from the natural-language research prompt through study specification, variable mapping, analysis generation, statistical analysis, safeguards, and result logging.
 
+## Expected Runtime
+
+**Data preparation and setup.** Using the provided pipeline, NHANES data preparation typically requires approximately 2–3 hours from download through PostgreSQL loading and schema generation. Processing the tabular portion of AI-READI typically requires approximately 1–2 hours after the dataset has been downloaded. Runtime can vary depending on network conditions, local hardware, and available computing resources.
+
+**Analysis runtime.** In the reported analyses, individual runs from natural-language input through statistical analysis and result generation typically required approximately 2–15 minutes. Runtime can vary depending on LLM API response latency, network conditions, database execution time, analysis complexity, and the specific model or provider used.
+
 ---
 
 ## Evaluation Framework

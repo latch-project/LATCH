@@ -35,7 +35,9 @@ fig2_reproduction_one_step_planner
 fig2_reproduction_may
 fig3_extension_may
 fig4_new_insights_may
-
+*test*.py
+*test*.sh
+*test*.ipynb
 
 # PyInstaller
 #   Usually these files are written by a python script from a template
