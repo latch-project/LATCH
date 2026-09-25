@@ -134,6 +134,8 @@ Executable workflows for:
 - **Study reproduction** — reproduction of previously published analyses
 - **Study extension** — targeted extensions of existing analyses
 - **Hypothesis-generating studies** — exploratory analyses beginning from investigator-formulated research questions
+- **Iterative analysis refinement** — documents successive prompt refinements and analysis outputs following human review; suffixes such as `_1`, `_2`, and `_3` indicate sequential iterations.
+- **LATCH adaptation example** — demonstrates how LATCH can be adapted to registry-style data using a synthetic schema summary. The workflow generates SQL from the synthetic schema, allowing queries to be reviewed and later executed within a protected environment without requiring direct access to the secure dataset during query generation. The configuration file (`config.py`)  can be used to specify dataset-specific schema information.
 
 Each script can be run independently and may reference prompts from `analyses/prompts/`.
 
@@ -206,7 +208,9 @@ evaluation/
 ├── api_variation/
 ├── content_evaluation/
 ├── logic_evaluation/
-└── phrase_evaluation/
+├── phrase_evaluation/
+├── variable_rank/
+└── one_step_planner/
 ```
 
 These directories contain datasets, experiment code, and results used to evaluate LATCH performance.
@@ -215,10 +219,9 @@ These directories contain datasets, experiment code, and results used to evaluat
 
 ## Notes
 
-These scripts are provided to document the workflow used in the study. LATCH includes stochastic LLM-assisted components, and exact generated outputs may differ across reruns. 
+NHANES data are retrieved from external source URLs maintained by NHANES. Because these upstream resources may change over time, future reruns may be affected by changes in file availability, URLs, or source organization. The download workflow was verified to function at the time of the study and repository preparation.
 
-NHANES data are retrieved from external source URLs maintained by NHANES. Because these upstream resources may change over time, future reruns may be affected by changes in file availability, URLs, or source organization.
-
+These scripts are provided to document the workflow/code used in the study. LATCH includes stochastic LLM-assisted components, and exact generated outputs may not be identical across runs.
 ---
 
 ## Citation
