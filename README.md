@@ -221,8 +221,7 @@ These directories contain datasets, experiment code, and results used to evaluat
 
 NHANES data are retrieved from external source URLs maintained by NHANES. Because these upstream resources may change over time, future reruns may be affected by changes in file availability, URLs, or source organization. The download workflow was verified to function at the time of the study and repository preparation.
 
-These scripts are provided to document the workflow/code used in the study. LATCH includes LLM-integrated components and exact generated outputs may not be identical across runs.
-
+These scripts are provided to document the workflow and code used in the study. Because LATCH includes LLM-integrated components, exact generated outputs may not be identical across runs.
 ---
 
 ## Citation
