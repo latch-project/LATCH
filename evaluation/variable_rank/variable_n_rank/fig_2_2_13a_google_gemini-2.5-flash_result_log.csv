@@ -1,0 +1,57 @@
+Search Keyword,Cycle,Expected Table,Expected Column,Found,Candidate Rank,Matched Variable,Matched Table,Similarity Score
+self-reported diagnosis of diabetes,2005-2006,nhanes.diq_d,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_d,0.7151071
+self-reported diagnosis of diabetes,2011-2012,nhanes.diq_g,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_g,0.7151071
+self-reported diagnosis of diabetes,2009-2010,nhanes.diq_f,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_f,0.7151071
+self-reported diagnosis of diabetes,2007-2008,nhanes.diq_e,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_e,0.7151071
+diabetes onset (years),2005-2006,nhanes.diq_d,age_when_first_told_you_had_diabetes,True,2,age when first told you had diabetes,nhanes.diq_d,0.7374362
+diabetes onset (years),2011-2012,nhanes.diq_g,age_when_first_told_you_had_diabetes,True,1,age when first told you had diabetes,nhanes.diq_g,0.7374362
+diabetes onset (years),2009-2010,nhanes.diq_f,age_when_first_told_you_had_diabetes,True,1,age when first told you had diabetes,nhanes.diq_f,0.7374362
+diabetes onset (years),2007-2008,nhanes.diq_e,age_when_first_told_you_had_diabetes,True,2,age when first told you had diabetes,nhanes.diq_e,0.7374362
+age at screening (years),2005-2006,nhanes.demo_d,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_d,0.9867746
+age at screening (years),2011-2012,nhanes.demo_g,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_g,0.9867746
+age at screening (years),2009-2010,nhanes.demo_f,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_f,0.9867746
+age at screening (years),2007-2008,nhanes.demo_e,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_e,0.9867746
+pregnant at the time of the exam,2005-2006,nhanes.demo_d,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_d,0.83518887
+pregnant at the time of the exam,2011-2012,nhanes.demo_g,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_g,0.83518887
+pregnant at the time of the exam,2009-2010,nhanes.demo_f,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_f,0.83518887
+pregnant at the time of the exam,2007-2008,nhanes.demo_e,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_e,0.83518887
+insulin therapy duration (years),2005-2006,nhanes.diq_d,how_long_taking_insulin,True,1,how long taking insulin,nhanes.diq_d,0.75673616
+insulin therapy duration (years),2011-2012,nhanes.diq_g,how_long_taking_insulin,True,1,how long taking insulin,nhanes.diq_g,0.75673616
+insulin therapy duration (years),2009-2010,nhanes.diq_f,how_long_taking_insulin,True,1,how long taking insulin,nhanes.diq_f,0.75673616
+insulin therapy duration (years),2007-2008,nhanes.diq_e,how_long_taking_insulin,True,1,how long taking insulin,nhanes.diq_e,0.75673616
+have little interest in doing things,2005-2006,nhanes.dpq_d,have_little_interest_in_doing_things,True,1,have little interest in doing things,nhanes.dpq_d,1.0
+have little interest in doing things,2011-2012,nhanes.dpq_g,have_little_interest_in_doing_things,True,1,have little interest in doing things,nhanes.dpq_g,1.0
+have little interest in doing things,2009-2010,nhanes.dpq_f,have_little_interest_in_doing_things,True,1,have little interest in doing things,nhanes.dpq_f,1.0
+have little interest in doing things,2007-2008,nhanes.dpq_e,have_little_interest_in_doing_things,True,1,have little interest in doing things,nhanes.dpq_e,1.0
+feeling down depressed or hopeless,2005-2006,nhanes.dpq_d,feeling_down_depressed_or_hopeless,True,1,"feeling down, depressed, or hopeless",nhanes.dpq_d,0.9524647
+feeling down depressed or hopeless,2011-2012,nhanes.dpq_g,feeling_down_depressed_or_hopeless,True,1,"feeling down, depressed, or hopeless",nhanes.dpq_g,0.9524647
+feeling down depressed or hopeless,2009-2010,nhanes.dpq_f,feeling_down_depressed_or_hopeless,True,1,"feeling down, depressed, or hopeless",nhanes.dpq_f,0.9524647
+feeling down depressed or hopeless,2007-2008,nhanes.dpq_e,feeling_down_depressed_or_hopeless,True,1,"feeling down, depressed, or hopeless",nhanes.dpq_e,0.9524647
+trouble sleeping or sleeping too much,2005-2006,nhanes.dpq_d,trouble_sleeping_or_sleeping_too_much,True,1,trouble sleeping or sleeping too much,nhanes.dpq_d,1.0
+trouble sleeping or sleeping too much,2011-2012,nhanes.dpq_g,trouble_sleeping_or_sleeping_too_much,True,1,trouble sleeping or sleeping too much,nhanes.dpq_g,1.0
+trouble sleeping or sleeping too much,2009-2010,nhanes.dpq_f,trouble_sleeping_or_sleeping_too_much,True,1,trouble sleeping or sleeping too much,nhanes.dpq_f,1.0
+trouble sleeping or sleeping too much,2007-2008,nhanes.dpq_e,trouble_sleeping_or_sleeping_too_much,True,1,trouble sleeping or sleeping too much,nhanes.dpq_e,1.0
+feeling tired or having little energy,2005-2006,nhanes.dpq_d,feeling_tired_or_having_little_energy,True,1,feeling tired or having little energy,nhanes.dpq_d,1.0
+feeling tired or having little energy,2011-2012,nhanes.dpq_g,feeling_tired_or_having_little_energy,True,1,feeling tired or having little energy,nhanes.dpq_g,1.0
+feeling tired or having little energy,2009-2010,nhanes.dpq_f,feeling_tired_or_having_little_energy,True,1,feeling tired or having little energy,nhanes.dpq_f,1.0
+feeling tired or having little energy,2007-2008,nhanes.dpq_e,feeling_tired_or_having_little_energy,True,1,feeling tired or having little energy,nhanes.dpq_e,1.0
+poor appetite or overeating,2005-2006,nhanes.dpq_d,poor_appetite_or_overeating,True,1,poor appetite or overeating,nhanes.dpq_d,1.0
+poor appetite or overeating,2011-2012,nhanes.dpq_g,poor_appetite_or_overeating,True,1,poor appetite or overeating,nhanes.dpq_g,1.0
+poor appetite or overeating,2009-2010,nhanes.dpq_f,poor_appetite_or_overeating,True,1,poor appetite or overeating,nhanes.dpq_f,1.0
+poor appetite or overeating,2007-2008,nhanes.dpq_e,poor_appetite_or_overeating,True,1,poor appetite or overeating,nhanes.dpq_e,1.0
+feeling bad about yourself,2005-2006,nhanes.dpq_d,feeling_bad_about_yourself,True,1,feeling bad about yourself,nhanes.dpq_d,1.0
+feeling bad about yourself,2011-2012,nhanes.dpq_g,feeling_bad_about_yourself,True,1,feeling bad about yourself,nhanes.dpq_g,1.0
+feeling bad about yourself,2009-2010,nhanes.dpq_f,feeling_bad_about_yourself,True,1,feeling bad about yourself,nhanes.dpq_f,1.0
+feeling bad about yourself,2007-2008,nhanes.dpq_e,feeling_bad_about_yourself,True,1,feeling bad about yourself,nhanes.dpq_e,1.0
+trouble concentrating on things,2005-2006,nhanes.dpq_d,trouble_concentrating_on_things,True,1,trouble concentrating on things,nhanes.dpq_d,1.0
+trouble concentrating on things,2011-2012,nhanes.dpq_g,trouble_concentrating_on_things,True,1,trouble concentrating on things,nhanes.dpq_g,1.0
+trouble concentrating on things,2009-2010,nhanes.dpq_f,trouble_concentrating_on_things,True,1,trouble concentrating on things,nhanes.dpq_f,1.0
+trouble concentrating on things,2007-2008,nhanes.dpq_e,trouble_concentrating_on_things,True,1,trouble concentrating on things,nhanes.dpq_e,1.0
+moving or speaking slowly or too fast,2005-2006,nhanes.dpq_d,moving_or_speaking_slowly_or_too_fast,True,1,moving or speaking slowly or too fast,nhanes.dpq_d,1.0
+moving or speaking slowly or too fast,2011-2012,nhanes.dpq_g,moving_or_speaking_slowly_or_too_fast,True,1,moving or speaking slowly or too fast,nhanes.dpq_g,1.0
+moving or speaking slowly or too fast,2009-2010,nhanes.dpq_f,moving_or_speaking_slowly_or_too_fast,True,1,moving or speaking slowly or too fast,nhanes.dpq_f,1.0
+moving or speaking slowly or too fast,2007-2008,nhanes.dpq_e,moving_or_speaking_slowly_or_too_fast,True,1,moving or speaking slowly or too fast,nhanes.dpq_e,1.0
+thought you would be better off dead,2005-2006,nhanes.dpq_d,thought_you_would_be_better_off_dead,True,1,thought you would be better off dead,nhanes.dpq_d,1.0
+thought you would be better off dead,2011-2012,nhanes.dpq_g,thought_you_would_be_better_off_dead,True,1,thought you would be better off dead,nhanes.dpq_g,1.0
+thought you would be better off dead,2009-2010,nhanes.dpq_f,thought_you_would_be_better_off_dead,True,1,thought you would be better off dead,nhanes.dpq_f,1.0
+thought you would be better off dead,2007-2008,nhanes.dpq_e,thought_you_would_be_better_off_dead,True,1,thought you would be better off dead,nhanes.dpq_e,1.0

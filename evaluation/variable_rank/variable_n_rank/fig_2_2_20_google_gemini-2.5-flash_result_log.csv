@@ -1,0 +1,55 @@
+Search Keyword,Cycle,Expected Table,Expected Column,Found,Candidate Rank,Matched Variable,Matched Table,Similarity Score
+self-reported diabetes question,2005-2006,nhanes.diq_d,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_d,0.7110876
+self-reported diabetes question,2001-2002,nhanes.diq_b,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_b,0.7110876
+self-reported diabetes question,2003-2004,nhanes.diq_c,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_c,0.7110876
+self-reported diabetes question,2007-2008,nhanes.diq_e,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_e,0.7110876
+self-reported diabetes question,2009-2010,nhanes.diq_f,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_f,0.7110876
+self-reported diabetes question,1999-2000,nhanes.diq,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq,0.7110876
+age at screening,2005-2006,nhanes.demo_d,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_d,0.9615551
+age at screening,2001-2002,nhanes.demo_b,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_b,0.9615551
+age at screening,2003-2004,nhanes.demo_c,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_c,0.9615551
+age at screening,2007-2008,nhanes.demo_e,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_e,0.9615551
+age at screening,2009-2010,nhanes.demo_f,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_f,0.9615551
+age at screening,1999-2000,nhanes.demo,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo,0.9615551
+months followup examination,2005-2006,nhanes.mortality_data_d,months_followup_examination,True,1,months_followup_examination,nhanes.mortality_data_d,0.9414265
+months followup examination,2001-2002,nhanes.mortality_data_b,months_followup_examination,True,1,months_followup_examination,nhanes.mortality_data_b,0.9414265
+months followup examination,2003-2004,nhanes.mortality_data_c,months_followup_examination,True,1,months_followup_examination,nhanes.mortality_data_c,0.9414265
+months followup examination,2007-2008,nhanes.mortality_data_e,months_followup_examination,True,1,months_followup_examination,nhanes.mortality_data_e,0.9414265
+months followup examination,2009-2010,nhanes.mortality_data_f,months_followup_examination,True,1,months_followup_examination,nhanes.mortality_data_f,0.9414265
+months followup examination,1999-2000,nhanes.mortality_data,months_followup_examination,True,1,months_followup_examination,nhanes.mortality_data,0.9414265
+red cell distribution,2005-2006,nhanes.cbc_d,red_cell_distribution_width,True,1,red cell distribution width (%),nhanes.cbc_d,0.725914
+red cell distribution,2001-2002,nhanes.l25_b,red_cell_distribution_width,True,2,red cell distribution width (%),nhanes.l25_b,0.72591406
+red cell distribution,2003-2004,nhanes.l25_c,red_cell_distribution_width,True,1,red cell distribution width (%),nhanes.l25_c,0.725914
+red cell distribution,2007-2008,nhanes.cbc_e,red_cell_distribution_width,True,1,red cell distribution width (%),nhanes.cbc_e,0.725914
+red cell distribution,2009-2010,nhanes.cbc_f,red_cell_distribution_width,True,1,red cell distribution width (%),nhanes.cbc_f,0.725914
+red cell distribution,1999-2000,nhanes.lab25,red_cell_distribution_width,True,1,red cell distribution width (%),nhanes.lab25,0.725914
+mortality information,2005-2006,nhanes.mortality_data_d,mortality_status,True,1,mortality_status,nhanes.mortality_data_d,0.7960022
+mortality information,2001-2002,nhanes.mortality_data_b,mortality_status,True,1,mortality_status,nhanes.mortality_data_b,0.79600227
+mortality information,2003-2004,nhanes.mortality_data_c,mortality_status,True,1,mortality_status,nhanes.mortality_data_c,0.7960022
+mortality information,2007-2008,nhanes.mortality_data_e,mortality_status,True,1,mortality_status,nhanes.mortality_data_e,0.79600227
+mortality information,2009-2010,nhanes.mortality_data_f,mortality_status,True,1,mortality_status,nhanes.mortality_data_f,0.79600227
+mortality information,1999-2000,nhanes.mortality_data,mortality_status,True,1,mortality_status,nhanes.mortality_data,0.79600227
+gender,2005-2006,nhanes.demo_d,gender,True,2,gender,nhanes.demo_d,1.0
+gender,2001-2002,nhanes.demo_b,gender,True,1,gender,nhanes.demo_b,1.0
+gender,2003-2004,nhanes.demo_c,gender,True,1,gender,nhanes.demo_c,1.0
+gender,2007-2008,nhanes.demo_e,gender,True,1,gender,nhanes.demo_e,1.0
+gender,2009-2010,nhanes.demo_f,gender,True,1,gender,nhanes.demo_f,1.0
+gender,1999-2000,nhanes.demo,gender,True,1,gender,nhanes.demo,1.0
+race/hispanic origin,2005-2006,nhanes.demo_d,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_d,1.0
+race/hispanic origin,2001-2002,nhanes.demo_b,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_b,1.0
+race/hispanic origin,2003-2004,nhanes.demo_c,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_c,1.0
+race/hispanic origin,2007-2008,nhanes.demo_e,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_e,1.0
+race/hispanic origin,2009-2010,nhanes.demo_f,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_f,1.0
+race/hispanic origin,1999-2000,nhanes.demo,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo,1.0
+hemoglobin,2005-2006,nhanes.cbc_d,hemoglobin_g_dl,True,1,hemoglobin (g/dl),nhanes.cbc_d,0.83632183
+hemoglobin,2001-2002,nhanes.l25_b,hemoglobin_g_dl,True,2,hemoglobin (g/dl),nhanes.l25_b,0.83632183
+hemoglobin,2003-2004,nhanes.l25_c,hemoglobin_g_dl,True,1,hemoglobin (g/dl),nhanes.l25_c,0.83632183
+hemoglobin,2007-2008,nhanes.cbc_e,hemoglobin_g_dl,True,1,hemoglobin (g/dl),nhanes.cbc_e,0.83632183
+hemoglobin,2009-2010,nhanes.cbc_f,hemoglobin_g_dl,True,1,hemoglobin (g/dl),nhanes.cbc_f,0.83632183
+hemoglobin,1999-2000,nhanes.lab25,hemoglobin_g_dl,True,1,hemoglobin (g/dl),nhanes.lab25,0.83632183
+all-cause mortality,2005-2006,nhanes.mortality_data_d,mortality_status,True,1,mortality_status,nhanes.mortality_data_d,0.48912704
+all-cause mortality,2001-2002,nhanes.mortality_data_b,mortality_status,True,1,mortality_status,nhanes.mortality_data_b,0.4891271
+all-cause mortality,2003-2004,nhanes.mortality_data_c,mortality_status,True,1,mortality_status,nhanes.mortality_data_c,0.48912704
+all-cause mortality,2007-2008,nhanes.mortality_data_e,mortality_status,True,1,mortality_status,nhanes.mortality_data_e,0.4891271
+all-cause mortality,2009-2010,nhanes.mortality_data_f,mortality_status,True,1,mortality_status,nhanes.mortality_data_f,0.4891271
+all-cause mortality,1999-2000,nhanes.mortality_data,mortality_status,True,1,mortality_status,nhanes.mortality_data,0.4891271

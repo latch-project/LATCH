@@ -1,0 +1,27 @@
+Search Keyword,Cycle,Expected Table,Expected Column,Found,Candidate Rank,Matched Variable,Matched Table,Similarity Score
+age in years at screening,2011-2012,nhanes.demo_g,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_g,1.0
+age in years at screening,2013-2014,nhanes.demo_h,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_h,1.0
+digit symbol substitution test (dsst),2011-2012,nhanes.cfq_g,digit_symbol_score,True,3,digit symbol: score,nhanes.cfq_g,0.48041993
+digit symbol substitution test (dsst),2013-2014,nhanes.cfq_h,digit_symbol_score,True,3,digit symbol: score,nhanes.cfq_h,0.48041993
+animal fluency score,2011-2012,nhanes.cfq_g,animal_fluency_score_total,True,1,animal fluency: score total,nhanes.cfq_g,0.95611954
+animal fluency score,2013-2014,nhanes.cfq_h,animal_fluency_score_total,True,1,animal fluency: score total,nhanes.cfq_h,0.95611954
+cerad score trial 1 recall,2011-2012,nhanes.cfq_g,cerad_score_trial_1_recall,True,1,cerad: score trial 1 recall,nhanes.cfq_g,0.96926296
+cerad score trial 1 recall,2013-2014,nhanes.cfq_h,cerad_score_trial_1_recall,True,1,cerad: score trial 1 recall,nhanes.cfq_h,0.96926296
+cerad score trial 2 recall,2011-2012,nhanes.cfq_g,cerad_score_trial_2_recall,True,1,cerad: score trial 2 recall,nhanes.cfq_g,0.96865326
+cerad score trial 2 recall,2013-2014,nhanes.cfq_h,cerad_score_trial_2_recall,True,1,cerad: score trial 2 recall,nhanes.cfq_h,0.96865326
+cerad score trial 3 recall,2011-2012,nhanes.cfq_g,cerad_score_trial_3_recall,True,1,cerad: score trial 3 recall,nhanes.cfq_g,0.96753836
+cerad score trial 3 recall,2013-2014,nhanes.cfq_h,cerad_score_trial_3_recall,True,1,cerad: score trial 3 recall,nhanes.cfq_h,0.96753836
+delayed word recall,2011-2012,nhanes.cfq_g,cerad_score_delayed_recall,True,1,cerad: score delayed recall,nhanes.cfq_g,0.6665827
+delayed word recall,2013-2014,nhanes.cfq_h,cerad_score_delayed_recall,True,1,cerad: score delayed recall,nhanes.cfq_h,0.6665827
+doctor told you have diabetes,2011-2012,nhanes.diq_g,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_g,1.0
+doctor told you have diabetes,2013-2014,nhanes.diq_h,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_h,1.0
+glycohemoglobin (hba1c) (%),2011-2012,nhanes.ghb_g,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_g,0.9163717
+glycohemoglobin (hba1c) (%),2013-2014,nhanes.ghb_h,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_h,0.9163717
+fasting plasma glucose (fpg) (mg/dl),2011-2012,nhanes.glu_g,fasting_glucose_mg_dl,True,1,fasting glucose (mg/dl),nhanes.glu_g,0.81906086
+fasting plasma glucose (fpg) (mg/dl),2013-2014,nhanes.glu_h,fasting_glucose_mg_dl,True,1,fasting glucose (mg/dl),nhanes.glu_h,0.8190608
+age,2011-2012,nhanes.demo_g,age_in_years_at_screening,True,9,age in years at screening,nhanes.demo_g,0.50418305
+age,2013-2014,nhanes.demo_h,age_in_years_at_screening,True,11,age in years at screening,nhanes.demo_h,0.50418305
+gender,2011-2012,nhanes.demo_g,gender,True,1,gender,nhanes.demo_g,1.0
+gender,2013-2014,nhanes.demo_h,gender,True,1,gender,nhanes.demo_h,1.0
+race/hispanic origin,2011-2012,nhanes.demo_g,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_g,1.0
+race/hispanic origin,2013-2014,nhanes.demo_h,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_h,1.0

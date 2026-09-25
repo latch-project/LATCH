@@ -1,0 +1,25 @@
+Search Keyword,Cycle,Expected Table,Expected Column,Found,Candidate Rank,Matched Variable,Matched Table,Similarity Score
+age at screening,2005-2006,nhanes.demo_d,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_d,0.9615551
+age at screening,2007-2008,nhanes.demo_e,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_e,0.9615551
+glycated hemoglobin (%),2005-2006,nhanes.ghb_d,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_d,0.8548211
+glycated hemoglobin (%),2007-2008,nhanes.ghb_e,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_e,0.8548211
+fasting plasma glucose (mmol/l),2005-2006,nhanes.glu_d,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_d,0.95560396
+fasting plasma glucose (mmol/l),2007-2008,nhanes.glu_e,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_e,0.95560396
+oral glucose tolerace test (mmol/l),2005-2006,nhanes.ogtt_d,two_hour_glucose_ogtt_mmol_l,True,2,two hour glucose(ogtt) (mmol/l),nhanes.ogtt_d,0.64285374
+oral glucose tolerace test (mmol/l),2007-2008,nhanes.ogtt_e,two_hour_glucose_ogtt_mmol_l,True,2,two hour glucose(ogtt) (mmol/l),nhanes.ogtt_e,0.64285374
+self reported diagnosis of diabetes,2005-2006,nhanes.diq_d,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_d,0.70866895
+self reported diagnosis of diabetes,2007-2008,nhanes.diq_e,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_e,0.70866895
+current use of insulin,2005-2006,nhanes.diq_d,taking_insulin_now,True,1,taking insulin now,nhanes.diq_d,0.7439478
+current use of insulin,2007-2008,nhanes.diq_e,taking_insulin_now,True,1,taking insulin now,nhanes.diq_e,0.74394774
+current use of diabetes medication,2005-2006,nhanes.diq_d,take_diabetic_pills_to_lower_blood_sugar,True,6,take diabetic pills to lower blood sugar,nhanes.diq_d,0.5836272
+current use of diabetes medication,2007-2008,nhanes.diq_e,take_diabetic_pills_to_lower_blood_sugar,True,6,take diabetic pills to lower blood sugar,nhanes.diq_e,0.5836272
+four level retinopathy severity,2005-2006,nhanes.opxret_d,4_levels_retinopathy_severity_worse_eye,True,1,"4 levels retinopathy severity, worse eye",nhanes.opxret_d,0.9200079
+four level retinopathy severity,2007-2008,nhanes.opxret_e,4_levels_retinopathy_severity_worse_eye,True,1,"4 levels retinopathy severity, worse eye",nhanes.opxret_e,0.9200079
+monocyte count,2005-2006,nhanes.cbc_d,monocyte_number_1000_cells_ul,True,1,monocyte number (1000 cells/ul),nhanes.cbc_d,0.7359444
+monocyte count,2007-2008,nhanes.cbc_e,monocyte_number_1000_cells_ul,True,1,monocyte number (1000 cells/ul),nhanes.cbc_e,0.7359444
+lymphocyte count,2005-2006,nhanes.cbc_d,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_d,0.8138987
+lymphocyte count,2007-2008,nhanes.cbc_e,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_e,0.8138987
+gender,2005-2006,nhanes.demo_d,gender,True,2,gender,nhanes.demo_d,1.0
+gender,2007-2008,nhanes.demo_e,gender,True,1,gender,nhanes.demo_e,1.0
+race hispanic origin,2005-2006,nhanes.demo_d,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_d,0.9721111
+race hispanic origin,2007-2008,nhanes.demo_e,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_e,0.9721111

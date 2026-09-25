@@ -1,3 +1,8 @@
+from pathlib import Path
+import sys 
+sys.path.append(str(Path.cwd().parents[0]))
+from config import other_config, data_config, config
+
 nhanes_table_example = """
 For example the output would be a dictioniary with 6 items:
   {
@@ -18,6 +23,26 @@ For example the output would be a dictioniary with 3 items:
     "values": ["0.0", "2.0", "1.0", "", "", "", "", "", "", ""]
 }
 """
+registry_table_example = """
+For example the output would be a dictioniary with 3 items: 
+ {
+    "column_name": "age",
+    "table_name": "demographics",
+    "values": ["30", "50", "32", "70", ""]
+}
+"""
+
+registry_schema = "registry"
+registry_name = registry_schema.upper()
+
+registry_years = data_config.schema_configs[registry_schema]["available_years"][0]
+registry_year_range = f"{registry_years[0]}-{registry_years[1]}"
+
+registry_info1 = f""" or {registry_name} data ({registry_year_range})"""
+registry_info2 = f""", {registry_name}"""
+
+# registry_info1 = """ or registry data (2020-2021)"""
+# registry_info2 = """, registry"""
 
 question_free_text = """
 Use NHANES data from 2011-2016. 

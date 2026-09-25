@@ -1850,10 +1850,10 @@ def run_r(analysis, df, schema):
             )
 
             report = ro.globalenv["report"]
-            print("2222")
+            # print("2222")
             print(report.to_string())
 
-            print("1111")
+            # print("1111")
             print(result.to_string())
             if (report["na_count"] != 0).any():
                 r_impute, mice = imputation_module(analysis, df, schema)

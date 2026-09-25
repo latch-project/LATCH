@@ -1,0 +1,2 @@
+Among participants over 20 years old and whose got type 2 diabetes and now uses insulin, is cholsterol associated with the presence of microaneurysm in the IRIS registry from 2021-2023? Adjust for age cagetorized as less than 40, 40 to less than 60 and 60 or more, sex, race, diabetes duration, smoking, and blood pressure systolic less than 130 or 130 or more.
+Include patients with private insurance and exclude those with missing values for variables used here.

@@ -1,0 +1,933 @@
+Title,Schema,Question,Structured Question,Initial Parsed Question,Parsed Question,Schema Incorportation,Weight,SQL,Cohort,Dataframeshape,R,Variables,Statistics,Impute R,Impute Stats,Impute Variable,Analysis,Period,Years,LLM provider,Safeguard1,Safeguard2,Safeguard3,Total Time,Total Cost,SQL Error,SQL Attempts,Lookup Table,Result Log,LLM Log,Status,Error
+55085,nhanes,"Using NHANES data from 2011-2016, we will do a weighted logistic regression using exam weights.
+We will include participants whose age at screening is 20 years or older.
+We will also exclude participants with incomplete any of the following PHQ-9 quesitons:  ""have little interest in doing things"", ""feeling down, depressed, or hopeless"", ""trouble sleeping or sleeping too much"", ""feeling tired or having little energy"", ""poor appetite or overeating"", ""feeling bad about yourself"", ""trouble concentrating on things"", ""moving or speaking slowly or too fast"", ""thought you would be better off dead"".
+We will also exclude participants who were pregnant at the time of the exam and exclude participants with incomplete any of the following demographic data: age at screening, gender, race/Hispanic origin.
+Additionally, we will exclude participants with incomplete all of following diabetes exam or survey data: self-report of previous diagnosis of diabetes by medical professionals, fasting plasma glucose (FPG) (mg/dL), glycosylated hemoglobin (HbA1c) (%), post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl), whether they take glucose lowering agents, whether they take insulin.
+Covariates will include age at screening categorized to 20-39, 40-59, 60-79, equal or more than 80, gender, race/Hispanic origin categorized into White, Black, Mexican Hispanic, Other Hispanic, Asian, others.
+Our predictor is depression outcome, which is based on the total score from the nine questions were calculated where each question has value of Not at all (0), Several days (1), More than half the days (2), Nearly every day (3), and all were added and categorized as None [0-4], Mild [5-9], Moderate [10-14], Moderately Severe [15-19], and Severe [20 or higher]): 
+The outcome will be diabetes presence where participants who met one of the following were considered to have diabetes and else as no: fasting plasma glucose (FPG) (mg/dL) ≥126 mg/dL, glycohemoglobin (HbA1c) %  ≥6.5%, post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl) ≥200 mg/dL, self-report of previous diagnosis of diabetes by medical professionalstaking glucose-lowering agents, taking insulin.",,"{'analysis_type': 'weighted logistic regression (exam)', 'dataset': 'NHANES', 'period_of_interest': '2011-2016', 'inclusion': [{'keyword': 'age at screening', 'derived': False, 'condition': '>= 20'}], 'exclusion': [{'keyword': 'incomplete any of the following phq-9 quesitons', 'derived': True, 'depends_on': [{'keyword': 'have little interest in doing things', 'derived': False, 'condition': 'is_na'}, {'keyword': 'feeling down, depressed, or hopeless', 'derived': False, 'condition': 'is_na'}, {'keyword': 'trouble sleeping or sleeping too much', 'derived': False, 'condition': 'is_na'}, {'keyword': 'feeling tired or having little energy', 'derived': False, 'condition': 'is_na'}, {'keyword': 'poor appetite or overeating', 'derived': False, 'condition': 'is_na'}, {'keyword': 'feeling bad about yourself', 'derived': False, 'condition': 'is_na'}, {'keyword': 'trouble concentrating on things', 'derived': False, 'condition': 'is_na'}, {'keyword': 'moving or speaking slowly or too fast', 'derived': False, 'condition': 'is_na'}, {'keyword': 'thought you would be better off dead', 'derived': False, 'condition': 'is_na'}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['have little interest in doing things is_na', 'feeling down, depressed, or hopeless is_na', 'trouble sleeping or sleeping too much is_na', 'feeling tired or having little energy is_na', 'poor appetite or overeating is_na', 'feeling bad about yourself is_na', 'trouble concentrating on things is_na', 'moving or speaking slowly or too fast is_na', 'thought you would be better off dead is_na']}}]}, {'keyword': 'pregnant at the time of the exam', 'derived': False}, {'keyword': 'incomplete any of the following demographic data', 'derived': True, 'depends_on': [{'keyword': 'age at screening', 'derived': False, 'condition': 'is_na'}, {'keyword': 'gender', 'derived': False, 'condition': 'is_na'}, {'keyword': 'race/hispanic origin', 'derived': False, 'condition': 'is_na'}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['age at screening is_na', 'gender is_na', 'race/hispanic origin is_na']}}]}, {'keyword': 'incomplete all of following diabetes exam or survey data', 'derived': True, 'depends_on': [{'keyword': 'self-report of previous diagnosis of diabetes by medical professionals', 'derived': False, 'condition': 'is_na'}, {'keyword': 'fasting plasma glucose (FPG) (mg/dL)', 'derived': False, 'condition': 'is_na'}, {'keyword': 'glycosylated hemoglobin (HbA1c) (%)', 'derived': False, 'condition': 'is_na'}, {'keyword': 'post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl)', 'derived': False, 'condition': 'is_na'}, {'keyword': 'whether they take glucose lowering agents', 'derived': False, 'condition': 'is_na'}, {'keyword': 'whether they take insulin', 'derived': False, 'condition': 'is_na'}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_and', 'criteria': ['self-report of previous diagnosis of diabetes by medical professionals is_na', 'fasting plasma glucose (FPG) (mg/dL) is_na', 'glycosylated hemoglobin (HbA1c) (%) is_na', 'post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl) is_na', 'whether they take glucose lowering agents is_na', 'whether they take insulin is_na']}}]}], 'covariates': [{'keyword': 'age at screening', 'derived': True, 'depends_on': [{'keyword': 'age at screening', 'derived': False}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'bins': [20, 40, 60, 80, inf], 'labels': ['20-39', '40-59', '60-79', 'equal or more than 80']}}]}, {'keyword': 'gender', 'derived': False}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['White', 'Black', 'Mexican Hispanic', 'Other Hispanic', 'Asian', 'others']}}]}], 'predictor': [{'keyword': 'depression outcome', 'derived': True, 'depends_on': [{'keyword': 'have little interest in doing things', 'derived': False}, {'keyword': 'feeling down, depressed, or hopeless', 'derived': False}, {'keyword': 'trouble sleeping or sleeping too much', 'derived': False}, {'keyword': 'feeling tired or having little energy', 'derived': False}, {'keyword': 'poor appetite or overeating', 'derived': False}, {'keyword': 'feeling bad about yourself', 'derived': False}, {'keyword': 'trouble concentrating on things', 'derived': False}, {'keyword': 'moving or speaking slowly or too fast', 'derived': False}, {'keyword': 'thought you would be better off dead', 'derived': False}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'description': 'Map PHQ-9 question responses to numerical scores', 'labels': {'Not at all': 0, 'Several days': 1, 'More than half the days': 2, 'Nearly every day': 3}, 'output': 'phq9_scores'}}, {'step': 2, 'derivation_method': {'type': 'formula', 'description': 'Calculate total PHQ-9 score by summing individual question scores', 'formula': ""sum(phq9_scores for 'have little interest in doing things', 'feeling down, depressed, or hopeless', 'trouble sleeping or sleeping too much', 'feeling tired or having little energy', 'poor appetite or overeating', 'feeling bad about yourself', 'trouble concentrating on things', 'moving or speaking slowly or too fast', 'thought you would be better off dead')"", 'output': 'total phq-9 score'}}, {'step': 3, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'bins': [0, 5, 10, 15, 20, inf], 'labels': ['None [0-4]', 'Mild [5-9]', 'Moderate [10-14]', 'Moderately Severe [15-19]', 'Severe [20 or higher]']}}]}], 'outcome': [{'keyword': 'diabetes presence', 'derived': True, 'depends_on': [{'keyword': 'fasting plasma glucose (FPG) (mg/dL)', 'derived': False}, {'keyword': 'glycohemoglobin (HbA1c) (%)', 'derived': False}, {'keyword': 'post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl)', 'derived': False}, {'keyword': 'self-report of previous diagnosis of diabetes by medical professionals', 'derived': False}, {'keyword': 'taking glucose-lowering agents', 'derived': False}, {'keyword': 'taking insulin', 'derived': False}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['fasting plasma glucose (FPG) (mg/dL) >= 126', 'glycohemoglobin (HbA1c) (%) >= 6.5', 'post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl) >= 200', 'self-report of previous diagnosis of diabetes by medical professionals = Yes', 'taking glucose-lowering agents = Yes', 'taking insulin = Yes']}}, {'step': 2, 'derivation_method': {'type': 'mapping', 'labels': ['1', '0']}}]}]}","{'dataset': 'NHANES', 'inclusion': [{'keyword': 'age at screening', 'derived': False, 'condition': '>= 20', 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}], 'exclusion': [{'keyword': 'incomplete any of the following phq-9 quesitons', 'derived': True, 'depends_on': [{'keyword': 'have little interest in doing things', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'have_little_interest_in_doing_things', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'feeling down, depressed, or hopeless', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'feeling_down_depressed_or_hopeless', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'trouble sleeping or sleeping too much', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'trouble_sleeping_or_sleeping_too_much', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'feeling tired or having little energy', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'feeling_tired_or_having_little_energy', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'poor appetite or overeating', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'poor_appetite_or_overeating', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'feeling bad about yourself', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'feeling_bad_about_yourself', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'trouble concentrating on things', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'trouble_concentrating_on_things', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'moving or speaking slowly or too fast', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'moving_or_speaking_slowly_or_too_fast', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'thought you would be better off dead', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'thought_you_would_be_better_off_dead', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['have little interest in doing things is_na', 'feeling down, depressed, or hopeless is_na', 'trouble sleeping or sleeping too much is_na', 'feeling tired or having little energy is_na', 'poor appetite or overeating is_na', 'feeling bad about yourself is_na', 'trouble concentrating on things is_na', 'moving or speaking slowly or too fast is_na', 'thought you would be better off dead is_na']}}]}, {'keyword': 'pregnant at the time of the exam', 'derived': False, 'table': 'final_master_table', 'column': 'pregnancy_status_at_exam', 'examples': ['Cannot ascertain if the participant is pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'keyword': 'incomplete any of the following demographic data', 'derived': True, 'depends_on': [{'keyword': 'age at screening', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}, {'keyword': 'gender', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/hispanic origin', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['age at screening is_na', 'gender is_na', 'race/hispanic origin is_na']}}]}, {'keyword': 'incomplete all of following diabetes exam or survey data', 'derived': True, 'depends_on': [{'keyword': 'self-report of previous diagnosis of diabetes by medical professionals', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'fasting plasma glucose (FPG) (mg/dL)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'fasting_glucose_mg_dl', 'examples': ['76.0', '96.0', '154.0', '162.0', '174.0']}, {'keyword': 'glycosylated hemoglobin (HbA1c) (%)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '12.4', '13.2']}, {'keyword': 'post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl)', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'two_hour_glucose_ogtt_mg_dl', 'examples': ['61.0', '96.0', '154.0', '174.0', '248.0']}, {'keyword': 'whether they take glucose lowering agents', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'examples': ['No', 'Yes']}, {'keyword': 'whether they take insulin', 'derived': False, 'condition': 'is_na', 'table': 'final_master_table', 'column': 'taking_insulin_now', 'examples': ['No', 'Yes']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_and', 'criteria': ['self-report of previous diagnosis of diabetes by medical professionals is_na', 'fasting plasma glucose (FPG) (mg/dL) is_na', 'glycosylated hemoglobin (HbA1c) (%) is_na', 'post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl) is_na', 'whether they take glucose lowering agents is_na', 'whether they take insulin is_na']}}]}], 'covariates': [{'keyword': 'age at screening', 'derived': True, 'depends_on': [{'keyword': 'age at screening', 'derived': False, 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'bins': [20, 40, 60, 80, inf], 'labels': ['20-39', '40-59', '60-79', 'equal or more than 80']}}], 'table': 'final_master_table', 'column': 'age_in_years_at_screening', 'examples': ['0.0', '61.0', '62.0', '63.0', '76.0']}, {'keyword': 'gender', 'derived': False, 'table': 'final_master_table', 'column': 'gender', 'examples': ['Female', 'Male']}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['White', 'Black', 'Mexican Hispanic', 'Other Hispanic', 'Asian', 'others']}}], 'table': 'final_master_table', 'column': 'race_hispanic_origin', 'examples': ['Mexican American', 'Non-Hispanic Black', 'Non-Hispanic White', 'Other Hispanic', 'Other Race - Including Multi-Racial']}], 'predictor': [{'keyword': 'depression outcome', 'derived': True, 'depends_on': [{'keyword': 'have little interest in doing things', 'derived': False, 'table': 'final_master_table', 'column': 'have_little_interest_in_doing_things', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'feeling down, depressed, or hopeless', 'derived': False, 'table': 'final_master_table', 'column': 'feeling_down_depressed_or_hopeless', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'trouble sleeping or sleeping too much', 'derived': False, 'table': 'final_master_table', 'column': 'trouble_sleeping_or_sleeping_too_much', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'feeling tired or having little energy', 'derived': False, 'table': 'final_master_table', 'column': 'feeling_tired_or_having_little_energy', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'poor appetite or overeating', 'derived': False, 'table': 'final_master_table', 'column': 'poor_appetite_or_overeating', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'feeling bad about yourself', 'derived': False, 'table': 'final_master_table', 'column': 'feeling_bad_about_yourself', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'trouble concentrating on things', 'derived': False, 'table': 'final_master_table', 'column': 'trouble_concentrating_on_things', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'moving or speaking slowly or too fast', 'derived': False, 'table': 'final_master_table', 'column': 'moving_or_speaking_slowly_or_too_fast', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}, {'keyword': 'thought you would be better off dead', 'derived': False, 'table': 'final_master_table', 'column': 'thought_you_would_be_better_off_dead', 'examples': ['More than half the days', 'Nearly every day', 'Not at all', 'Several days']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'description': 'Map PHQ-9 question responses to numerical scores', 'labels': {'Not at all': 0, 'Several days': 1, 'More than half the days': 2, 'Nearly every day': 3}, 'output': 'phq9_scores'}}, {'step': 2, 'derivation_method': {'type': 'formula', 'description': 'Calculate total PHQ-9 score by summing individual question scores', 'formula': ""sum(phq9_scores for 'have little interest in doing things', 'feeling down, depressed, or hopeless', 'trouble sleeping or sleeping too much', 'feeling tired or having little energy', 'poor appetite or overeating', 'feeling bad about yourself', 'trouble concentrating on things', 'moving or speaking slowly or too fast', 'thought you would be better off dead')"", 'output': 'total phq-9 score'}}, {'step': 3, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'bins': [0, 5, 10, 15, 20, inf], 'labels': ['None [0-4]', 'Mild [5-9]', 'Moderate [10-14]', 'Moderately Severe [15-19]', 'Severe [20 or higher]']}}]}], 'outcome': [{'keyword': 'diabetes presence', 'derived': True, 'depends_on': [{'keyword': 'fasting plasma glucose (FPG) (mg/dL)', 'derived': False, 'table': 'final_master_table', 'column': 'fasting_glucose_mg_dl', 'examples': ['76.0', '96.0', '154.0', '162.0', '174.0']}, {'keyword': 'glycohemoglobin (HbA1c) (%)', 'derived': False, 'table': 'final_master_table', 'column': 'glycohemoglobin', 'examples': ['4.8', '5.8', '6.2', '12.4', '13.2']}, {'keyword': 'post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl)', 'derived': False, 'table': 'final_master_table', 'column': 'two_hour_glucose_ogtt_mg_dl', 'examples': ['61.0', '96.0', '154.0', '174.0', '248.0']}, {'keyword': 'self-report of previous diagnosis of diabetes by medical professionals', 'derived': False, 'table': 'final_master_table', 'column': 'doctor_told_you_have_diabetes', 'examples': ['Borderline', 'No', 'Yes']}, {'keyword': 'taking glucose-lowering agents', 'derived': False, 'table': 'final_master_table', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'examples': ['No', 'Yes']}, {'keyword': 'taking insulin', 'derived': False, 'table': 'final_master_table', 'column': 'taking_insulin_now', 'examples': ['No', 'Yes']}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['fasting plasma glucose (FPG) (mg/dL) >= 126', 'glycohemoglobin (HbA1c) (%) >= 6.5', 'post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl) >= 200', 'self-report of previous diagnosis of diabetes by medical professionals = Yes', 'taking glucose-lowering agents = Yes', 'taking insulin = Yes']}}, {'step': 2, 'derivation_method': {'type': 'mapping', 'labels': ['1', '0']}}]}]}","{'analysis_type': 'weighted logistic regression (exam)', 'dataset': 'NHANES', 'period_of_interest': '2011-2016', 'inclusion': [{'keyword': 'age at screening', 'derived': False, 'condition': '>= 20', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}], 'exclusion': [{'keyword': 'incomplete any of the following phq-9 quesitons', 'derived': True, 'depends_on': [{'keyword': 'have little interest in doing things', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'feeling down, depressed, or hopeless', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'trouble sleeping or sleeping too much', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'feeling tired or having little energy', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'poor appetite or overeating', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'feeling bad about yourself', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'trouble concentrating on things', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'moving or speaking slowly or too fast', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'thought you would be better off dead', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['have little interest in doing things is_na', 'feeling down, depressed, or hopeless is_na', 'trouble sleeping or sleeping too much is_na', 'feeling tired or having little energy is_na', 'poor appetite or overeating is_na', 'feeling bad about yourself is_na', 'trouble concentrating on things is_na', 'moving or speaking slowly or too fast is_na', 'thought you would be better off dead is_na']}}]}, {'keyword': 'pregnant at the time of the exam', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if the participant is pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if the participant is pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'pregnancy_status_at_exam', 'example_values': ['Cannot ascertain if the participant is pregnant at exam', 'The participant was not pregnant at exam', 'Yes, positive lab pregnancy test or self-reported pregnant at exam']}]}, {'keyword': 'incomplete any of the following demographic data', 'derived': True, 'depends_on': [{'keyword': 'age at screening', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'gender', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/hispanic origin', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['age at screening is_na', 'gender is_na', 'race/hispanic origin is_na']}}]}, {'keyword': 'incomplete all of following diabetes exam or survey data', 'derived': True, 'depends_on': [{'keyword': 'self-report of previous diagnosis of diabetes by medical professionals', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'fasting plasma glucose (FPG) (mg/dL)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.glu_g', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '217.0', '76.0']}, {'cycle': '2013-2014', 'table': 'nhanes.glu_h', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '76.0', '96.0']}, {'cycle': '2015-2016', 'table': 'nhanes.glu_i', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '76.0', '96.0']}]}, {'keyword': 'glycosylated hemoglobin (HbA1c) (%)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}, {'cycle': '2015-2016', 'table': 'nhanes.ghb_i', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}]}, {'keyword': 'post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl)', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.ogtt_g', 'column': 'two_hour_glucose_ogtt_mg_dl', 'example_values': ['154.0', '174.0', '96.0', '61.0', '248.0']}, {'cycle': '2013-2014', 'table': 'nhanes.ogtt_h', 'column': 'two_hour_glucose_ogtt_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '96.0', '61.0']}, {'cycle': '2015-2016', 'table': 'nhanes.ogtt_i', 'column': 'two_hour_glucose_ogtt_mg_dl', 'example_values': ['154.0', '174.0', '517.0', '96.0', '61.0']}]}, {'keyword': 'whether they take glucose lowering agents', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}]}, {'keyword': 'whether they take insulin', 'derived': False, 'condition': 'is_na', 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_and', 'criteria': ['self-report of previous diagnosis of diabetes by medical professionals is_na', 'fasting plasma glucose (FPG) (mg/dL) is_na', 'glycosylated hemoglobin (HbA1c) (%) is_na', 'post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl) is_na', 'whether they take glucose lowering agents is_na', 'whether they take insulin is_na']}}]}], 'covariates': [{'keyword': 'age at screening', 'derived': True, 'depends_on': [{'keyword': 'age at screening', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'bins': [20, 40, 60, 80, inf], 'labels': ['20-39', '40-59', '60-79', 'equal or more than 80']}}], 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'age_in_years_at_screening', 'example_values': ['0.0', '62.0', '76.0', '61.0', '63.0']}]}, {'keyword': 'gender', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'gender', 'example_values': ['Female', 'Male']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'gender', 'example_values': ['Female', 'Male']}]}, {'keyword': 'race/hispanic origin', 'derived': True, 'depends_on': [{'keyword': 'race/hispanic origin', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'labels': ['White', 'Black', 'Mexican Hispanic', 'Other Hispanic', 'Asian', 'others']}}], 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.demo_g', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2013-2014', 'table': 'nhanes.demo_h', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}, {'cycle': '2015-2016', 'table': 'nhanes.demo_i', 'column': 'race_hispanic_origin', 'example_values': ['Non-Hispanic Black', 'Non-Hispanic White', 'Mexican American', 'Other Hispanic', 'Other Race - Including Multi-Racial']}]}], 'predictor': [{'keyword': 'depression outcome', 'derived': True, 'depends_on': [{'keyword': 'have little interest in doing things', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'have_little_interest_in_doing_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'feeling down, depressed, or hopeless', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'feeling_down_depressed_or_hopeless', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'trouble sleeping or sleeping too much', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'trouble_sleeping_or_sleeping_too_much', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'feeling tired or having little energy', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'feeling_tired_or_having_little_energy', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'poor appetite or overeating', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'poor_appetite_or_overeating', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'feeling bad about yourself', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'feeling_bad_about_yourself', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'trouble concentrating on things', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'trouble_concentrating_on_things', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'moving or speaking slowly or too fast', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'moving_or_speaking_slowly_or_too_fast', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}, {'keyword': 'thought you would be better off dead', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.dpq_g', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2013-2014', 'table': 'nhanes.dpq_h', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}, {'cycle': '2015-2016', 'table': 'nhanes.dpq_i', 'column': 'thought_you_would_be_better_off_dead', 'example_values': ['Several days', 'Nearly every day', 'Not at all', 'More than half the days']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'mapping', 'description': 'Map PHQ-9 question responses to numerical scores', 'labels': {'Not at all': 0, 'Several days': 1, 'More than half the days': 2, 'Nearly every day': 3}, 'output': 'phq9_scores'}}, {'step': 2, 'derivation_method': {'type': 'formula', 'description': 'Calculate total PHQ-9 score by summing individual question scores', 'formula': ""sum(phq9_scores for 'have little interest in doing things', 'feeling down, depressed, or hopeless', 'trouble sleeping or sleeping too much', 'feeling tired or having little energy', 'poor appetite or overeating', 'feeling bad about yourself', 'trouble concentrating on things', 'moving or speaking slowly or too fast', 'thought you would be better off dead')"", 'output': 'total phq-9 score'}}, {'step': 3, 'derivation_method': {'type': 'binning', 'strategy': 'custom', 'bins': [0, 5, 10, 15, 20, inf], 'labels': ['None [0-4]', 'Mild [5-9]', 'Moderate [10-14]', 'Moderately Severe [15-19]', 'Severe [20 or higher]']}}]}], 'outcome': [{'keyword': 'diabetes presence', 'derived': True, 'depends_on': [{'keyword': 'fasting plasma glucose (FPG) (mg/dL)', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.glu_g', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '217.0', '76.0']}, {'cycle': '2013-2014', 'table': 'nhanes.glu_h', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '76.0', '96.0']}, {'cycle': '2015-2016', 'table': 'nhanes.glu_i', 'column': 'fasting_glucose_mg_dl', 'example_values': ['154.0', '174.0', '162.0', '76.0', '96.0']}]}, {'keyword': 'glycohemoglobin (HbA1c) (%)', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.ghb_g', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}, {'cycle': '2013-2014', 'table': 'nhanes.ghb_h', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '14.7', '5.8', '4.8']}, {'cycle': '2015-2016', 'table': 'nhanes.ghb_i', 'column': 'glycohemoglobin', 'example_values': ['12.4', '13.2', '5.8', '4.8', '6.2']}]}, {'keyword': 'post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl)', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.ogtt_g', 'column': 'two_hour_glucose_ogtt_mg_dl', 'example_values': ['154.0', '174.0', '96.0', '61.0', '248.0']}, {'cycle': '2013-2014', 'table': 'nhanes.ogtt_h', 'column': 'two_hour_glucose_ogtt_mg_dl', 'example_values': ['154.0', '346.0', '174.0', '96.0', '61.0']}, {'cycle': '2015-2016', 'table': 'nhanes.ogtt_i', 'column': 'two_hour_glucose_ogtt_mg_dl', 'example_values': ['154.0', '174.0', '517.0', '96.0', '61.0']}]}, {'keyword': 'self-report of previous diagnosis of diabetes by medical professionals', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'doctor_told_you_have_diabetes', 'example_values': ['No', 'Borderline', 'Yes']}]}, {'keyword': 'taking glucose-lowering agents', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'take_diabetic_pills_to_lower_blood_sugar', 'example_values': ['No', 'Yes']}]}, {'keyword': 'taking insulin', 'derived': False, 'data_sources': [{'cycle': '2011-2012', 'table': 'nhanes.diq_g', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}, {'cycle': '2013-2014', 'table': 'nhanes.diq_h', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}, {'cycle': '2015-2016', 'table': 'nhanes.diq_i', 'column': 'taking_insulin_now', 'example_values': ['No', 'Yes']}]}], 'derivation': [{'step': 1, 'derivation_method': {'type': 'boolean_or', 'criteria': ['fasting plasma glucose (FPG) (mg/dL) >= 126', 'glycohemoglobin (HbA1c) (%) >= 6.5', 'post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl) >= 200', 'self-report of previous diagnosis of diabetes by medical professionals = Yes', 'taking glucose-lowering agents = Yes', 'taking insulin = Yes']}}, {'step': 2, 'derivation_method': {'type': 'mapping', 'labels': ['1', '0']}}]}]}",exam,"-- STEP 1: Create temp_master_weight
+
+-- TEMP TABLE FOR weight
+DROP TABLE IF EXISTS temp_master_weight;
+
+CREATE TEMP TABLE temp_master_weight AS
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 6.0) AS survey_weight
+FROM nhanes.demo_g
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 6.0) AS survey_weight
+FROM nhanes.demo_h
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL
+UNION ALL
+SELECT respondent_sequence_number, 
+       (full_sample_2_year_mec_exam_weight * 2.0 / 6.0) AS survey_weight
+FROM nhanes.demo_i
+WHERE full_sample_2_year_mec_exam_weight IS NOT NULL;
+
+
+-- STEP 2: Create temp_psu_stratum
+
+-- TEMP TABLE FOR PSU and Stratum
+DROP TABLE IF EXISTS temp_psu_stratum;
+CREATE TEMP TABLE temp_psu_stratum AS
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, 
+       masked_variance_pseudo_psu AS masked_variance_pseudo_psu,
+       masked_variance_pseudo_stratum AS masked_variance_pseudo_stratum
+FROM nhanes.demo_i;
+
+
+-- STEP 3: Create final weight+design table
+DROP TABLE IF EXISTS weight_design;
+CREATE TABLE weight_design AS
+SELECT 
+    s.respondent_sequence_number,
+    s.masked_variance_pseudo_psu,
+    s.masked_variance_pseudo_stratum,
+    w.survey_weight
+FROM temp_psu_stratum s
+INNER JOIN temp_master_weight w
+  ON s.respondent_sequence_number = w.respondent_sequence_number;
+
+
+
+
+-- TEMP TABLE FOR ""age at screening"", ""age at screening"", ""age at screening"", ""age at screening""
+DROP TABLE IF EXISTS temp_master_age_in_years_at_screening;
+CREATE TEMP TABLE temp_master_age_in_years_at_screening AS
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""age_in_years_at_screening"" AS ""age_in_years_at_screening""
+FROM nhanes.demo_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_age_in_years_at_screening ON temp_master_age_in_years_at_screening (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""have little interest in doing things"", ""have little interest in doing things""
+DROP TABLE IF EXISTS temp_master_have_little_interest_in_doing_things;
+CREATE TEMP TABLE temp_master_have_little_interest_in_doing_things AS
+SELECT respondent_sequence_number, ""have_little_interest_in_doing_things"" AS ""have_little_interest_in_doing_things""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""have_little_interest_in_doing_things"" AS ""have_little_interest_in_doing_things""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""have_little_interest_in_doing_things"" AS ""have_little_interest_in_doing_things""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_have_little_interest_in_doing_things ON temp_master_have_little_interest_in_doing_things (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""feeling down, depressed, or hopeless"", ""feeling down, depressed, or hopeless""
+DROP TABLE IF EXISTS temp_master_feeling_down_depressed_or_hopeless;
+CREATE TEMP TABLE temp_master_feeling_down_depressed_or_hopeless AS
+SELECT respondent_sequence_number, ""feeling_down_depressed_or_hopeless"" AS ""feeling_down_depressed_or_hopeless""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_down_depressed_or_hopeless"" AS ""feeling_down_depressed_or_hopeless""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_down_depressed_or_hopeless"" AS ""feeling_down_depressed_or_hopeless""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_feeling_down_depressed_or_hopeless ON temp_master_feeling_down_depressed_or_hopeless (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""trouble sleeping or sleeping too much"", ""trouble sleeping or sleeping too much""
+DROP TABLE IF EXISTS temp_master_trouble_sleeping_or_sleeping_too_much;
+CREATE TEMP TABLE temp_master_trouble_sleeping_or_sleeping_too_much AS
+SELECT respondent_sequence_number, ""trouble_sleeping_or_sleeping_too_much"" AS ""trouble_sleeping_or_sleeping_too_much""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""trouble_sleeping_or_sleeping_too_much"" AS ""trouble_sleeping_or_sleeping_too_much""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""trouble_sleeping_or_sleeping_too_much"" AS ""trouble_sleeping_or_sleeping_too_much""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_trouble_sleeping_or_sleeping_too_much ON temp_master_trouble_sleeping_or_sleeping_too_much (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""feeling tired or having little energy"", ""feeling tired or having little energy""
+DROP TABLE IF EXISTS temp_master_feeling_tired_or_having_little_energy;
+CREATE TEMP TABLE temp_master_feeling_tired_or_having_little_energy AS
+SELECT respondent_sequence_number, ""feeling_tired_or_having_little_energy"" AS ""feeling_tired_or_having_little_energy""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_tired_or_having_little_energy"" AS ""feeling_tired_or_having_little_energy""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_tired_or_having_little_energy"" AS ""feeling_tired_or_having_little_energy""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_feeling_tired_or_having_little_energy ON temp_master_feeling_tired_or_having_little_energy (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""poor appetite or overeating"", ""poor appetite or overeating""
+DROP TABLE IF EXISTS temp_master_poor_appetite_or_overeating;
+CREATE TEMP TABLE temp_master_poor_appetite_or_overeating AS
+SELECT respondent_sequence_number, ""poor_appetite_or_overeating"" AS ""poor_appetite_or_overeating""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""poor_appetite_or_overeating"" AS ""poor_appetite_or_overeating""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""poor_appetite_or_overeating"" AS ""poor_appetite_or_overeating""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_poor_appetite_or_overeating ON temp_master_poor_appetite_or_overeating (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""feeling bad about yourself"", ""feeling bad about yourself""
+DROP TABLE IF EXISTS temp_master_feeling_bad_about_yourself;
+CREATE TEMP TABLE temp_master_feeling_bad_about_yourself AS
+SELECT respondent_sequence_number, ""feeling_bad_about_yourself"" AS ""feeling_bad_about_yourself""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_bad_about_yourself"" AS ""feeling_bad_about_yourself""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""feeling_bad_about_yourself"" AS ""feeling_bad_about_yourself""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_feeling_bad_about_yourself ON temp_master_feeling_bad_about_yourself (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""trouble concentrating on things"", ""trouble concentrating on things""
+DROP TABLE IF EXISTS temp_master_trouble_concentrating_on_things;
+CREATE TEMP TABLE temp_master_trouble_concentrating_on_things AS
+SELECT respondent_sequence_number, ""trouble_concentrating_on_things"" AS ""trouble_concentrating_on_things""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""trouble_concentrating_on_things"" AS ""trouble_concentrating_on_things""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""trouble_concentrating_on_things"" AS ""trouble_concentrating_on_things""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_trouble_concentrating_on_things ON temp_master_trouble_concentrating_on_things (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""moving or speaking slowly or too fast"", ""moving or speaking slowly or too fast""
+DROP TABLE IF EXISTS temp_master_moving_or_speaking_slowly_or_too_fast;
+CREATE TEMP TABLE temp_master_moving_or_speaking_slowly_or_too_fast AS
+SELECT respondent_sequence_number, ""moving_or_speaking_slowly_or_too_fast"" AS ""moving_or_speaking_slowly_or_too_fast""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""moving_or_speaking_slowly_or_too_fast"" AS ""moving_or_speaking_slowly_or_too_fast""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""moving_or_speaking_slowly_or_too_fast"" AS ""moving_or_speaking_slowly_or_too_fast""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_moving_or_speaking_slowly_or_too_fast ON temp_master_moving_or_speaking_slowly_or_too_fast (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""thought you would be better off dead"", ""thought you would be better off dead""
+DROP TABLE IF EXISTS temp_master_thought_you_would_be_better_off_dead;
+CREATE TEMP TABLE temp_master_thought_you_would_be_better_off_dead AS
+SELECT respondent_sequence_number, ""thought_you_would_be_better_off_dead"" AS ""thought_you_would_be_better_off_dead""
+FROM nhanes.dpq_g
+UNION ALL
+SELECT respondent_sequence_number, ""thought_you_would_be_better_off_dead"" AS ""thought_you_would_be_better_off_dead""
+FROM nhanes.dpq_h
+UNION ALL
+SELECT respondent_sequence_number, ""thought_you_would_be_better_off_dead"" AS ""thought_you_would_be_better_off_dead""
+FROM nhanes.dpq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_thought_you_would_be_better_off_dead ON temp_master_thought_you_would_be_better_off_dead (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""pregnant at the time of the exam""
+DROP TABLE IF EXISTS temp_master_pregnancy_status_at_exam;
+CREATE TEMP TABLE temp_master_pregnancy_status_at_exam AS
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""pregnancy_status_at_exam"" AS ""pregnancy_status_at_exam""
+FROM nhanes.demo_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_pregnancy_status_at_exam ON temp_master_pregnancy_status_at_exam (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""gender"", ""gender""
+DROP TABLE IF EXISTS temp_master_gender;
+CREATE TEMP TABLE temp_master_gender AS
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""gender"" AS ""gender""
+FROM nhanes.demo_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_gender ON temp_master_gender (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""race/hispanic origin"", ""race/hispanic origin"", ""race/hispanic origin""
+DROP TABLE IF EXISTS temp_master_race_hispanic_origin;
+CREATE TEMP TABLE temp_master_race_hispanic_origin AS
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_g
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_h
+UNION ALL
+SELECT respondent_sequence_number, ""race_hispanic_origin"" AS ""race_hispanic_origin""
+FROM nhanes.demo_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_race_hispanic_origin ON temp_master_race_hispanic_origin (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""self-report of previous diagnosis of diabetes by medical professionals"", ""self-report of previous diagnosis of diabetes by medical professionals""
+DROP TABLE IF EXISTS temp_master_doctor_told_you_have_diabetes;
+CREATE TEMP TABLE temp_master_doctor_told_you_have_diabetes AS
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""doctor_told_you_have_diabetes"" AS ""doctor_told_you_have_diabetes""
+FROM nhanes.diq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_doctor_told_you_have_diabetes ON temp_master_doctor_told_you_have_diabetes (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""fasting plasma glucose (FPG) (mg/dL)"", ""fasting plasma glucose (FPG) (mg/dL)""
+DROP TABLE IF EXISTS temp_master_fasting_glucose_mg_dl;
+CREATE TEMP TABLE temp_master_fasting_glucose_mg_dl AS
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_g
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_h
+UNION ALL
+SELECT respondent_sequence_number, ""fasting_glucose_mg_dl"" AS ""fasting_glucose_mg_dl""
+FROM nhanes.glu_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_fasting_glucose_mg_dl ON temp_master_fasting_glucose_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""glycohemoglobin (HbA1c) (%)"", ""glycosylated hemoglobin (HbA1c) (%)""
+DROP TABLE IF EXISTS temp_master_glycohemoglobin;
+CREATE TEMP TABLE temp_master_glycohemoglobin AS
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_g
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_h
+UNION ALL
+SELECT respondent_sequence_number, ""glycohemoglobin"" AS ""glycohemoglobin""
+FROM nhanes.ghb_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_glycohemoglobin ON temp_master_glycohemoglobin (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl)"", ""post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl)""
+DROP TABLE IF EXISTS temp_master_two_hour_glucose_ogtt_mg_dl;
+CREATE TEMP TABLE temp_master_two_hour_glucose_ogtt_mg_dl AS
+SELECT respondent_sequence_number, ""two_hour_glucose_ogtt_mg_dl"" AS ""two_hour_glucose_ogtt_mg_dl""
+FROM nhanes.ogtt_g
+UNION ALL
+SELECT respondent_sequence_number, ""two_hour_glucose_ogtt_mg_dl"" AS ""two_hour_glucose_ogtt_mg_dl""
+FROM nhanes.ogtt_h
+UNION ALL
+SELECT respondent_sequence_number, ""two_hour_glucose_ogtt_mg_dl"" AS ""two_hour_glucose_ogtt_mg_dl""
+FROM nhanes.ogtt_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_two_hour_glucose_ogtt_mg_dl ON temp_master_two_hour_glucose_ogtt_mg_dl (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""taking glucose-lowering agents"", ""whether they take glucose lowering agents""
+DROP TABLE IF EXISTS temp_master_take_diabetic_pills_to_lower_blood_sugar;
+CREATE TEMP TABLE temp_master_take_diabetic_pills_to_lower_blood_sugar AS
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""take_diabetic_pills_to_lower_blood_sugar"" AS ""take_diabetic_pills_to_lower_blood_sugar""
+FROM nhanes.diq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_take_diabetic_pills_to_lower_blood_sugar ON temp_master_take_diabetic_pills_to_lower_blood_sugar (respondent_sequence_number);
+
+-- TEMP TABLE FOR ""taking insulin"", ""whether they take insulin""
+DROP TABLE IF EXISTS temp_master_taking_insulin_now;
+CREATE TEMP TABLE temp_master_taking_insulin_now AS
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_g
+UNION ALL
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_h
+UNION ALL
+SELECT respondent_sequence_number, ""taking_insulin_now"" AS ""taking_insulin_now""
+FROM nhanes.diq_i;
+-- Add index for faster joins
+CREATE INDEX idx_temp_master_taking_insulin_now ON temp_master_taking_insulin_now (respondent_sequence_number);
+
+-- ALL UNIQUE PATIENT IDs
+DROP TABLE IF EXISTS temp_all_ids;
+CREATE TEMP TABLE temp_all_ids AS
+SELECT respondent_sequence_number FROM temp_master_age_in_years_at_screening
+UNION
+SELECT respondent_sequence_number FROM temp_master_have_little_interest_in_doing_things
+UNION
+SELECT respondent_sequence_number FROM temp_master_feeling_down_depressed_or_hopeless
+UNION
+SELECT respondent_sequence_number FROM temp_master_trouble_sleeping_or_sleeping_too_much
+UNION
+SELECT respondent_sequence_number FROM temp_master_feeling_tired_or_having_little_energy
+UNION
+SELECT respondent_sequence_number FROM temp_master_poor_appetite_or_overeating
+UNION
+SELECT respondent_sequence_number FROM temp_master_feeling_bad_about_yourself
+UNION
+SELECT respondent_sequence_number FROM temp_master_trouble_concentrating_on_things
+UNION
+SELECT respondent_sequence_number FROM temp_master_moving_or_speaking_slowly_or_too_fast
+UNION
+SELECT respondent_sequence_number FROM temp_master_thought_you_would_be_better_off_dead
+UNION
+SELECT respondent_sequence_number FROM temp_master_pregnancy_status_at_exam
+UNION
+SELECT respondent_sequence_number FROM temp_master_gender
+UNION
+SELECT respondent_sequence_number FROM temp_master_race_hispanic_origin
+UNION
+SELECT respondent_sequence_number FROM temp_master_doctor_told_you_have_diabetes
+UNION
+SELECT respondent_sequence_number FROM temp_master_fasting_glucose_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_glycohemoglobin
+UNION
+SELECT respondent_sequence_number FROM temp_master_two_hour_glucose_ogtt_mg_dl
+UNION
+SELECT respondent_sequence_number FROM temp_master_take_diabetic_pills_to_lower_blood_sugar
+UNION
+SELECT respondent_sequence_number FROM temp_master_taking_insulin_now;
+
+-- Add index to the main ID table for the final join
+CREATE INDEX idx_temp_all_ids_respondent_sequence_number ON temp_all_ids (respondent_sequence_number);
+
+-- FINAL MASTER TABLE
+DROP TABLE IF EXISTS final_master_table;
+CREATE TABLE final_master_table AS
+SELECT
+    a.respondent_sequence_number,
+    t0.""age_in_years_at_screening"",
+    t1.""have_little_interest_in_doing_things"",
+    t2.""feeling_down_depressed_or_hopeless"",
+    t3.""trouble_sleeping_or_sleeping_too_much"",
+    t4.""feeling_tired_or_having_little_energy"",
+    t5.""poor_appetite_or_overeating"",
+    t6.""feeling_bad_about_yourself"",
+    t7.""trouble_concentrating_on_things"",
+    t8.""moving_or_speaking_slowly_or_too_fast"",
+    t9.""thought_you_would_be_better_off_dead"",
+    t10.""pregnancy_status_at_exam"",
+    t11.""gender"",
+    t12.""race_hispanic_origin"",
+    t13.""doctor_told_you_have_diabetes"",
+    t14.""fasting_glucose_mg_dl"",
+    t15.""glycohemoglobin"",
+    t16.""two_hour_glucose_ogtt_mg_dl"",
+    t17.""take_diabetic_pills_to_lower_blood_sugar"",
+    t18.""taking_insulin_now""
+FROM temp_all_ids a
+LEFT JOIN temp_master_age_in_years_at_screening t0 ON a.respondent_sequence_number = t0.respondent_sequence_number 
+LEFT JOIN temp_master_have_little_interest_in_doing_things t1 ON a.respondent_sequence_number = t1.respondent_sequence_number 
+LEFT JOIN temp_master_feeling_down_depressed_or_hopeless t2 ON a.respondent_sequence_number = t2.respondent_sequence_number 
+LEFT JOIN temp_master_trouble_sleeping_or_sleeping_too_much t3 ON a.respondent_sequence_number = t3.respondent_sequence_number 
+LEFT JOIN temp_master_feeling_tired_or_having_little_energy t4 ON a.respondent_sequence_number = t4.respondent_sequence_number 
+LEFT JOIN temp_master_poor_appetite_or_overeating t5 ON a.respondent_sequence_number = t5.respondent_sequence_number 
+LEFT JOIN temp_master_feeling_bad_about_yourself t6 ON a.respondent_sequence_number = t6.respondent_sequence_number 
+LEFT JOIN temp_master_trouble_concentrating_on_things t7 ON a.respondent_sequence_number = t7.respondent_sequence_number 
+LEFT JOIN temp_master_moving_or_speaking_slowly_or_too_fast t8 ON a.respondent_sequence_number = t8.respondent_sequence_number 
+LEFT JOIN temp_master_thought_you_would_be_better_off_dead t9 ON a.respondent_sequence_number = t9.respondent_sequence_number 
+LEFT JOIN temp_master_pregnancy_status_at_exam t10 ON a.respondent_sequence_number = t10.respondent_sequence_number 
+LEFT JOIN temp_master_gender t11 ON a.respondent_sequence_number = t11.respondent_sequence_number 
+LEFT JOIN temp_master_race_hispanic_origin t12 ON a.respondent_sequence_number = t12.respondent_sequence_number 
+LEFT JOIN temp_master_doctor_told_you_have_diabetes t13 ON a.respondent_sequence_number = t13.respondent_sequence_number 
+LEFT JOIN temp_master_fasting_glucose_mg_dl t14 ON a.respondent_sequence_number = t14.respondent_sequence_number 
+LEFT JOIN temp_master_glycohemoglobin t15 ON a.respondent_sequence_number = t15.respondent_sequence_number 
+LEFT JOIN temp_master_two_hour_glucose_ogtt_mg_dl t16 ON a.respondent_sequence_number = t16.respondent_sequence_number 
+LEFT JOIN temp_master_take_diabetic_pills_to_lower_blood_sugar t17 ON a.respondent_sequence_number = t17.respondent_sequence_number 
+LEFT JOIN temp_master_taking_insulin_now t18 ON a.respondent_sequence_number = t18.respondent_sequence_number;
+
+CREATE INDEX idx_final_master_respondent_sequence_number    
+    ON final_master_table (respondent_sequence_number);
+
+
+-- Clean up final_master_table
+DELETE FROM final_master_table
+WHERE respondent_sequence_number NOT IN (
+    SELECT respondent_sequence_number FROM weight_design
+);
+
+
+-- ========== STEP 1: Inclusion ==========
+
+-- STEP 1.1: Includes participants whose age at screening is 20 years or older
+CREATE TEMP TABLE temp_inclusion_step1 AS
+SELECT ""respondent_sequence_number""
+FROM final_master_table
+WHERE ""age_in_years_at_screening"" >= 20;
+
+-- ========== STEP 2: Exclusions ==========
+
+-- STEP 2.1: Exclude participants with incomplete any of the PHQ-9 questions
+CREATE TEMP TABLE temp_exclusion_step1 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_inclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""have_little_interest_in_doing_things"" IS NOT NULL
+  AND f.""feeling_down_depressed_or_hopeless"" IS NOT NULL
+  AND f.""trouble_sleeping_or_sleeping_too_much"" IS NOT NULL
+  AND f.""feeling_tired_or_having_little_energy"" IS NOT NULL
+  AND f.""poor_appetite_or_overeating"" IS NOT NULL
+  AND f.""feeling_bad_about_yourself"" IS NOT NULL
+  AND f.""trouble_concentrating_on_things"" IS NOT NULL
+  AND f.""moving_or_speaking_slowly_or_too_fast"" IS NOT NULL
+  AND f.""thought_you_would_be_better_off_dead"" IS NOT NULL;
+
+-- STEP 2.2: Exclude participants who were pregnant at the time of the exam
+CREATE TEMP TABLE temp_exclusion_step2 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step1 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""pregnancy_status_at_exam"" IS NULL
+   OR f.""pregnancy_status_at_exam"" NOT IN ('Yes, positive lab pregnancy test or self-reported pregnant at exam');
+
+-- STEP 2.3: Exclude participants with incomplete any of the demographic data
+CREATE TEMP TABLE temp_exclusion_step3 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step2 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE f.""age_in_years_at_screening"" IS NOT NULL
+  AND f.""gender"" IS NOT NULL
+  AND f.""race_hispanic_origin"" IS NOT NULL;
+
+-- STEP 2.4: Exclude participants with incomplete all of the diabetes exam or survey data
+CREATE TEMP TABLE temp_exclusion_step4 AS
+SELECT i.""respondent_sequence_number""
+FROM temp_exclusion_step3 i
+JOIN final_master_table f ON i.""respondent_sequence_number"" = f.""respondent_sequence_number""
+WHERE NOT (
+    f.""doctor_told_you_have_diabetes"" IS NULL AND
+    f.""fasting_glucose_mg_dl"" IS NULL AND
+    f.""glycohemoglobin"" IS NULL AND
+    f.""two_hour_glucose_ogtt_mg_dl"" IS NULL AND
+    f.""take_diabetic_pills_to_lower_blood_sugar"" IS NULL AND
+    f.""taking_insulin_now"" IS NULL
+);
+
+-- ========== STEP 3: Cohort ==========
+
+-- The final temp table in the exclusion sequence becomes temp_cohort.
+CREATE TEMP TABLE temp_cohort AS
+SELECT ""respondent_sequence_number""
+FROM temp_exclusion_step4;
+
+-- ========== STEP 4: Variables ==========
+
+-- 4.1 Age at screening (covariate)
+-- Categorize age at screening
+CREATE TEMP TABLE temp_age_at_screening AS
+SELECT c.""respondent_sequence_number"",
+       CASE
+           WHEN f.""age_in_years_at_screening"" >= 80 THEN 'equal or more than 80'
+           WHEN f.""age_in_years_at_screening"" >= 60 AND f.""age_in_years_at_screening"" < 80 THEN '60-79'
+           WHEN f.""age_in_years_at_screening"" >= 40 AND f.""age_in_years_at_screening"" < 60 THEN '40-59'
+           WHEN f.""age_in_years_at_screening"" >= 20 AND f.""age_in_years_at_screening"" < 40 THEN '20-39'
+           ELSE NULL
+       END AS ""age_at_screening""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.2 Gender (covariate)
+-- Extract gender
+CREATE TEMP TABLE temp_gender AS
+SELECT c.""respondent_sequence_number"",
+       f.""gender""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.3 Race/Hispanic origin (covariate)
+-- Map race/Hispanic origin to specified categories
+CREATE TEMP TABLE temp_race_hispanic_origin AS
+SELECT c.""respondent_sequence_number"",
+       CASE
+           WHEN f.""race_hispanic_origin"" = 'Non-Hispanic White' THEN 'White'
+           WHEN f.""race_hispanic_origin"" = 'Non-Hispanic Black' THEN 'Black'
+           WHEN f.""race_hispanic_origin"" = 'Mexican American' THEN 'Mexican Hispanic'
+           WHEN f.""race_hispanic_origin"" = 'Other Hispanic' THEN 'Other Hispanic'
+           WHEN f.""race_hispanic_origin"" = 'Other Race - Including Multi-Racial' THEN 'others'
+           -- Assuming 'Asian' would fall under 'Other Race - Including Multi-Racial' or is not present in examples.
+           -- If 'Asian' is a distinct value in the data, it would be NULL here without explicit mapping.
+           ELSE NULL
+       END AS ""race_hispanic_origin""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- 4.4 Depression outcome (predictor)
+-- Map PHQ-9 question responses to numerical scores
+CREATE TEMP TABLE temp_phq9_scores AS
+SELECT c.""respondent_sequence_number"",
+       CASE f.""have_little_interest_in_doing_things""
+           WHEN 'Not at all' THEN 0
+           WHEN 'Several days' THEN 1
+           WHEN 'More than half the days' THEN 2
+           WHEN 'Nearly every day' THEN 3
+           ELSE NULL
+       END AS ""score_interest"",
+       CASE f.""feeling_down_depressed_or_hopeless""
+           WHEN 'Not at all' THEN 0
+           WHEN 'Several days' THEN 1
+           WHEN 'More than half the days' THEN 2
+           WHEN 'Nearly every day' THEN 3
+           ELSE NULL
+       END AS ""score_depressed"",
+       CASE f.""trouble_sleeping_or_sleeping_too_much""
+           WHEN 'Not at all' THEN 0
+           WHEN 'Several days' THEN 1
+           WHEN 'More than half the days' THEN 2
+           WHEN 'Nearly every day' THEN 3
+           ELSE NULL
+       END AS ""score_sleep"",
+       CASE f.""feeling_tired_or_having_little_energy""
+           WHEN 'Not at all' THEN 0
+           WHEN 'Several days' THEN 1
+           WHEN 'More than half the days' THEN 2
+           WHEN 'Nearly every day' THEN 3
+           ELSE NULL
+       END AS ""score_energy"",
+       CASE f.""poor_appetite_or_overeating""
+           WHEN 'Not at all' THEN 0
+           WHEN 'Several days' THEN 1
+           WHEN 'More than half the days' THEN 2
+           WHEN 'Nearly every day' THEN 3
+           ELSE NULL
+       END AS ""score_appetite"",
+       CASE f.""feeling_bad_about_yourself""
+           WHEN 'Not at all' THEN 0
+           WHEN 'Several days' THEN 1
+           WHEN 'More than half the days' THEN 2
+           WHEN 'Nearly every day' THEN 3
+           ELSE NULL
+       END AS ""score_bad_self"",
+       CASE f.""trouble_concentrating_on_things""
+           WHEN 'Not at all' THEN 0
+           WHEN 'Several days' THEN 1
+           WHEN 'More than half the days' THEN 2
+           WHEN 'Nearly every day' THEN 3
+           ELSE NULL
+       END AS ""score_concentrating"",
+       CASE f.""moving_or_speaking_slowly_or_too_fast""
+           WHEN 'Not at all' THEN 0
+           WHEN 'Several days' THEN 1
+           WHEN 'More than half the days' THEN 2
+           WHEN 'Nearly every day' THEN 3
+           ELSE NULL
+       END AS ""score_movement"",
+       CASE f.""thought_you_would_be_better_off_dead""
+           WHEN 'Not at all' THEN 0
+           WHEN 'Several days' THEN 1
+           WHEN 'More than half the days' THEN 2
+           WHEN 'Nearly every day' THEN 3
+           ELSE NULL
+       END AS ""score_dead""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- Calculate total PHQ-9 score
+CREATE TEMP TABLE temp_total_phq9_score AS
+SELECT ""respondent_sequence_number"",
+       (COALESCE(""score_interest"", 0) + COALESCE(""score_depressed"", 0) + COALESCE(""score_sleep"", 0) +
+        COALESCE(""score_energy"", 0) + COALESCE(""score_appetite"", 0) + COALESCE(""score_bad_self"", 0) +
+        COALESCE(""score_concentrating"", 0) + COALESCE(""score_movement"", 0) + COALESCE(""score_dead"", 0)) AS ""total_phq9_score""
+FROM temp_phq9_scores;
+
+-- Categorize total PHQ-9 score into depression outcome
+CREATE TEMP TABLE temp_depression_outcome AS
+SELECT ""respondent_sequence_number"",
+       CASE
+           WHEN ""total_phq9_score"" >= 20 THEN 'Severe [20 or higher]'
+           WHEN ""total_phq9_score"" >= 15 AND ""total_phq9_score"" < 20 THEN 'Moderately Severe [15-19]'
+           WHEN ""total_phq9_score"" >= 10 AND ""total_phq9_score"" < 15 THEN 'Moderate [10-14]'
+           WHEN ""total_phq9_score"" >= 5 AND ""total_phq9_score"" < 10 THEN 'Mild [5-9]'
+           WHEN ""total_phq9_score"" >= 0 AND ""total_phq9_score"" < 5 THEN 'None [0-4]'
+           ELSE NULL
+       END AS ""depression_outcome""
+FROM temp_total_phq9_score;
+
+-- 4.5 Diabetes presence (outcome)
+-- Determine diabetes presence based on criteria
+CREATE TEMP TABLE temp_diabetes_presence AS
+SELECT c.""respondent_sequence_number"",
+       CASE
+           WHEN f.""fasting_glucose_mg_dl"" >= 126
+             OR f.""glycohemoglobin"" >= 6.5
+             OR f.""two_hour_glucose_ogtt_mg_dl"" >= 200
+             OR f.""doctor_told_you_have_diabetes"" = 'Yes'
+             OR f.""take_diabetic_pills_to_lower_blood_sugar"" = 'Yes'
+             OR f.""taking_insulin_now"" = 'Yes'
+           THEN 1
+           ELSE 0
+       END AS ""diabetes_presence""
+FROM temp_cohort c
+JOIN final_master_table f ON c.""respondent_sequence_number"" = f.""respondent_sequence_number"";
+
+-- ========== STEP 5: Final Table ==========
+CREATE TEMP TABLE temp_final_table AS
+SELECT
+  c.""respondent_sequence_number"",
+  tas.""age_at_screening"",
+  tg.""gender"",
+  trho.""race_hispanic_origin"",
+  tdo.""depression_outcome"",
+  tdp.""diabetes_presence""
+FROM temp_cohort c
+LEFT JOIN temp_age_at_screening tas ON c.""respondent_sequence_number"" = tas.""respondent_sequence_number""
+LEFT JOIN temp_gender tg ON c.""respondent_sequence_number"" = tg.""respondent_sequence_number""
+LEFT JOIN temp_race_hispanic_origin trho ON c.""respondent_sequence_number"" = trho.""respondent_sequence_number""
+LEFT JOIN temp_depression_outcome tdo ON c.""respondent_sequence_number"" = tdo.""respondent_sequence_number""
+LEFT JOIN temp_diabetes_presence tdp ON c.""respondent_sequence_number"" = tdp.""respondent_sequence_number"";
+
+-- ========== STEP 6: Final Output ==========
+SELECT * FROM temp_final_table;
+
+-- STEP: Create merged final table with design variables + in_analysis flag
+DROP TABLE IF EXISTS temp_final_with_weights;
+
+CREATE TEMP TABLE temp_final_with_weights AS
+SELECT 
+    wd.""respondent_sequence_number"",
+    wd.""masked_variance_pseudo_psu"",
+    wd.""masked_variance_pseudo_stratum"",
+    wd.""survey_weight"",
+    CASE WHEN ft.""respondent_sequence_number"" IS NOT NULL THEN 1 ELSE 0 END AS ""in_analysis"",
+    ft.""age_at_screening"",
+    ft.""gender"",
+    ft.""race_hispanic_origin"",
+    ft.""depression_outcome"",
+    ft.""diabetes_presence""
+FROM weight_design wd
+LEFT JOIN temp_final_table ft
+  ON wd.""respondent_sequence_number"" = ft.""respondent_sequence_number"";
+  
+-- Preview the result
+SELECT * FROM temp_final_with_weights;
+","   step_num                                                                                    step  remaining_after_step  excluded_at_step
+0         0                                       Total unique participants pooled from all sources                 29902               NaN
+1         1                       Participants with a valid survey weight (after initial filtering)                 29113             789.0
+2         2             STEP 1.1: Includes participants whose age at screening is 20 years or older                 16622           12491.0
+3         3               STEP 2.1: Exclude participants with incomplete any of the PHQ-9 questions                 14581            2041.0
+4         4                STEP 2.2: Exclude participants who were pregnant at the time of the exam                 14418             163.0
+5         5              STEP 2.3: Exclude participants with incomplete any of the demographic data                 14418               0.0
+6         6  STEP 2.4: Exclude participants with incomplete all of the diabetes exam or survey data                 14418               0.0
+7         7                     The final temp table in the exclusion sequence becomes temp_cohort.                 14418               0.0
+8         8                                               ========== STEP 5: Final Table ==========                 14418               0.0","(29113, 10)","
+    suppressPackageStartupMessages(library(dplyr))
+    suppressPackageStartupMessages(library(broom))
+    suppressPackageStartupMessages(library(tibble))
+
+    identifier_vars <- c(""respondent_sequence_number"")
+    outcome_vars <- c(""diabetes_presence"")
+    weight_vars <- c(""survey_weight"",""masked_variance_pseudo_psu"",""masked_variance_pseudo_stratum"",""in_analysis"")
+
+    cohort <- df[df$in_analysis == 1, names(df) != ""in_analysis""]
+
+
+    outcome_roles <- c()
+    outcome_roles[""diabetes_presence""] <- ""outcome""
+
+
+    summarize_variable <- function(column, name) {
+    n_unique <- length(unique(na.omit(column)))
+    na_count <- sum(is.na(column))
+
+    if (name %in% identifier_vars) {
+        category <- ""identifier""
+        summary_info <- paste0(""Total rows = "", nrow(cohort))
+
+    } else if (name %in% outcome_vars) {
+        # Assign its special role (e.g., ""outcome"", ""mediator"")
+        category <- ifelse(!is.na(outcome_roles[name]), outcome_roles[name], ""outcome"")
+
+        # Generate a summary based on its underlying data type
+        underlying_type <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (underlying_type == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (underlying_type %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+
+    
+
+    } else if (name %in% weight_vars) {
+        category <- ""weight""
+        summary_info <- ""Weight variable"" 
+    
+
+    } else {
+        # This block handles regular predictors
+        category <- case_when(
+        n_unique == 2                                 ~ ""binary"",
+        is.numeric(column) & n_unique > 2             ~ ""numerical"",
+        is.character(column) | is.factor(column)      ~ ""categorical"",
+        TRUE                                          ~ ""other""
+        )
+
+        if (category == ""numerical"") {
+        mean_val <- round(mean(column, na.rm = TRUE), 3)
+        sd_val   <- round(sd(column, na.rm = TRUE), 3)
+        summary_info <- paste0(""mean = "", mean_val, "", sd = "", sd_val)
+        } else if (category %in% c(""categorical"", ""binary"")) {
+        tbl <- prop.table(table(column)) * 100
+        tbl <- round(tbl, 1)
+        summary_info <- paste0(names(tbl), "": "", tbl, ""%"", collapse = ""; "")
+        } else {
+        summary_info <- NA
+        }
+    }
+
+    data.frame(
+        variable   = name,
+        category   = category,
+        n_unique   = n_unique,
+        na_count   = na_count,
+        summary    = summary_info,
+        stringsAsFactors = FALSE
+    )
+    }
+
+    report <- bind_rows(
+    lapply(names(cohort), function(col_name) {
+        summarize_variable(cohort[[col_name]], col_name)
+    })
+    )
+
+    identifier_vars  <- report$variable[report$category == ""identifier""]
+    cat(""Identifier Variables:\n"");   print(identifier_vars);   cat(""\n"")
+
+    weight_vars <- report$variable[report$category == ""weight""]; cat(""Weight Variables: ""); print(weight_vars); psu_var <- weight_vars[grepl(""psu"", weight_vars, ignore.case = TRUE)][1]; cat(""PSU:"", psu_var); stratum_var <- weight_vars[grepl(""stratum"", weight_vars, ignore.case = TRUE)][1]; cat(""Stratum:"", stratum_var); weight_var <- weight_vars[grepl(""weight"", weight_vars, ignore.case = TRUE)][1]; cat(""Weight:"", weight_var); in_analysis_var <- weight_vars[grepl(""in_analysis"", weight_vars, ignore.case = TRUE)][1]; cat(""In Analysis:"", in_analysis_var)
+
+    binary_vars      <- report$variable[report$category == ""binary""]
+    cat(""Binary Variables:\n"");       print(binary_vars);       cat(""\n"")
+    print(binary_vars)
+
+    categorical_vars <- report$variable[report$category == ""categorical""]
+    cat(""Categorical Variables:\n"");  print(categorical_vars);  cat(""\n"")
+    print(categorical_vars)
+
+    numerical_vars   <- report$variable[report$category == ""numerical""]
+    cat(""Numerical Variables:\n"");    print(numerical_vars);    cat(""\n"")
+    print(numerical_vars)
+
+    
+    
+
+    outcome_var     <- report$variable[report$category %in% c(""outcome"")]
+    cat(""Outcome Variables:\n"");      print(outcome_var);      cat(""\n"")
+    
+
+    
+    library(survey)
+    options(survey.lonely.psu = ""adjust"")
+        
+    
+    
+    # Identify predictors and factor candidates
+    predictor_vars <- report$variable[report$category %in% c(""categorical"", ""binary"", ""numerical"")]
+    factor_candidates <- report$variable[report$category %in% c(""categorical"", ""binary"")]
+
+    # Convert binary/categorical variables to factor if not already
+    for (var in factor_candidates) {
+    if (!is.factor(df[[var]])) {
+        df[[var]] <- as.factor(df[[var]])
+    }
+    }
+
+    # Initialize reference_levels table
+    reference_levels <- tibble(variable = character(), reference_level = character())
+
+    # Clean, trim, and set reference levels for all factor variables
+    for (col in factor_candidates) {
+    df[[col]] <- factor(trimws(as.character(df[[col]])))
+    levels_vec <- levels(df[[col]])
+
+    # Try to find preferred reference
+    preferred_order <- c(""healthy"", ""none"", ""control"", ""reference"", ""ref"", ""normal"",""Q1"", ""low"", ""0"", ""1"")
+    matches <- tolower(levels_vec)  # lower case to standardize
+    ref_level <- NA  # default
+
+    for (keyword in preferred_order) {
+    idx <- which(grepl(keyword, matches, ignore.case = TRUE))
+    if (length(idx) > 0) {
+        ref_level <- levels_vec[idx[1]]  # pick the first match for that keyword
+        break  # stop at the highest-priority match
+    }
+    }
+
+
+    # If none found, fall back to most common level
+    if (is.na(ref_level)) {
+        level_counts <- table(df[[col]])
+        ref_level <- names(level_counts)[which.max(level_counts)]
+    }
+
+    # Set reference level
+    df[[col]] <- relevel(df[[col]], ref = ref_level)
+
+    # Record reference level
+    reference_levels <- bind_rows(
+        reference_levels,
+        tibble(variable = col, reference_level = ref_level)
+    )
+    }
+    
+        
+    
+    x_raw <- df[[outcome_var]]
+    x_chr <- trimws(tolower(as.character(x_raw)))
+
+    none_tokens <- c(""none"", ""nan"", ""na"", """", ""null"", ""nil"", ""missing"")
+    x_chr[x_chr %in% none_tokens] <- NA_character_
+    y <- rep(NA_integer_, length(x_chr))
+    y[x_chr %in% c(""yes"", ""y"", ""true"", ""t"")]  <- 1L
+    y[x_chr %in% c(""no"",  ""n"", ""false"", ""f"")] <- 0L
+    x_num <- suppressWarnings(as.numeric(x_chr))
+    y[is.na(y) & !is.na(x_num) & x_num == 1] <- 1L
+    y[is.na(y) & !is.na(x_num) & x_num == 0] <- 0L
+    idx <- is.na(y) & !is.na(x_chr)
+    if (any(idx)) {
+    vals <- sort(unique(x_chr[idx]))
+    if (length(vals) != 2) {
+        stop(sprintf(
+        ""Outcome '%s' must have exactly 2 non-missing classes after excluding none. Found: %s"",
+        outcome_var, paste(vals, collapse = "", "")
+        ))
+    }
+    tab <- table(x_chr[idx])
+    minority <- names(tab)[which.min(tab)]
+    majority <- setdiff(vals, minority)
+    cat(sprintf(
+        ""Outcome '%s' recoding: 1 = %s (minority)  0 = %s (majority)"",
+        outcome_var, minority, majority
+    ))
+    y[idx] <- as.integer(x_chr[idx] == minority)
+    }
+    df[[outcome_var]] <- y
+    u <- sort(unique(df[[outcome_var]][!is.na(df[[outcome_var]])]))
+    if (!(length(u) == 2 && all(u == c(0, 1)))) {
+    stop(sprintf(
+        ""After recoding, '%s' must contain both 0 and 1 (plus NA for none). Found: %s"",
+        outcome_var,
+        ifelse(length(u) == 0, ""<no non-missing values>"", paste(u, collapse = "", ""))
+    ))
+    }
+    formula <- as.formula(paste0(outcome_var, "" ~ "", paste(predictor_vars, collapse = "" + "")))
+            
+    
+    survey_design <- svydesign(
+        ids     = as.formula(paste0(""~"", psu_var)),
+        strata  = as.formula(paste0(""~"", stratum_var)),
+        weights = as.formula(paste0(""~"", weight_var)),
+        data    = df,
+        nest    = TRUE
+        )
+    survey_design <- subset(survey_design, in_analysis ==1)
+        
+    
+    model <- svyglm(formula,design = survey_design, family = quasibinomial()) 
+            
+    
+    result_table <- tidy(model, conf.int = TRUE, exponentiate = TRUE) %>%
+            select(term, estimate, p.value, conf.low, conf.high)
+            
+    ","[{'variable': 'respondent_sequence_number', 'category': 'identifier', 'n_unique': 14418, 'na_count': 0, 'summary': 'Total rows = 14418'}, {'variable': 'masked_variance_pseudo_psu', 'category': 'weight', 'n_unique': 3, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'masked_variance_pseudo_stratum', 'category': 'weight', 'n_unique': 44, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'survey_weight', 'category': 'weight', 'n_unique': 12273, 'na_count': 0, 'summary': 'Weight variable'}, {'variable': 'age_at_screening', 'category': 'categorical', 'n_unique': 4, 'na_count': 0, 'summary': '20-39: 33.2%; 40-59: 33.2%; 60-79: 27.8%; equal or more than 80: 5.9%'}, {'variable': 'gender', 'category': 'binary', 'n_unique': 2, 'na_count': 0, 'summary': 'Female: 50.4%; Male: 49.6%'}, {'variable': 'race_hispanic_origin', 'category': 'categorical', 'n_unique': 5, 'na_count': 0, 'summary': 'Black: 22.4%; Mexican Hispanic: 13.6%; Other Hispanic: 10.6%; others: 14.5%; White: 39%'}, {'variable': 'depression_outcome', 'category': 'categorical', 'n_unique': 5, 'na_count': 0, 'summary': 'Mild [5-9]: 16%; Moderate [10-14]: 5.4%; Moderately Severe [15-19]: 2.4%; None [0-4]: 75.1%; Severe [20 or higher]: 1.2%'}, {'variable': 'diabetes_presence', 'category': 'outcome', 'n_unique': 2, 'na_count': 0, 'summary': '0: 80.5%; 1: 19.5%'}]","[{'term': '(Intercept)', 'estimate': 0.020856365870862422, 'p.value': 2.1659427054348235e-29, 'conf.low': 0.016802680810773647, 'conf.high': 0.025888011695155602}, {'term': 'age_at_screening40-59', 'estimate': 4.9710129738404545, 'p.value': 4.543528263660704e-18, 'conf.low': 4.079966933798779, 'conf.high': 6.056659376668577}, {'term': 'age_at_screening60-79', 'estimate': 12.412114227765846, 'p.value': 6.319706944333113e-24, 'conf.low': 10.118638914041489, 'conf.high': 15.225425169517585}, {'term': 'age_at_screeningequal or more than 80', 'estimate': 12.990376656829856, 'p.value': 1.8898393078709023e-21, 'conf.low': 10.143496519994006, 'conf.high': 16.63626397009004}, {'term': 'genderMale', 'estimate': 1.324889304501039, 'p.value': 7.313355461760775e-05, 'conf.low': 1.1667820992770646, 'conf.high': 1.5044211513605206}, {'term': 'race_hispanic_originBlack', 'estimate': 1.9938317177904619, 'p.value': 1.8415372815562009e-10, 'conf.low': 1.702121363974491, 'conf.high': 2.3355355281980006}, {'term': 'race_hispanic_originMexican Hispanic', 'estimate': 2.275240229780582, 'p.value': 1.7656692813666045e-08, 'conf.low': 1.8080192224263767, 'conf.high': 2.863198598223306}, {'term': 'race_hispanic_originOther Hispanic', 'estimate': 1.6374714816927414, 'p.value': 1.5571907091948275e-07, 'conf.low': 1.4047194105033418, 'conf.high': 1.9087889248972847}, {'term': 'race_hispanic_originothers', 'estimate': 1.6934327587143656, 'p.value': 2.1355197119733706e-06, 'conf.low': 1.4021197006566095, 'conf.high': 2.045270818849491}, {'term': 'depression_outcomeMild [5-9]', 'estimate': 1.6170591703738182, 'p.value': 4.387591355517591e-07, 'conf.low': 1.3811260337016953, 'conf.high': 1.8932959749384035}, {'term': 'depression_outcomeModerate [10-14]', 'estimate': 2.016067024347416, 'p.value': 4.654507182541903e-05, 'conf.low': 1.4840292066804797, 'conf.high': 2.7388451846932966}, {'term': 'depression_outcomeModerately Severe [15-19]', 'estimate': 2.285457503254175, 'p.value': 1.4727552994713804e-05, 'conf.low': 1.6369785978225007, 'conf.high': 3.1908272998369247}, {'term': 'depression_outcomeSevere [20 or higher]', 'estimate': 2.1416136806387387, 'p.value': 0.006393907570972183, 'conf.low': 1.2568275686212291, 'conf.high': 3.649274786461376}]",,,,weighted logistic regression (exam),2011-2016,"[[2011, 2012], [2013, 2014], [2015, 2016]]",google_gemini-2.5-flash,"Review Required
+
+The analysis plan is mostly well-defined, but there is one point that requires clarification regarding the exclusion criteria for diabetes-related data.
+
+Please clarify the following:
+
+*   **Exclusion Criteria for Diabetes Data:** You stated, ""Additionally, we will exclude participants with incomplete all of following diabetes exam or survey data: self-report of previous diagnosis of diabetes by medical professionals, fasting plasma glucose (FPG) (mg/dL), glycosylated hemoglobin (HbA1c) (%), post 2-hour plasma glucose after 75 g oral glucose tolerance test (OGTT)(mg/dl), whether they take glucose lowering agents, whether they take insulin.""
+
+    This phrasing (""incomplete all of following"") typically means that a participant is only excluded if *every single one* of these listed diabetes-related variables is missing. Is this the intended meaning, or do you mean that participants should be excluded if *any one* of these variables is incomplete/missing, to ensure a complete assessment for the diabetes outcome?",[],,421.716317,"[[{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 960, 'output_tokens': 211, 'total_cost': 0.0008155, 'formatted_total_cost': '$0.000816'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3542, 'output_tokens': 2780, 'total_cost': 0.0080126, 'formatted_total_cost': '$0.008013'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3791, 'output_tokens': 112, 'total_cost': 0.0014172999999999998, 'formatted_total_cost': '$0.001417'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3791, 'output_tokens': 112, 'total_cost': 0.0014172999999999998, 'formatted_total_cost': '$0.001417'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3980, 'output_tokens': 114, 'total_cost': 0.0014789999999999998, 'formatted_total_cost': '$0.001479'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3980, 'output_tokens': 114, 'total_cost': 0.0014789999999999998, 'formatted_total_cost': '$0.001479'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3917, 'output_tokens': 112, 'total_cost': 0.0014551, 'formatted_total_cost': '$0.001455'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3917, 'output_tokens': 112, 'total_cost': 0.0014551, 'formatted_total_cost': '$0.001455'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 364, 'output_tokens': 3, 'total_cost': 0.0001167, 'formatted_total_cost': '$0.000117'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3614, 'output_tokens': 108, 'total_cost': 0.0013542, 'formatted_total_cost': '$0.001354'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3614, 'output_tokens': 108, 'total_cost': 0.0013542, 'formatted_total_cost': '$0.001354'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3720, 'output_tokens': 108, 'total_cost': 0.001386, 'formatted_total_cost': '$0.001386'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3720, 'output_tokens': 108, 'total_cost': 0.001386, 'formatted_total_cost': '$0.001386'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3720, 'output_tokens': 108, 'total_cost': 0.001386, 'formatted_total_cost': '$0.001386'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3720, 'output_tokens': 108, 'total_cost': 0.001386, 'formatted_total_cost': '$0.001386'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 345, 'output_tokens': 3, 'total_cost': 0.000111, 'formatted_total_cost': '$0.000111'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3676, 'output_tokens': 97, 'total_cost': 0.0013452999999999998, 'formatted_total_cost': '$0.001345'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3676, 'output_tokens': 97, 'total_cost': 0.0013452999999999998, 'formatted_total_cost': '$0.001345'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3773, 'output_tokens': 97, 'total_cost': 0.0013744, 'formatted_total_cost': '$0.001374'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3773, 'output_tokens': 97, 'total_cost': 0.0013744, 'formatted_total_cost': '$0.001374'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3757, 'output_tokens': 97, 'total_cost': 0.0013696, 'formatted_total_cost': '$0.001370'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3757, 'output_tokens': 97, 'total_cost': 0.0013696, 'formatted_total_cost': '$0.001370'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 406, 'output_tokens': 3, 'total_cost': 0.0001293, 'formatted_total_cost': '$0.000129'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3421, 'output_tokens': 82, 'total_cost': 0.0012312999999999998, 'formatted_total_cost': '$0.001231'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3421, 'output_tokens': 82, 'total_cost': 0.0012312999999999998, 'formatted_total_cost': '$0.001231'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3553, 'output_tokens': 80, 'total_cost': 0.0012659000000000001, 'formatted_total_cost': '$0.001266'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3553, 'output_tokens': 80, 'total_cost': 0.0012659000000000001, 'formatted_total_cost': '$0.001266'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3451, 'output_tokens': 82, 'total_cost': 0.0012403000000000002, 'formatted_total_cost': '$0.001240'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3451, 'output_tokens': 82, 'total_cost': 0.0012403000000000002, 'formatted_total_cost': '$0.001240'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 408, 'output_tokens': 3, 'total_cost': 0.00012989999999999999, 'formatted_total_cost': '$0.000130'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3441, 'output_tokens': 89, 'total_cost': 0.0012548, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3441, 'output_tokens': 89, 'total_cost': 0.0012548, 'formatted_total_cost': '$0.001255'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3518, 'output_tokens': 91, 'total_cost': 0.0012829, 'formatted_total_cost': '$0.001283'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3518, 'output_tokens': 91, 'total_cost': 0.0012829, 'formatted_total_cost': '$0.001283'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3479, 'output_tokens': 91, 'total_cost': 0.0012711999999999999, 'formatted_total_cost': '$0.001271'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3479, 'output_tokens': 91, 'total_cost': 0.0012711999999999999, 'formatted_total_cost': '$0.001271'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 434, 'output_tokens': 3, 'total_cost': 0.00013769999999999999, 'formatted_total_cost': '$0.000138'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3303, 'output_tokens': 76, 'total_cost': 0.0011809, 'formatted_total_cost': '$0.001181'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3303, 'output_tokens': 76, 'total_cost': 0.0011809, 'formatted_total_cost': '$0.001181'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3524, 'output_tokens': 78, 'total_cost': 0.0012522, 'formatted_total_cost': '$0.001252'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3524, 'output_tokens': 78, 'total_cost': 0.0012522, 'formatted_total_cost': '$0.001252'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3490, 'output_tokens': 76, 'total_cost': 0.001237, 'formatted_total_cost': '$0.001237'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3490, 'output_tokens': 76, 'total_cost': 0.001237, 'formatted_total_cost': '$0.001237'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 381, 'output_tokens': 3, 'total_cost': 0.00012179999999999999, 'formatted_total_cost': '$0.000122'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4446, 'output_tokens': 109, 'total_cost': 0.0016063, 'formatted_total_cost': '$0.001606'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4446, 'output_tokens': 109, 'total_cost': 0.0016063, 'formatted_total_cost': '$0.001606'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4383, 'output_tokens': 109, 'total_cost': 0.0015873999999999999, 'formatted_total_cost': '$0.001587'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4383, 'output_tokens': 109, 'total_cost': 0.0015873999999999999, 'formatted_total_cost': '$0.001587'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4373, 'output_tokens': 109, 'total_cost': 0.0015844, 'formatted_total_cost': '$0.001584'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4373, 'output_tokens': 109, 'total_cost': 0.0015844, 'formatted_total_cost': '$0.001584'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 370, 'output_tokens': 3, 'total_cost': 0.0001185, 'formatted_total_cost': '$0.000118'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3568, 'output_tokens': 103, 'total_cost': 0.0013279, 'formatted_total_cost': '$0.001328'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3568, 'output_tokens': 103, 'total_cost': 0.0013279, 'formatted_total_cost': '$0.001328'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3616, 'output_tokens': 103, 'total_cost': 0.0013422999999999998, 'formatted_total_cost': '$0.001342'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3616, 'output_tokens': 103, 'total_cost': 0.0013422999999999998, 'formatted_total_cost': '$0.001342'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3616, 'output_tokens': 103, 'total_cost': 0.0013422999999999998, 'formatted_total_cost': '$0.001342'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3616, 'output_tokens': 103, 'total_cost': 0.0013422999999999998, 'formatted_total_cost': '$0.001342'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 378, 'output_tokens': 3, 'total_cost': 0.00012090000000000001, 'formatted_total_cost': '$0.000121'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3671, 'output_tokens': 78, 'total_cost': 0.0012963, 'formatted_total_cost': '$0.001296'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3671, 'output_tokens': 78, 'total_cost': 0.0012963, 'formatted_total_cost': '$0.001296'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3749, 'output_tokens': 80, 'total_cost': 0.0013247, 'formatted_total_cost': '$0.001325'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3749, 'output_tokens': 80, 'total_cost': 0.0013247, 'formatted_total_cost': '$0.001325'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3711, 'output_tokens': 80, 'total_cost': 0.0013133, 'formatted_total_cost': '$0.001313'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3711, 'output_tokens': 80, 'total_cost': 0.0013133, 'formatted_total_cost': '$0.001313'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 311, 'output_tokens': 3, 'total_cost': 0.00010080000000000001, 'formatted_total_cost': '$0.000101'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3467, 'output_tokens': 101, 'total_cost': 0.0012926, 'formatted_total_cost': '$0.001293'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3467, 'output_tokens': 101, 'total_cost': 0.0012926, 'formatted_total_cost': '$0.001293'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3441, 'output_tokens': 101, 'total_cost': 0.0012848, 'formatted_total_cost': '$0.001285'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3441, 'output_tokens': 101, 'total_cost': 0.0012848, 'formatted_total_cost': '$0.001285'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3447, 'output_tokens': 103, 'total_cost': 0.0012916, 'formatted_total_cost': '$0.001292'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3447, 'output_tokens': 103, 'total_cost': 0.0012916, 'formatted_total_cost': '$0.001292'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 390, 'output_tokens': 3, 'total_cost': 0.0001245, 'formatted_total_cost': '$0.000124'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3410, 'output_tokens': 76, 'total_cost': 0.0012129999999999999, 'formatted_total_cost': '$0.001213'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3410, 'output_tokens': 76, 'total_cost': 0.0012129999999999999, 'formatted_total_cost': '$0.001213'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3533, 'output_tokens': 76, 'total_cost': 0.0012499, 'formatted_total_cost': '$0.001250'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3533, 'output_tokens': 76, 'total_cost': 0.0012499, 'formatted_total_cost': '$0.001250'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3491, 'output_tokens': 76, 'total_cost': 0.0012373, 'formatted_total_cost': '$0.001237'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3491, 'output_tokens': 76, 'total_cost': 0.0012373, 'formatted_total_cost': '$0.001237'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 380, 'output_tokens': 3, 'total_cost': 0.00012150000000000001, 'formatted_total_cost': '$0.000122'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3350, 'output_tokens': 75, 'total_cost': 0.0011925, 'formatted_total_cost': '$0.001192'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 493, 'output_tokens': 59, 'total_cost': 0.0002954, 'formatted_total_cost': '$0.000295'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 493, 'output_tokens': 59, 'total_cost': 0.0002954, 'formatted_total_cost': '$0.000295'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3365, 'output_tokens': 75, 'total_cost': 0.001197, 'formatted_total_cost': '$0.001197'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 508, 'output_tokens': 59, 'total_cost': 0.00029989999999999997, 'formatted_total_cost': '$0.000300'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 508, 'output_tokens': 59, 'total_cost': 0.00029989999999999997, 'formatted_total_cost': '$0.000300'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3366, 'output_tokens': 73, 'total_cost': 0.0011922999999999999, 'formatted_total_cost': '$0.001192'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 510, 'output_tokens': 59, 'total_cost': 0.0003005, 'formatted_total_cost': '$0.000300'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 510, 'output_tokens': 59, 'total_cost': 0.0003005, 'formatted_total_cost': '$0.000300'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 295, 'output_tokens': 3, 'total_cost': 9.6e-05, 'formatted_total_cost': '$0.000096'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3355, 'output_tokens': 85, 'total_cost': 0.001219, 'formatted_total_cost': '$0.001219'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3355, 'output_tokens': 85, 'total_cost': 0.001219, 'formatted_total_cost': '$0.001219'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3338, 'output_tokens': 83, 'total_cost': 0.0012089, 'formatted_total_cost': '$0.001209'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3338, 'output_tokens': 83, 'total_cost': 0.0012089, 'formatted_total_cost': '$0.001209'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3262, 'output_tokens': 85, 'total_cost': 0.0011911, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3262, 'output_tokens': 85, 'total_cost': 0.0011911, 'formatted_total_cost': '$0.001191'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 386, 'output_tokens': 3, 'total_cost': 0.0001233, 'formatted_total_cost': '$0.000123'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4155, 'output_tokens': 127, 'total_cost': 0.0015639999999999999, 'formatted_total_cost': '$0.001564'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4155, 'output_tokens': 127, 'total_cost': 0.0015639999999999999, 'formatted_total_cost': '$0.001564'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4190, 'output_tokens': 127, 'total_cost': 0.0015745, 'formatted_total_cost': '$0.001574'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4190, 'output_tokens': 127, 'total_cost': 0.0015745, 'formatted_total_cost': '$0.001574'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4222, 'output_tokens': 127, 'total_cost': 0.0015840999999999997, 'formatted_total_cost': '$0.001584'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4222, 'output_tokens': 127, 'total_cost': 0.0015840999999999997, 'formatted_total_cost': '$0.001584'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 344, 'output_tokens': 3, 'total_cost': 0.00011070000000000001, 'formatted_total_cost': '$0.000111'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4302, 'output_tokens': 129, 'total_cost': 0.0016131000000000001, 'formatted_total_cost': '$0.001613'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4302, 'output_tokens': 129, 'total_cost': 0.0016131000000000001, 'formatted_total_cost': '$0.001613'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4194, 'output_tokens': 129, 'total_cost': 0.0015807, 'formatted_total_cost': '$0.001581'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4194, 'output_tokens': 129, 'total_cost': 0.0015807, 'formatted_total_cost': '$0.001581'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4256, 'output_tokens': 129, 'total_cost': 0.0015993000000000001, 'formatted_total_cost': '$0.001599'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4256, 'output_tokens': 129, 'total_cost': 0.0015993000000000001, 'formatted_total_cost': '$0.001599'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 388, 'output_tokens': 3, 'total_cost': 0.0001239, 'formatted_total_cost': '$0.000124'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3836, 'output_tokens': 103, 'total_cost': 0.0014083, 'formatted_total_cost': '$0.001408'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3836, 'output_tokens': 103, 'total_cost': 0.0014083, 'formatted_total_cost': '$0.001408'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3945, 'output_tokens': 89, 'total_cost': 0.001406, 'formatted_total_cost': '$0.001406'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3945, 'output_tokens': 89, 'total_cost': 0.001406, 'formatted_total_cost': '$0.001406'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3857, 'output_tokens': 105, 'total_cost': 0.0014196, 'formatted_total_cost': '$0.001420'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3857, 'output_tokens': 105, 'total_cost': 0.0014196, 'formatted_total_cost': '$0.001420'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 379, 'output_tokens': 3, 'total_cost': 0.0001212, 'formatted_total_cost': '$0.000121'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3493, 'output_tokens': 101, 'total_cost': 0.0013004000000000002, 'formatted_total_cost': '$0.001300'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3493, 'output_tokens': 101, 'total_cost': 0.0013004000000000002, 'formatted_total_cost': '$0.001300'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3832, 'output_tokens': 99, 'total_cost': 0.0013971, 'formatted_total_cost': '$0.001397'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3832, 'output_tokens': 99, 'total_cost': 0.0013971, 'formatted_total_cost': '$0.001397'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3859, 'output_tokens': 99, 'total_cost': 0.0014052000000000001, 'formatted_total_cost': '$0.001405'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3859, 'output_tokens': 99, 'total_cost': 0.0014052000000000001, 'formatted_total_cost': '$0.001405'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 374, 'output_tokens': 3, 'total_cost': 0.0001197, 'formatted_total_cost': '$0.000120'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4194, 'output_tokens': 108, 'total_cost': 0.0015282, 'formatted_total_cost': '$0.001528'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4194, 'output_tokens': 108, 'total_cost': 0.0015282, 'formatted_total_cost': '$0.001528'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4375, 'output_tokens': 108, 'total_cost': 0.0015825000000000001, 'formatted_total_cost': '$0.001583'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4375, 'output_tokens': 108, 'total_cost': 0.0015825000000000001, 'formatted_total_cost': '$0.001583'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4280, 'output_tokens': 106, 'total_cost': 0.001549, 'formatted_total_cost': '$0.001549'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4280, 'output_tokens': 106, 'total_cost': 0.001549, 'formatted_total_cost': '$0.001549'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 378, 'output_tokens': 5, 'total_cost': 0.0001259, 'formatted_total_cost': '$0.000126'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3918, 'output_tokens': 108, 'total_cost': 0.0014454, 'formatted_total_cost': '$0.001445'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3918, 'output_tokens': 108, 'total_cost': 0.0014454, 'formatted_total_cost': '$0.001445'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4057, 'output_tokens': 106, 'total_cost': 0.0014820999999999999, 'formatted_total_cost': '$0.001482'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 4057, 'output_tokens': 106, 'total_cost': 0.0014820999999999999, 'formatted_total_cost': '$0.001482'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3862, 'output_tokens': 106, 'total_cost': 0.0014236, 'formatted_total_cost': '$0.001424'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3862, 'output_tokens': 106, 'total_cost': 0.0014236, 'formatted_total_cost': '$0.001424'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 381, 'output_tokens': 3, 'total_cost': 0.00012179999999999999, 'formatted_total_cost': '$0.000122'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3689, 'output_tokens': 80, 'total_cost': 0.0013067, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3689, 'output_tokens': 80, 'total_cost': 0.0013067, 'formatted_total_cost': '$0.001307'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3738, 'output_tokens': 80, 'total_cost': 0.0013214000000000001, 'formatted_total_cost': '$0.001321'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3738, 'output_tokens': 80, 'total_cost': 0.0013214000000000001, 'formatted_total_cost': '$0.001321'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3725, 'output_tokens': 78, 'total_cost': 0.0013125, 'formatted_total_cost': '$0.001313'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3725, 'output_tokens': 78, 'total_cost': 0.0013125, 'formatted_total_cost': '$0.001313'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 313, 'output_tokens': 3, 'total_cost': 0.00010140000000000001, 'formatted_total_cost': '$0.000101'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3573, 'output_tokens': 108, 'total_cost': 0.0013419, 'formatted_total_cost': '$0.001342'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3573, 'output_tokens': 108, 'total_cost': 0.0013419, 'formatted_total_cost': '$0.001342'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3683, 'output_tokens': 106, 'total_cost': 0.0013699, 'formatted_total_cost': '$0.001370'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3683, 'output_tokens': 106, 'total_cost': 0.0013699, 'formatted_total_cost': '$0.001370'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3683, 'output_tokens': 108, 'total_cost': 0.0013749, 'formatted_total_cost': '$0.001375'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3683, 'output_tokens': 108, 'total_cost': 0.0013749, 'formatted_total_cost': '$0.001375'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 345, 'output_tokens': 3, 'total_cost': 0.000111, 'formatted_total_cost': '$0.000111'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3644, 'output_tokens': 113, 'total_cost': 0.0013756999999999999, 'formatted_total_cost': '$0.001376'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3644, 'output_tokens': 113, 'total_cost': 0.0013756999999999999, 'formatted_total_cost': '$0.001376'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3752, 'output_tokens': 113, 'total_cost': 0.0014081, 'formatted_total_cost': '$0.001408'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3752, 'output_tokens': 113, 'total_cost': 0.0014081, 'formatted_total_cost': '$0.001408'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3762, 'output_tokens': 111, 'total_cost': 0.0014061, 'formatted_total_cost': '$0.001406'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 3762, 'output_tokens': 111, 'total_cost': 0.0014061, 'formatted_total_cost': '$0.001406'}, {'model_name': 'google_gemini-2.5-flash', 'input_tokens': 385, 'output_tokens': 3, 'total_cost': 0.00012299999999999998, 'formatted_total_cost': '$0.000123'}], [{'model_name': 'google_gemini-2.5-flash', 'input_tokens': 10130, 'output_tokens': 3083, 'total_cost': 0.010746499999999999, 'formatted_total_cost': '$0.010746'}]]",False,0,,,,Finished Successfully,

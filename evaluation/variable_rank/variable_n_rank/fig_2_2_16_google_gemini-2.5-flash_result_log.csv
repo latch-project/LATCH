@@ -1,0 +1,77 @@
+Search Keyword,Cycle,Expected Table,Expected Column,Found,Candidate Rank,Matched Variable,Matched Table,Similarity Score
+age at screening (years),2011-2012,nhanes.demo_g,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_g,0.9867746
+age at screening (years),2009-2010,nhanes.demo_f,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_f,0.9867746
+age at screening (years),2013-2014,nhanes.demo_h,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_h,0.9867746
+age at screening (years),2015-2016,nhanes.demo_i,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_i,0.9867746
+self-reported diabetes,2011-2012,nhanes.diq_g,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_g,0.7115066
+self-reported diabetes,2009-2010,nhanes.diq_f,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_f,0.7115066
+self-reported diabetes,2013-2014,nhanes.diq_h,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_h,0.7115066
+self-reported diabetes,2015-2016,nhanes.diq_i,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_i,0.7115066
+takes diabetic medication,2011-2012,nhanes.diq_g,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_g,0.7340515
+takes diabetic medication,2009-2010,nhanes.diq_f,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_f,0.7340515
+takes diabetic medication,2013-2014,nhanes.diq_h,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_h,0.7340515
+takes diabetic medication,2015-2016,nhanes.diq_i,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_i,0.7340515
+takes insulin,2011-2012,nhanes.diq_g,taking_insulin_now,True,1,taking insulin now,nhanes.diq_g,0.82199067
+takes insulin,2009-2010,nhanes.diq_f,taking_insulin_now,True,1,taking insulin now,nhanes.diq_f,0.82199067
+takes insulin,2013-2014,nhanes.diq_h,taking_insulin_now,True,1,taking insulin now,nhanes.diq_h,0.82199067
+takes insulin,2015-2016,nhanes.diq_i,taking_insulin_now,True,1,taking insulin now,nhanes.diq_i,0.8219907
+neutrophil counts,2011-2012,nhanes.cbc_g,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_g,0.7169319
+neutrophil counts,2009-2010,nhanes.cbc_f,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_f,0.7169319
+neutrophil counts,2013-2014,nhanes.cbc_h,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_h,0.71693194
+neutrophil counts,2015-2016,nhanes.cbc_i,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_i,0.7169319
+lymphocyte counts,2011-2012,nhanes.cbc_g,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_g,0.7942172
+lymphocyte counts,2009-2010,nhanes.cbc_f,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_f,0.7942172
+lymphocyte counts,2013-2014,nhanes.cbc_h,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_h,0.7942172
+lymphocyte counts,2015-2016,nhanes.cbc_i,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_i,0.7942172
+have little interest in doing things,2011-2012,nhanes.dpq_g,have_little_interest_in_doing_things,True,1,have little interest in doing things,nhanes.dpq_g,1.0
+have little interest in doing things,2009-2010,nhanes.dpq_f,have_little_interest_in_doing_things,True,1,have little interest in doing things,nhanes.dpq_f,1.0
+have little interest in doing things,2013-2014,nhanes.dpq_h,have_little_interest_in_doing_things,True,1,have little interest in doing things,nhanes.dpq_h,1.0
+have little interest in doing things,2015-2016,nhanes.dpq_i,have_little_interest_in_doing_things,True,1,have little interest in doing things,nhanes.dpq_i,1.0
+"feeling down, depressed, or hopeless",2011-2012,nhanes.dpq_g,feeling_down_depressed_or_hopeless,True,1,"feeling down, depressed, or hopeless",nhanes.dpq_g,1.0
+"feeling down, depressed, or hopeless",2009-2010,nhanes.dpq_f,feeling_down_depressed_or_hopeless,True,1,"feeling down, depressed, or hopeless",nhanes.dpq_f,1.0
+"feeling down, depressed, or hopeless",2013-2014,nhanes.dpq_h,feeling_down_depressed_or_hopeless,True,1,"feeling down, depressed, or hopeless",nhanes.dpq_h,1.0
+"feeling down, depressed, or hopeless",2015-2016,nhanes.dpq_i,feeling_down_depressed_or_hopeless,True,1,"feeling down, depressed, or hopeless",nhanes.dpq_i,1.0
+trouble sleeping or sleeping too much,2011-2012,nhanes.dpq_g,trouble_sleeping_or_sleeping_too_much,True,1,trouble sleeping or sleeping too much,nhanes.dpq_g,1.0
+trouble sleeping or sleeping too much,2009-2010,nhanes.dpq_f,trouble_sleeping_or_sleeping_too_much,True,1,trouble sleeping or sleeping too much,nhanes.dpq_f,1.0
+trouble sleeping or sleeping too much,2013-2014,nhanes.dpq_h,trouble_sleeping_or_sleeping_too_much,True,1,trouble sleeping or sleeping too much,nhanes.dpq_h,1.0
+trouble sleeping or sleeping too much,2015-2016,nhanes.dpq_i,trouble_sleeping_or_sleeping_too_much,True,1,trouble sleeping or sleeping too much,nhanes.dpq_i,1.0
+feeling tired or having little energy,2011-2012,nhanes.dpq_g,feeling_tired_or_having_little_energy,True,1,feeling tired or having little energy,nhanes.dpq_g,1.0
+feeling tired or having little energy,2009-2010,nhanes.dpq_f,feeling_tired_or_having_little_energy,True,1,feeling tired or having little energy,nhanes.dpq_f,1.0
+feeling tired or having little energy,2013-2014,nhanes.dpq_h,feeling_tired_or_having_little_energy,True,1,feeling tired or having little energy,nhanes.dpq_h,1.0
+feeling tired or having little energy,2015-2016,nhanes.dpq_i,feeling_tired_or_having_little_energy,True,1,feeling tired or having little energy,nhanes.dpq_i,1.0
+poor appetite or overeating,2011-2012,nhanes.dpq_g,poor_appetite_or_overeating,True,1,poor appetite or overeating,nhanes.dpq_g,1.0
+poor appetite or overeating,2009-2010,nhanes.dpq_f,poor_appetite_or_overeating,True,1,poor appetite or overeating,nhanes.dpq_f,1.0
+poor appetite or overeating,2013-2014,nhanes.dpq_h,poor_appetite_or_overeating,True,1,poor appetite or overeating,nhanes.dpq_h,1.0
+poor appetite or overeating,2015-2016,nhanes.dpq_i,poor_appetite_or_overeating,True,1,poor appetite or overeating,nhanes.dpq_i,1.0
+feeling bad about yourself,2011-2012,nhanes.dpq_g,feeling_bad_about_yourself,True,1,feeling bad about yourself,nhanes.dpq_g,1.0
+feeling bad about yourself,2009-2010,nhanes.dpq_f,feeling_bad_about_yourself,True,1,feeling bad about yourself,nhanes.dpq_f,1.0
+feeling bad about yourself,2013-2014,nhanes.dpq_h,feeling_bad_about_yourself,True,1,feeling bad about yourself,nhanes.dpq_h,1.0
+feeling bad about yourself,2015-2016,nhanes.dpq_i,feeling_bad_about_yourself,True,1,feeling bad about yourself,nhanes.dpq_i,1.0
+trouble concentrating on things,2011-2012,nhanes.dpq_g,trouble_concentrating_on_things,True,1,trouble concentrating on things,nhanes.dpq_g,1.0
+trouble concentrating on things,2009-2010,nhanes.dpq_f,trouble_concentrating_on_things,True,1,trouble concentrating on things,nhanes.dpq_f,1.0
+trouble concentrating on things,2013-2014,nhanes.dpq_h,trouble_concentrating_on_things,True,1,trouble concentrating on things,nhanes.dpq_h,1.0
+trouble concentrating on things,2015-2016,nhanes.dpq_i,trouble_concentrating_on_things,True,1,trouble concentrating on things,nhanes.dpq_i,1.0
+moving or speaking slowly or too fast,2011-2012,nhanes.dpq_g,moving_or_speaking_slowly_or_too_fast,True,1,moving or speaking slowly or too fast,nhanes.dpq_g,1.0
+moving or speaking slowly or too fast,2009-2010,nhanes.dpq_f,moving_or_speaking_slowly_or_too_fast,True,1,moving or speaking slowly or too fast,nhanes.dpq_f,1.0
+moving or speaking slowly or too fast,2013-2014,nhanes.dpq_h,moving_or_speaking_slowly_or_too_fast,True,1,moving or speaking slowly or too fast,nhanes.dpq_h,1.0
+moving or speaking slowly or too fast,2015-2016,nhanes.dpq_i,moving_or_speaking_slowly_or_too_fast,True,1,moving or speaking slowly or too fast,nhanes.dpq_i,1.0
+thought you would be better off dead,2011-2012,nhanes.dpq_g,thought_you_would_be_better_off_dead,True,1,thought you would be better off dead,nhanes.dpq_g,1.0
+thought you would be better off dead,2009-2010,nhanes.dpq_f,thought_you_would_be_better_off_dead,True,1,thought you would be better off dead,nhanes.dpq_f,1.0
+thought you would be better off dead,2013-2014,nhanes.dpq_h,thought_you_would_be_better_off_dead,True,1,thought you would be better off dead,nhanes.dpq_h,1.0
+thought you would be better off dead,2015-2016,nhanes.dpq_i,thought_you_would_be_better_off_dead,True,1,thought you would be better off dead,nhanes.dpq_i,1.0
+gender,2011-2012,nhanes.demo_g,gender,True,1,gender,nhanes.demo_g,1.0
+gender,2009-2010,nhanes.demo_f,gender,True,1,gender,nhanes.demo_f,1.0
+gender,2013-2014,nhanes.demo_h,gender,True,1,gender,nhanes.demo_h,1.0
+gender,2015-2016,nhanes.demo_i,gender,True,1,gender,nhanes.demo_i,1.0
+race/hispanic origin,2011-2012,nhanes.demo_g,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_g,1.0
+race/hispanic origin,2009-2010,nhanes.demo_f,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_f,1.0
+race/hispanic origin,2013-2014,nhanes.demo_h,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_h,1.0
+race/hispanic origin,2015-2016,nhanes.demo_i,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_i,1.0
+neutrophil count,2011-2012,nhanes.cbc_g,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_g,0.71704406
+neutrophil count,2009-2010,nhanes.cbc_f,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_f,0.71704406
+neutrophil count,2013-2014,nhanes.cbc_h,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_h,0.71704406
+neutrophil count,2015-2016,nhanes.cbc_i,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_i,0.71704406
+lymphocyte count,2011-2012,nhanes.cbc_g,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_g,0.8138987
+lymphocyte count,2009-2010,nhanes.cbc_f,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_f,0.8138987
+lymphocyte count,2013-2014,nhanes.cbc_h,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_h,0.8138987
+lymphocyte count,2015-2016,nhanes.cbc_i,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_i,0.8138987

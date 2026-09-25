@@ -1,0 +1,37 @@
+Search Keyword,Cycle,Expected Table,Expected Column,Found,Candidate Rank,Matched Variable,Matched Table,Similarity Score
+self-reported diabetes diagnosis,2005-2006,nhanes.diq_d,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_d,0.7095017
+self-reported diabetes diagnosis,2007-2008,nhanes.diq_e,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_e,0.7095017
+self-reported diabetes diagnosis,2001-2002,nhanes.diq_b,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_b,0.7095017
+self-reported diabetes diagnosis,2003-2004,nhanes.diq_c,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_c,0.7095017
+glycohemoglobin (hba1c) (%),2005-2006,nhanes.ghb_d,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_d,0.9163717
+glycohemoglobin (hba1c) (%),2007-2008,nhanes.ghb_e,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_e,0.9163717
+glycohemoglobin (hba1c) (%),2001-2002,nhanes.l10_b,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.l10_b,0.9163717
+glycohemoglobin (hba1c) (%),2003-2004,nhanes.l10_c,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.l10_c,0.9163717
+fasting glucoes (mg/dl),2005-2006,nhanes.glu_d,fasting_glucose_mg_dl,True,1,fasting glucose (mg/dl),nhanes.glu_d,0.69925106
+fasting glucoes (mg/dl),2007-2008,nhanes.glu_e,fasting_glucose_mg_dl,True,1,fasting glucose (mg/dl),nhanes.glu_e,0.69925106
+fasting glucoes (mg/dl),2001-2002,nhanes.l10am_b,fasting_glucose_mg_dl,True,1,fasting glucose (mg/dl),nhanes.l10am_b,0.69925106
+fasting glucoes (mg/dl),2003-2004,nhanes.l10am_c,fasting_glucose_mg_dl,True,1,fasting glucose (mg/dl),nhanes.l10am_c,0.69925106
+age at screening (years old),2005-2006,nhanes.demo_d,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_d,0.9740733
+age at screening (years old),2007-2008,nhanes.demo_e,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_e,0.9740733
+age at screening (years old),2001-2002,nhanes.demo_b,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_b,0.9740733
+age at screening (years old),2003-2004,nhanes.demo_c,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_c,0.9740733
+gender,2005-2006,nhanes.demo_d,gender,True,2,gender,nhanes.demo_d,1.0
+gender,2007-2008,nhanes.demo_e,gender,True,1,gender,nhanes.demo_e,1.0
+gender,2001-2002,nhanes.demo_b,gender,True,1,gender,nhanes.demo_b,1.0
+gender,2003-2004,nhanes.demo_c,gender,True,1,gender,nhanes.demo_c,1.0
+race/hispanic origin,2005-2006,nhanes.demo_d,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_d,1.0
+race/hispanic origin,2007-2008,nhanes.demo_e,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_e,1.0
+race/hispanic origin,2001-2002,nhanes.demo_b,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_b,1.0
+race/hispanic origin,2003-2004,nhanes.demo_c,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_c,1.0
+urine albumin (mg/l),2005-2006,nhanes.alb_cr_d,albumin_urine_mg_l,True,1,"albumin, urine (mg/l)",nhanes.alb_cr_d,0.9804473
+urine albumin (mg/l),2007-2008,nhanes.alb_cr_e,albumin_urine_mg_l,True,1,"albumin, urine (mg/l)",nhanes.alb_cr_e,0.9804473
+urine albumin (mg/l),2001-2002,nhanes.l16_b,albumin_urine_mg_l_si,True,2,"albumin, urine (mg/l) si",nhanes.l16_b,0.9380132
+urine albumin (mg/l),2003-2004,nhanes.l16_c,albumin_urine_mg_l_si,True,1,"albumin, urine (mg/l) si",nhanes.l16_c,0.9380132
+urine creatinine (mg/dl),2005-2006,nhanes.alb_cr_d,creatinine_urine_mg_dl,True,4,"creatinine, urine (mg/dl)",nhanes.alb_cr_d,0.97331154
+urine creatinine (mg/dl),2007-2008,nhanes.alb_cr_e,creatinine_urine_mg_dl,True,4,"creatinine, urine (mg/dl)",nhanes.alb_cr_e,0.97331154
+urine creatinine (mg/dl),2001-2002,nhanes.l16_b,creatinine_urine_mg_dl,True,3,"creatinine, urine (mg/dl)",nhanes.l16_b,0.97331154
+urine creatinine (mg/dl),2003-2004,nhanes.l16_c,creatinine_urine_mg_dl,True,8,"creatinine, urine (mg/dl)",nhanes.l16_c,0.97331154
+serum creatinine (mg/dl),2005-2006,nhanes.biopro_d,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_d,0.8873489
+serum creatinine (mg/dl),2007-2008,nhanes.biopro_e,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_e,0.8873489
+serum creatinine (mg/dl),2001-2002,nhanes.l40_b,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.l40_b,0.8873489
+serum creatinine (mg/dl),2003-2004,nhanes.l40_c,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.l40_c,0.8873489

@@ -410,3 +410,83 @@ class ResultLogger:
                 self.dataframeshape,
                 self.stats_summary,
             )
+
+
+class QueryParser_Onestep:
+    def __init__(self, title, question, llm_provider, llm_log=None):
+        self.title = title
+        self.question = question
+        self.llm_provider = llm_provider
+        self.prompt0 = prompts.pre_review_step1_parse_request_free_text()
+        self.prompt2 = prompts.step1_parse_one_step()
+        usage_logs = []
+        try:
+            response, usage = utils.generate_ai_response(
+                self.prompt0, self.question, llm_provider
+            )
+            self.safeguard1 = response
+            cost_details0 = utils.calculate_cost(llm_provider, usage)
+            usage_logs.append(cost_details0)
+        except Exception as e:
+                raise RuntimeError("QueryParser failed at Safeguard 1 LLM call") from e
+        if llm_log:
+            utils.llm_log_to_csv(
+                title, llm_log, "Safeguard 1", self.prompt0, self.question, response
+            )
+
+        self.question_structured = None 
+        try:
+            response, usage = utils.generate_ai_response(
+                self.prompt2, self.question, llm_provider
+            )
+            self.respone_test = response
+            cost_details2 = utils.calculate_cost(llm_provider, usage)
+            usage_logs.append(cost_details2)
+
+        except Exception as e:
+            raise RuntimeError("QueryParser failed at parse LLM call") from e
+        if llm_log:
+            utils.llm_log_to_csv(
+                title,
+                llm_log,
+                "Step 1: Parse",
+                self.prompt2,
+                self.question,
+                response,
+            )
+        try:
+            json_str = utils.get_json_block(response)
+        except Exception:
+            print("Parsing failed!")
+            print(response)
+            raise RuntimeError(
+                    f"QueryParser failed at JSON extraction. Raw response: {response}"#####
+                ) from e
+        else:
+            print("Parsing succeeded")
+
+        json_str = utils.get_json_block(response)
+        try:
+            self.question_parse = json.loads(json_str)
+            print(self.question_parse)
+
+        except Exception as e:
+            raise RuntimeError(
+                f"QueryParser failed at JSON loading. JSON string: {json_str}"
+            ) from e
+        if "nhanes" in self.question_parse["dataset"].lower():
+            schema_name = "nhanes"
+        elif "aireadi" in self.question_parse["dataset"].lower():
+            schema_name = "aireadi"
+        elif "registry" in self.question_parse["dataset"].lower():
+            schema_name = "registry"
+        else:
+            schema_name = "nhanes"
+            print("dataset not properly detected")
+        self.cost = usage_logs
+        self.schema = schema_name
+        self.schema_folder = data_config.schema_configs[schema_name]["schema_folder"]
+        self.dictionary = data_config.schema_configs[schema_name]["dictionary"]
+        self.analysis = utils.get_analysis_type(json_str)
+        self.period = utils.get_period_of_interest(json_str)
+        self.years = utils.match_periods(self.period)

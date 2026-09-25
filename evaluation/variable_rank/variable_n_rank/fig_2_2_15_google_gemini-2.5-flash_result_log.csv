@@ -1,0 +1,31 @@
+Search Keyword,Cycle,Expected Table,Expected Column,Found,Candidate Rank,Matched Variable,Matched Table,Similarity Score
+age at screening,2011-2012,nhanes.demo_g,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_g,0.9615551
+age at screening,2013-2014,nhanes.demo_h,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_h,0.9615551
+doctor told you have diabetes,2011-2012,nhanes.diq_g,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_g,1.0
+doctor told you have diabetes,2013-2014,nhanes.diq_h,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_h,1.0
+reported taking diabetic pills to lower blood sugar,2011-2012,nhanes.diq_g,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_g,0.8911359
+reported taking diabetic pills to lower blood sugar,2013-2014,nhanes.diq_h,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_h,0.8911359
+fasting plasma glucose (mg/dl),2011-2012,nhanes.glu_g,fasting_glucose_mg_dl,True,1,fasting glucose (mg/dl),nhanes.glu_g,0.9477926
+fasting plasma glucose (mg/dl),2013-2014,nhanes.glu_h,fasting_glucose_mg_dl,True,1,fasting glucose (mg/dl),nhanes.glu_h,0.9477926
+adult food security questionaire,2011-2012,nhanes.fsq_g,adult_food_security_category,True,1,adult food security category,nhanes.fsq_g,0.8766058
+adult food security questionaire,2013-2014,nhanes.fsq_h,adult_food_security_category,True,1,adult food security category,nhanes.fsq_h,0.8766058
+have little interest in doing things,2011-2012,nhanes.dpq_g,have_little_interest_in_doing_things,True,1,have little interest in doing things,nhanes.dpq_g,1.0
+have little interest in doing things,2013-2014,nhanes.dpq_h,have_little_interest_in_doing_things,True,1,have little interest in doing things,nhanes.dpq_h,1.0
+"feeling down, depressed, or hopeless",2011-2012,nhanes.dpq_g,feeling_down_depressed_or_hopeless,True,1,"feeling down, depressed, or hopeless",nhanes.dpq_g,1.0
+"feeling down, depressed, or hopeless",2013-2014,nhanes.dpq_h,feeling_down_depressed_or_hopeless,True,1,"feeling down, depressed, or hopeless",nhanes.dpq_h,1.0
+trouble sleeping or sleeping too much,2011-2012,nhanes.dpq_g,trouble_sleeping_or_sleeping_too_much,True,1,trouble sleeping or sleeping too much,nhanes.dpq_g,1.0
+trouble sleeping or sleeping too much,2013-2014,nhanes.dpq_h,trouble_sleeping_or_sleeping_too_much,True,1,trouble sleeping or sleeping too much,nhanes.dpq_h,1.0
+feeling tired or having little energy,2011-2012,nhanes.dpq_g,feeling_tired_or_having_little_energy,True,1,feeling tired or having little energy,nhanes.dpq_g,1.0
+feeling tired or having little energy,2013-2014,nhanes.dpq_h,feeling_tired_or_having_little_energy,True,1,feeling tired or having little energy,nhanes.dpq_h,1.0
+poor appetite or overeating,2011-2012,nhanes.dpq_g,poor_appetite_or_overeating,True,1,poor appetite or overeating,nhanes.dpq_g,1.0
+poor appetite or overeating,2013-2014,nhanes.dpq_h,poor_appetite_or_overeating,True,1,poor appetite or overeating,nhanes.dpq_h,1.0
+feeling bad about yourself,2011-2012,nhanes.dpq_g,feeling_bad_about_yourself,True,1,feeling bad about yourself,nhanes.dpq_g,1.0
+feeling bad about yourself,2013-2014,nhanes.dpq_h,feeling_bad_about_yourself,True,1,feeling bad about yourself,nhanes.dpq_h,1.0
+trouble concentrating on things,2011-2012,nhanes.dpq_g,trouble_concentrating_on_things,True,1,trouble concentrating on things,nhanes.dpq_g,1.0
+trouble concentrating on things,2013-2014,nhanes.dpq_h,trouble_concentrating_on_things,True,1,trouble concentrating on things,nhanes.dpq_h,1.0
+moving or speaking slowly or too fast,2011-2012,nhanes.dpq_g,moving_or_speaking_slowly_or_too_fast,True,1,moving or speaking slowly or too fast,nhanes.dpq_g,1.0
+moving or speaking slowly or too fast,2013-2014,nhanes.dpq_h,moving_or_speaking_slowly_or_too_fast,True,1,moving or speaking slowly or too fast,nhanes.dpq_h,1.0
+thought you would be better off dead,2011-2012,nhanes.dpq_g,thought_you_would_be_better_off_dead,True,1,thought you would be better off dead,nhanes.dpq_g,1.0
+thought you would be better off dead,2013-2014,nhanes.dpq_h,thought_you_would_be_better_off_dead,True,1,thought you would be better off dead,nhanes.dpq_h,1.0
+adult food security question,2011-2012,nhanes.fsq_g,hh_adults_cut_size_or_skip_meals,True,35,hh adults cut size or skip meals,nhanes.fsq_g,0.3842697
+adult food security question,2013-2014,nhanes.fsq_h,hh_adults_cut_size_or_skip_meals,False,,,,

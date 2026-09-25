@@ -1,0 +1,57 @@
+Search Keyword,Cycle,Expected Table,Expected Column,Found,Candidate Rank,Matched Variable,Matched Table,Similarity Score
+told by medical professionals they had diabetes,2011-2012,nhanes.diq_g,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_g,0.8886898
+told by medical professionals they had diabetes,2017-2018,nhanes.diq_j,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_j,0.8886898
+told by medical professionals they had diabetes,2013-2014,nhanes.diq_h,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_h,0.8886898
+told by medical professionals they had diabetes,2015-2016,nhanes.diq_i,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_i,0.8886898
+fasting plasma glucose (mmol/L),2011-2012,nhanes.glu_g,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_g,0.95560396
+fasting plasma glucose (mmol/L),2017-2018,nhanes.glu_j,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_j,0.95560396
+fasting plasma glucose (mmol/L),2013-2014,nhanes.glu_h,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_h,0.95560396
+fasting plasma glucose (mmol/L),2015-2016,nhanes.glu_i,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_i,0.95560396
+glycohemoglobin (hba1c) (mmol/L),2011-2012,nhanes.ghb_g,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_g,0.7421026
+glycohemoglobin (hba1c) (mmol/L),2017-2018,nhanes.ghb_j,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_j,0.7421026
+glycohemoglobin (hba1c) (mmol/L),2013-2014,nhanes.ghb_h,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_h,0.7421026
+glycohemoglobin (hba1c) (mmol/L),2015-2016,nhanes.ghb_i,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_i,0.7421026
+taking diabetes medication,2011-2012,nhanes.diq_g,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_g,0.69703984
+taking diabetes medication,2017-2018,nhanes.diq_j,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_j,0.69703996
+taking diabetes medication,2013-2014,nhanes.diq_h,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_h,0.69703984
+taking diabetes medication,2015-2016,nhanes.diq_i,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_i,0.69703984
+age at screening,2011-2012,nhanes.demo_g,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_g,0.9615551
+age at screening,2017-2018,nhanes.demo_j,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_j,0.9615551
+age at screening,2013-2014,nhanes.demo_h,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_h,0.9615551
+age at screening,2015-2016,nhanes.demo_i,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_i,0.9615551
+platelet count,2011-2012,nhanes.cbc_g,platelet_count_1000_cells_ul,True,1,platelet count (1000 cells/ul),nhanes.cbc_g,0.8386256
+platelet count,2017-2018,nhanes.cbc_j,platelet_count_1000_cells_ul,True,1,platelet count (1000 cells/ul),nhanes.cbc_j,0.83862555
+platelet count,2013-2014,nhanes.cbc_h,platelet_count_1000_cells_ul,True,1,platelet count (1000 cells/ul),nhanes.cbc_h,0.8386256
+platelet count,2015-2016,nhanes.cbc_i,platelet_count_1000_cells_ul,True,1,platelet count (1000 cells/ul),nhanes.cbc_i,0.83862555
+neutrophil count,2011-2012,nhanes.cbc_g,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_g,0.71704406
+neutrophil count,2017-2018,nhanes.cbc_j,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_j,0.71704406
+neutrophil count,2013-2014,nhanes.cbc_h,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_h,0.71704406
+neutrophil count,2015-2016,nhanes.cbc_i,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_i,0.71704406
+lymphocyte count,2011-2012,nhanes.cbc_g,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_g,0.8138987
+lymphocyte count,2017-2018,nhanes.cbc_j,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_j,0.8138987
+lymphocyte count,2013-2014,nhanes.cbc_h,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_h,0.8138987
+lymphocyte count,2015-2016,nhanes.cbc_i,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_i,0.8138987
+urinary albumin to creatinine ratio,2011-2012,nhanes.alb_cr_g,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_g,0.81029886
+urinary albumin to creatinine ratio,2017-2018,nhanes.alb_cr_j,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_j,0.81029886
+urinary albumin to creatinine ratio,2013-2014,nhanes.alb_cr_h,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_h,0.81029886
+urinary albumin to creatinine ratio,2015-2016,nhanes.alb_cr_i,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_i,0.8102988
+gender,2011-2012,nhanes.demo_g,gender,True,1,gender,nhanes.demo_g,1.0
+gender,2017-2018,nhanes.demo_j,gender,True,1,gender,nhanes.demo_j,1.0
+gender,2013-2014,nhanes.demo_h,gender,True,1,gender,nhanes.demo_h,1.0
+gender,2015-2016,nhanes.demo_i,gender,True,1,gender,nhanes.demo_i,1.0
+race/hispanic origin,2011-2012,nhanes.demo_g,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_g,1.0
+race/hispanic origin,2017-2018,nhanes.demo_j,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_j,1.0
+race/hispanic origin,2013-2014,nhanes.demo_h,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_h,1.0
+race/hispanic origin,2015-2016,nhanes.demo_i,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_i,1.0
+pregnant at the time of the exam,2011-2012,nhanes.demo_g,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_g,0.83518887
+pregnant at the time of the exam,2017-2018,nhanes.demo_j,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_j,0.83518887
+pregnant at the time of the exam,2013-2014,nhanes.demo_h,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_h,0.83518887
+pregnant at the time of the exam,2015-2016,nhanes.demo_i,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_i,0.83518887
+serum creatinine (mg/dl),2011-2012,nhanes.biopro_g,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_g,0.8873489
+serum creatinine (mg/dl),2017-2018,nhanes.biopro_j,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_j,0.8873489
+serum creatinine (mg/dl),2013-2014,nhanes.biopro_h,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_h,0.8873489
+serum creatinine (mg/dl),2015-2016,nhanes.biopro_i,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_i,0.8873489
+urinary albumin to creatinine ratio (mg/g),2011-2012,nhanes.alb_cr_g,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_g,0.91316354
+urinary albumin to creatinine ratio (mg/g),2017-2018,nhanes.alb_cr_j,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_j,0.91316354
+urinary albumin to creatinine ratio (mg/g),2013-2014,nhanes.alb_cr_h,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_h,0.91316354
+urinary albumin to creatinine ratio (mg/g),2015-2016,nhanes.alb_cr_i,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_i,0.9131635

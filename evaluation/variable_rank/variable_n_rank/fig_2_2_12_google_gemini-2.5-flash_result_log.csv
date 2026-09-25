@@ -1,0 +1,49 @@
+Search Keyword,Cycle,Expected Table,Expected Column,Found,Candidate Rank,Matched Variable,Matched Table,Similarity Score
+self-reported diabetes,2017-2020,nhanes.p_diq,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.p_diq,0.7115066
+self-reported diabetes,2011-2012,nhanes.diq_g,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_g,0.7115066
+self-reported diabetes,2013-2014,nhanes.diq_h,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_h,0.7115066
+self-reported diabetes,2015-2016,nhanes.diq_i,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_i,0.7115066
+fasting plasma glucose (mmol/l),2017-2020,nhanes.p_glu,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.p_glu,0.95560396
+fasting plasma glucose (mmol/l),2011-2012,nhanes.glu_g,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_g,0.95560396
+fasting plasma glucose (mmol/l),2013-2014,nhanes.glu_h,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_h,0.95560396
+fasting plasma glucose (mmol/l),2015-2016,nhanes.glu_i,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_i,0.95560396
+glycohemoglobin (hba1c) (%),2017-2020,nhanes.p_ghb,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.p_ghb,0.9163717
+glycohemoglobin (hba1c) (%),2011-2012,nhanes.ghb_g,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_g,0.9163717
+glycohemoglobin (hba1c) (%),2013-2014,nhanes.ghb_h,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_h,0.9163717
+glycohemoglobin (hba1c) (%),2015-2016,nhanes.ghb_i,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_i,0.9163717
+random glucose level (mmol/l),2017-2020,nhanes.p_biopro,glucose_serum_mmol_l,True,1,"glucose, serum (mmol/l)",nhanes.p_biopro,0.7347678
+random glucose level (mmol/l),2011-2012,nhanes.biopro_g,glucose_serum_mmol_l,True,1,"glucose, serum (mmol/l)",nhanes.biopro_g,0.7347678
+random glucose level (mmol/l),2013-2014,nhanes.biopro_h,glucose_serum_mmol_l,True,1,"glucose, serum (mmol/l)",nhanes.biopro_h,0.7347678
+random glucose level (mmol/l),2015-2016,nhanes.biopro_i,glucose_serum_mmol_l,True,1,"glucose, serum (mmol/l)",nhanes.biopro_i,0.7347678
+age at screening,2017-2020,nhanes.p_demo,age_in_years_at_screening,True,1,age in years at screening,nhanes.p_demo,0.9615551
+age at screening,2011-2012,nhanes.demo_g,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_g,0.9615551
+age at screening,2013-2014,nhanes.demo_h,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_h,0.9615551
+age at screening,2015-2016,nhanes.demo_i,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_i,0.9615551
+gender,2017-2020,nhanes.p_demo,gender,True,1,gender,nhanes.p_demo,1.0
+gender,2011-2012,nhanes.demo_g,gender,True,1,gender,nhanes.demo_g,1.0
+gender,2013-2014,nhanes.demo_h,gender,True,1,gender,nhanes.demo_h,1.0
+gender,2015-2016,nhanes.demo_i,gender,True,1,gender,nhanes.demo_i,1.0
+race/hispanic origin,2017-2020,nhanes.p_demo,race_hispanic_origin,True,1,race/hispanic origin,nhanes.p_demo,1.0
+race/hispanic origin,2011-2012,nhanes.demo_g,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_g,1.0
+race/hispanic origin,2013-2014,nhanes.demo_h,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_h,1.0
+race/hispanic origin,2015-2016,nhanes.demo_i,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_i,1.0
+urine albumin (mg/l),2017-2020,nhanes.p_alb_cr,albumin_urine_mg_l,True,1,"albumin, urine (mg/l)",nhanes.p_alb_cr,0.9804473
+urine albumin (mg/l),2011-2012,nhanes.alb_cr_g,albumin_urine_mg_l,True,1,"albumin, urine (mg/l)",nhanes.alb_cr_g,0.9804473
+urine albumin (mg/l),2013-2014,nhanes.alb_cr_h,albumin_urine_mg_l,True,1,"albumin, urine (mg/l)",nhanes.alb_cr_h,0.9804473
+urine albumin (mg/l),2015-2016,nhanes.alb_cr_i,albumin_urine_mg_l,True,1,"albumin, urine (mg/l)",nhanes.alb_cr_i,0.9804473
+urine creatinine (mg/dl),2017-2020,nhanes.p_alb_cr,creatinine_urine_mg_dl,True,1,"creatinine, urine (mg/dl)",nhanes.p_alb_cr,0.97331154
+urine creatinine (mg/dl),2011-2012,nhanes.alb_cr_g,creatinine_urine_mg_dl,True,2,"creatinine, urine (mg/dl)",nhanes.alb_cr_g,0.97331154
+urine creatinine (mg/dl),2013-2014,nhanes.alb_cr_h,creatinine_urine_mg_dl,True,8,"creatinine, urine (mg/dl)",nhanes.alb_cr_h,0.97331154
+urine creatinine (mg/dl),2015-2016,nhanes.alb_cr_i,creatinine_urine_mg_dl,True,1,"creatinine, urine (mg/dl)",nhanes.alb_cr_i,0.97331154
+serum creatinine (mg/dl),2017-2020,nhanes.p_biopro,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.p_biopro,0.8873489
+serum creatinine (mg/dl),2011-2012,nhanes.biopro_g,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_g,0.8873489
+serum creatinine (mg/dl),2013-2014,nhanes.biopro_h,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_h,0.8873489
+serum creatinine (mg/dl),2015-2016,nhanes.biopro_i,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_i,0.8873489
+serum total folate (nmol/l),2017-2020,nhanes.p_folfms,serum_total_folate_nmol_l,True,1,serum total folate (nmol/l),nhanes.p_folfms,1.0
+serum total folate (nmol/l),2011-2012,nhanes.folfms_g,serum_total_folate_nmol_l,True,1,serum total folate (nmol/l),nhanes.folfms_g,1.0
+serum total folate (nmol/l),2013-2014,nhanes.folfms_h,serum_total_folate_nmol_l,True,1,serum total folate (nmol/l),nhanes.folfms_h,1.0
+serum total folate (nmol/l),2015-2016,nhanes.folfms_i,serum_total_folate_nmol_l,True,1,serum total folate (nmol/l),nhanes.folfms_i,1.0
+red blood cell folate (nmol/l),2017-2020,nhanes.p_folate,rbc_folate_nmol_l,True,1,rbc folate (nmol/l),nhanes.p_folate,0.8372634
+red blood cell folate (nmol/l),2011-2012,nhanes.folate_g,rbc_folate_nmol_l,True,1,rbc folate (nmol/l),nhanes.folate_g,0.8372634
+red blood cell folate (nmol/l),2013-2014,nhanes.folate_h,rbc_folate_nmol_l,True,1,rbc folate (nmol/l),nhanes.folate_h,0.8372634
+red blood cell folate (nmol/l),2015-2016,nhanes.folate_i,rbc_folate_nmol_l,True,1,rbc folate (nmol/l),nhanes.folate_i,0.8372634

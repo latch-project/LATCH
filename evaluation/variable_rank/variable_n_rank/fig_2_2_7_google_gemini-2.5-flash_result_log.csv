@@ -1,0 +1,49 @@
+Search Keyword,Cycle,Expected Table,Expected Column,Found,Candidate Rank,Matched Variable,Matched Table,Similarity Score
+age in years at screening,2011-2012,nhanes.demo_g,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_g,1.0
+age in years at screening,2009-2010,nhanes.demo_f,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_f,1.0
+age in years at screening,2013-2014,nhanes.demo_h,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_h,1.0
+age in years at screening,2015-2016,nhanes.demo_i,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_i,1.0
+doctor told you have diabetes,2011-2012,nhanes.diq_g,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_g,1.0
+doctor told you have diabetes,2009-2010,nhanes.diq_f,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_f,1.0
+doctor told you have diabetes,2013-2014,nhanes.diq_h,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_h,1.0
+doctor told you have diabetes,2015-2016,nhanes.diq_i,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_i,1.0
+diabetes affected eyes/had retinopathy,2011-2012,nhanes.diq_g,diabetes_affected_eyes_had_retinopathy,True,1,diabetes affected eyes/had retinopathy,nhanes.diq_g,1.0
+diabetes affected eyes/had retinopathy,2009-2010,nhanes.diq_f,diabetes_affected_eyes_had_retinopathy,True,1,diabetes affected eyes/had retinopathy,nhanes.diq_f,1.0
+diabetes affected eyes/had retinopathy,2013-2014,nhanes.diq_h,diabetes_affected_eyes_had_retinopathy,True,1,diabetes affected eyes/had retinopathy,nhanes.diq_h,1.0
+diabetes affected eyes/had retinopathy,2015-2016,nhanes.diq_i,diabetes_affected_eyes_had_retinopathy,True,1,diabetes affected eyes/had retinopathy,nhanes.diq_i,1.0
+serum albumin (alb) (g/dl),2011-2012,nhanes.biopro_g,albumin_g_dl,True,2,albumin (g/dl),nhanes.biopro_g,0.6547506
+serum albumin (alb) (g/dl),2009-2010,nhanes.biopro_f,albumin_g_dl,True,2,albumin (g/dl),nhanes.biopro_f,0.6547506
+serum albumin (alb) (g/dl),2013-2014,nhanes.biopro_h,albumin_g_dl,True,2,albumin (g/dl),nhanes.biopro_h,0.6547506
+serum albumin (alb) (g/dl),2015-2016,nhanes.biopro_i,albumin_g_dl,True,2,albumin (g/dl),nhanes.biopro_i,0.6547506
+serum creatinine scr (mg/dl),2011-2012,nhanes.biopro_g,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_g,0.7958411
+serum creatinine scr (mg/dl),2009-2010,nhanes.biopro_f,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_f,0.7958411
+serum creatinine scr (mg/dl),2013-2014,nhanes.biopro_h,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_h,0.7958411
+serum creatinine scr (mg/dl),2015-2016,nhanes.biopro_i,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_i,0.7958411
+urinary albumin-to-creatinine ratio (uacr (mg/g)),2011-2012,nhanes.alb_cr_g,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_g,0.82346094
+urinary albumin-to-creatinine ratio (uacr (mg/g)),2009-2010,nhanes.alb_cr_f,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_f,0.82346094
+urinary albumin-to-creatinine ratio (uacr (mg/g)),2013-2014,nhanes.alb_cr_h,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_h,0.82346094
+urinary albumin-to-creatinine ratio (uacr (mg/g)),2015-2016,nhanes.alb_cr_i,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_i,0.82346094
+gender,2011-2012,nhanes.demo_g,gender,True,1,gender,nhanes.demo_g,1.0
+gender,2009-2010,nhanes.demo_f,gender,True,1,gender,nhanes.demo_f,1.0
+gender,2013-2014,nhanes.demo_h,gender,True,1,gender,nhanes.demo_h,1.0
+gender,2015-2016,nhanes.demo_i,gender,True,1,gender,nhanes.demo_i,1.0
+race/hispanic origin,2011-2012,nhanes.demo_g,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_g,1.0
+race/hispanic origin,2009-2010,nhanes.demo_f,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_f,1.0
+race/hispanic origin,2013-2014,nhanes.demo_h,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_h,1.0
+race/hispanic origin,2015-2016,nhanes.demo_i,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_i,1.0
+education level,2011-2012,nhanes.demo_g,education_level_adults_20,True,2,education level - adults 20+,nhanes.demo_g,0.7963867
+education level,2009-2010,nhanes.demo_f,education_level_adults_20,True,2,education level - adults 20+,nhanes.demo_f,0.7963867
+education level,2013-2014,nhanes.demo_h,education_level_adults_20,True,2,education level - adults 20+,nhanes.demo_h,0.7963867
+education level,2015-2016,nhanes.demo_i,education_level_adults_20,True,2,education level - adults 20+,nhanes.demo_i,0.7963867
+poverty income ratio (pir),2011-2012,nhanes.demo_g,ratio_of_family_income_to_poverty,True,1,ratio of family income to poverty,nhanes.demo_g,0.7119156
+poverty income ratio (pir),2009-2010,nhanes.demo_f,ratio_of_family_income_to_poverty,True,1,ratio of family income to poverty,nhanes.demo_f,0.7119156
+poverty income ratio (pir),2013-2014,nhanes.demo_h,ratio_of_family_income_to_poverty,True,1,ratio of family income to poverty,nhanes.demo_h,0.7119156
+poverty income ratio (pir),2015-2016,nhanes.demo_i,ratio_of_family_income_to_poverty,True,1,ratio of family income to poverty,nhanes.demo_i,0.7119156
+urinary albumin-to-creatinine ratio uacr (mg/g),2011-2012,nhanes.alb_cr_g,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_g,0.82346094
+urinary albumin-to-creatinine ratio uacr (mg/g),2009-2010,nhanes.alb_cr_f,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_f,0.82346094
+urinary albumin-to-creatinine ratio uacr (mg/g),2013-2014,nhanes.alb_cr_h,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_h,0.82346094
+urinary albumin-to-creatinine ratio uacr (mg/g),2015-2016,nhanes.alb_cr_i,albumin_creatinine_ratio_mg_g,True,1,albumin creatinine ratio (mg/g),nhanes.alb_cr_i,0.82346094
+serum albumin alb (g/dl),2011-2012,nhanes.biopro_g,albumin_g_dl,True,2,albumin (g/dl),nhanes.biopro_g,0.6547506
+serum albumin alb (g/dl),2009-2010,nhanes.biopro_f,albumin_g_dl,True,2,albumin (g/dl),nhanes.biopro_f,0.6547506
+serum albumin alb (g/dl),2013-2014,nhanes.biopro_h,albumin_g_dl,True,2,albumin (g/dl),nhanes.biopro_h,0.6547506
+serum albumin alb (g/dl),2015-2016,nhanes.biopro_i,albumin_g_dl,True,2,albumin (g/dl),nhanes.biopro_i,0.6547506

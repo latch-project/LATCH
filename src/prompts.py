@@ -88,7 +88,145 @@ Output should be text with the following structure:
 
 Response to user: Output the final result wrapped in triple single quotes ('''   ''') with no extra commentary.
 """
+###########################
+def step1_parse_one_step():
+    return f"""
+Your goal is to convert the user's free-text request directly into an organized dictionary for a study design.
 
+General rules:
+- Organize the content into these components: analysis type, dataset, period of interest, inclusion criteria, exclusion criteria, variables (note: variable requirements depend on the analysis type).
+- If any component is missing, set its value as an empty list.
+- Provide complete derivation, categorization, data processing, calculation, binning, formula, and IF/ELSE details; do not omit steps.
+- If a unit appears with a variable name, preserve it exactly as written.
+- Preserve all keyword and variable names exactly as provided (including spelling, punctuation, and spacing). Do not normalize, reinterpret, or replace with synonyms; keep them as-is whenever possible.
+- Only allowed changes are making keywords lowercase and remove special symbols for consistency.
+- Pay close attention to logical operators (AND, OR, IF); they control the analysis logic and outcomes.
+
+Datasets:
+- Allowed datasets: NHANES, AIREADI.
+
+Inclusion/Exclusion rules:
+- Include or exclude participants only according to the user's requested conditions.
+- If criteria is redundant (both inclusion exclusion) just include it in either.
+- Do not include/exclude based on missing values unless the user explicitly requests this for specific variables.
+- For conditions that could be framed as either inclusion or exclusion, follow the user's framing.
+- If the user wants to include all participants, set inclusion as an empty list.
+
+Analysis type:
+- Choose one of: logistic regression, linear regression, cox regression, mediation analysis, group comparison, prevalence, stratified logistic regression, weighted logistic regression, weighted linear regression, weighted cox regression, weighted group comparison, weighted prevalence, weighted stratified logistic regression.
+- If a weight type is specified, denote it in parentheses, e.g., "weighted logistic regression (exam)" or "weighted logistic regression (questionnaire)". If no weight is specified, do not use a weighted analysis; the model will automatically select the most restrictive compatible weights based on the variables used.
+- If the analysis type is not specified, choose the most suitable one
+- Variable requirements by analysis (list items in this exact order):
+  - Logistic regression: covariates (if provided); predictor; outcome (binary mapped to 1 and 0).
+  - Cox regression: covariates (if provided); predictor; outcome consisting of (1) time-to-event and (2) event indicator (binary, in this order).
+  - Linear regression: covariates (if provided); predictor; outcome.
+  - Prevalence: grouping variables (if comparing groups); outcome (binary mapped to 1 and 0).
+  - Mediation analysis: covariates (if provided), predictor; mediator; outcome.
+  - Group comparison: variables being compared; outcome (the variable used to define groups).
+
+Variable parsing rules:
+- Include full derivation details (e.g., categorization, binning, formula, IF/ELSE) without omitting any steps.
+- For each derived variable, trace dependencies recursively until you reach the most basic variables, and list only these fundamental variables as keywords.
+- Include units in the keyword if present.
+- For phrases that has conditions like missing value or more/less than certain value, organize the logic separately in keyword and condition so that correct keyword can be later looked up.
+- For analysis type, use the exact wording from thse input and don't omit anything.
+- Make all keyword lowercase and no special symbols for consistency.
+- For mapping derivations, list only the mapped labels, not the source-target pairs. Source values will be inferred later from examples. 
+- For mapping derivations, if any of the mapped labels is specified as reference keep the word "reference" in the final name for clarity.
+- For categorical and binary variables in covariates, name them explicitly as group names in strings.
+
+Period of interest:
+- Use the format YYYY-YYYY, e.g., 2014-2015.
+
+This is an example of the input and expected output:
+
+input will be:
+{examples.question_free_text}
+
+Output should be a JSON object with the following structure:
+{examples.parsed_question}
+
+Response to user: Output the final result wrapped in triple single quotes ('''   ''') with no extra commentary.
+"""
+
+###########################
+def pre_review_step1_parse_request_free_text_extended():
+    return f"""
+Your goal is to evaluate whether analysis request makes sense and has all the information needed. If not, we will be requesting more information from the user.
+
+Analysis scope:
+We support these: logistic regression, linear regression, cox regression, group comparison, prevalence, and mediation analysis. There are weighted versions for each (e.g., weighted logistic regression and logistic regression)
+Typically we need these components for analysis: analysis type, period of interest, inclusion criteria, exclusion criteria, covariates (if applicable), predictor (if applicable), and outcome.
+
+Outcomes should be in different forms based on the statistical analysis:
+- Logistic regressions require binary outcome, 
+- Linear regressions require numerical outcome, 
+- Cox regression requires two outcome metrics: time to event, and binary outcome so list two outcomes for this analysis, 
+- Group comparison wlil be the variable that divides the group,
+- Prevalence will be the variable we are measuring the prevalence of.
+- Only regresssion models will have predictors. For prevalence and group comparison analysis, variables of interest will be treated as like covariates in regressions for categorization purposes.
+
+Dataset and Period scope:
+We support either NHANES (1999-2023) or AIREADI data (2023-2025){examples.registry_info1}
+
+Other rules:
+If the request is ambiguous or needs more details, please ask the user for more information.
+If there are any contradictory information within the user input, ask for clarification.
+Ask for more detail if thess are missing: analysis type, period of interest, inclusion criteria, exclusion criteria, outcome, or any other necessary metrics for a specified statistics analyses, to make sure that we have all the study details. 
+If analysis type is missing, you can recommend one as well based on given information.
+
+If this analysis plan is reasonable and not missing critical informtaion, say "Pass".
+If it is missing critical information say "Review Required" and explain why it is not reasonable and ask questions for the user for clarification.
+"""
+
+###########################
+def step1_parse_request_free_text_extended():
+    return f"""
+Your goal is to convert the user's free-text request into a structured study design specification.
+
+General rules:
+- Organize the content into these components: analysis type, dataset, period of interest, inclusion criteria, exclusion criteria, variables (note: variable requirements depend on the analysis type).
+- If any component is missing, set its value to None.
+- Provide complete derivation, categorization, data processing, and calculation details; do not omit steps.
+- If a unit appears with a variable name, preserve it exactly as written.
+- Preserve all keyword and variable names exactly as provided (including spelling, casing, punctuation, and spacing). Do not normalize, reinterpret, or replace with synonyms; keep them as-is whenever possible.
+- Pay close attention to logical operators (AND, OR, IF); they control the analysis logic and outcomes.
+
+Datasets:
+- Allowed datasets: NHANES, AIREADI{examples.registry_info2}.
+
+Inclusion/Exclusion rules:
+- Include or exclude participants only according to the user's requested conditions.
+- If criteria is redundant (both inclusion exclusion) just include it in either.
+- Do not include/exclude based on missing values unless the user explicitly requests this for specific variables.
+- For conditions that could be framed as either inclusion or exclusion, follow the user's framing.
+- If the user wants to include all participants, set inclusion to None.
+
+Analysis type:
+- Choose one of: logistic regression, linear regression, cox regression, mediation analysis, group comparison, prevalence, stratified logistic regression, weighted logistic regression, weighted linear regression, weighted cox regression, weighted group comparison, weighted prevalence, weighted stratified logistic regression.
+- If a weight type is specified, denote it in parentheses, e.g., "weighted logistic regression (exam)" or "weighted logistic regression (questionnaire)". If no weight is specified, do not use a weighted analysis; the model will automatically select the most restrictive compatible weights based on the variables used.
+- If the analysis type is not specified, choose the most suitable one
+- Variable requirements by analysis (list items in this exact order):
+  - Logistic regression: covariates (if provided); predictor; outcome (binary mapped to 1 and 0).
+  - Cox regression: covariates (if provided); predictor; outcome consisting of (1) time-to-event and (2) event indicator (binary, in this order).
+  - Linear regression: covariates (if provided); predictor; outcome.
+  - Prevalence: grouping variables (if comparing groups); outcome (binary mapped to 1 and 0).
+  - Mediation analysis: covariates (if provided), predictor; mediator; outcome.
+  - Group comparison: variables being compared; outcome (the variable used to define groups).
+
+Period of interest:
+- Use the format YYYY-YYYY, e.g., 2014-2015.
+
+This is an example of the input and expected output:
+
+input will be:
+{examples.question_free_text}
+
+Output should be text with the following structure:
+{examples.question}
+
+Response to user: Output the final result wrapped in triple single quotes ('''   ''') with no extra commentary.
+"""
 
 def step1_parse_request():
     return f"""
@@ -123,6 +261,9 @@ def step2_get_relevant_tables(schema):
 
     elif "aireadi" in schema:
         example = examples.aireadi_table_example
+    
+    elif "registry" in schema:
+        example = examples.registry_table_example
 
     return f"""
   Your goal is to select the most relevant candidate from the provided candidates that best aligns with the given keyword from the question.
@@ -140,6 +281,30 @@ def step2_get_relevant_tables(schema):
 
   Response to user: The full formatted final output dictionary wrapped in triple single quotes (''' ... ''') without any explanation or commentary.
     """
+
+# def step2_get_relevant_tables(schema):
+#     if "nhanes" in schema:
+#         example = examples.nhanes_table_example
+
+#     elif "aireadi" in schema:
+#         example = examples.aireadi_table_example
+
+#     return f"""
+#   Your goal is to select the most relevant candidate from the provided candidates that best aligns with the given keyword from the question.
+#   - If any candidate matches the keyword exactly from the user question, it is the correct candidate so select it.
+#   - If not, follow the instruction below to make a correct choice:
+#   - If more information like table name is available, use that to get more context and help you pick the most accurate candidate. For example, age related information should be in demographic or patient related table, and serum levels should be in the lab or measurement table.
+#   - Make sure to be precise about any medical condition names. For example, pre disease X,  disease X, risk of disease X are different conditions pick the correct one.
+#   - If there are multiple same name candidates, pick the most relevant one to the user's question based on the description.
+#   - If a keyword is related to a missing value or a comparison (e.g., less than or more than some value), pick the variable that is related to the keyword. We can check for missing values or perform comparisons on that variable later. For example, for "Missing or Unknown vitamin C" or "vitamin C level more than 10%", "vitamin C" is the correct choice.
+#   - Pick the one that most accurately describes what the original question is looking for.
+  
+#   {example}
+  
+#   Use only the provided options and do not introduce new ones.
+
+#   Response to user: The full formatted final output dictionary wrapped in triple single quotes (''' ... ''') without any explanation or commentary.
+#     """
 
 
 def step2_3_evaluate_picked_candidate_pickone1():

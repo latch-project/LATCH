@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+import copy
 
 # print(config.DB_NAME)
 # print(data_config.nhanes_config)
@@ -40,14 +41,23 @@ class DataConfig:
         "nhanes": {
             "schema_folder": f"{root}/nhanes/schema",
             "dictionary": f"{root}/nhanes/metadata/schema_summary.csv",
-            "patientid": "respondent_sequence_number",
+            "patientid": "respondent_sequence_number", 
         },
+
         "aireadi": {
             "schema_folder": f"{root}/aireadi/schema",
             "dictionary": f"{root}/aireadi/schema_summary/schema_summary.csv",
             "patientid": "person_id",
+            "available_years": [[2023, 2025]]
         },
-    }
+        "registry": {
+            "schema_folder": f"{root}/registry/schema",
+            "dictionary": f"{root}/registry/schema_summary/schema_summary.csv",
+            "patientid": "patient_id",
+            "available_years": [[2021, 2023]]
+        },
+    } 
+###########################
 
     nhanes_config = {
         "keyword_column": "SAS Label",
@@ -80,6 +90,13 @@ class DataConfig:
             "Description",
             "Examples",
         ],
+         "variable_lookup": [
+            "SAS Label",
+            "Data File Description",
+            "Data File Name",
+            "Examples",
+
+        ],
     }
     aireadi_config = {
         "keyword_column": "column_name",
@@ -100,9 +117,19 @@ class DataConfig:
             "Examples",
             "Examples",
         ],
+         "variable_lookup": [
+            "column_name",
+            "column_description",
+            "table_name",
+            "values",
+        ],
     }
+    registry_config = copy.deepcopy(aireadi_config)
 
-    config_map = {"nhanes": nhanes_config, "aireadi": aireadi_config}
+
+###########################
+
+    config_map = {"nhanes": nhanes_config, "aireadi": aireadi_config,  "registry": registry_config}
 
 
 data_config = DataConfig()

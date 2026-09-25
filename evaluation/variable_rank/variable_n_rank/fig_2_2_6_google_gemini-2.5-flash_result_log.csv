@@ -1,0 +1,13 @@
+Search Keyword,Cycle,Expected Table,Expected Column,Found,Candidate Rank,Matched Variable,Matched Table,Similarity Score
+doctor told you have diabetes,2005-2006,nhanes.diq_d,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_d,1.0
+doctor told you have diabetes,2007-2008,nhanes.diq_e,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_e,1.0
+hemoglobin (g/dl),2005-2006,nhanes.cbc_d,hemoglobin_g_dl,True,1,hemoglobin (g/dl),nhanes.cbc_d,1.0
+hemoglobin (g/dl),2007-2008,nhanes.cbc_e,hemoglobin_g_dl,True,1,hemoglobin (g/dl),nhanes.cbc_e,1.0
+"4 levels retinopathy severity, worse eye",2005-2006,nhanes.opxret_d,4_levels_retinopathy_severity_worse_eye,True,1,"4 levels retinopathy severity, worse eye",nhanes.opxret_d,1.0
+"4 levels retinopathy severity, worse eye",2007-2008,nhanes.opxret_e,4_levels_retinopathy_severity_worse_eye,True,1,"4 levels retinopathy severity, worse eye",nhanes.opxret_e,1.0
+age at screening,2005-2006,nhanes.demo_d,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_d,0.9615551
+age at screening,2007-2008,nhanes.demo_e,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_e,0.9615551
+gender,2005-2006,nhanes.demo_d,gender,True,2,gender,nhanes.demo_d,1.0
+gender,2007-2008,nhanes.demo_e,gender,True,1,gender,nhanes.demo_e,1.0
+race/hispanic origin,2005-2006,nhanes.demo_d,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_d,1.0
+race/hispanic origin,2007-2008,nhanes.demo_e,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_e,1.0

@@ -1,0 +1,161 @@
+Search Keyword,Cycle,Expected Table,Expected Column,Found,Candidate Rank,Matched Variable,Matched Table,Similarity Score
+self-reported diabetes,2005-2006,nhanes.diq_d,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_d,0.7115066
+self-reported diabetes,2017-2020,nhanes.p_diq,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.p_diq,0.7115066
+self-reported diabetes,2011-2012,nhanes.diq_g,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_g,0.7115066
+self-reported diabetes,2013-2014,nhanes.diq_h,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_h,0.7115066
+self-reported diabetes,2001-2002,nhanes.diq_b,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_b,0.7115066
+self-reported diabetes,2003-2004,nhanes.diq_c,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_c,0.7115066
+self-reported diabetes,2007-2008,nhanes.diq_e,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_e,0.7115066
+self-reported diabetes,2009-2010,nhanes.diq_f,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_f,0.7115066
+self-reported diabetes,2015-2016,nhanes.diq_i,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_i,0.7115066
+self-reported diabetes,1999-2000,nhanes.diq,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq,0.7115066
+use of insulin,2005-2006,nhanes.diq_d,taking_insulin_now,True,1,taking insulin now,nhanes.diq_d,0.78361595
+use of insulin,2017-2020,nhanes.p_diq,taking_insulin_now,True,1,taking insulin now,nhanes.p_diq,0.7836159
+use of insulin,2011-2012,nhanes.diq_g,taking_insulin_now,True,1,taking insulin now,nhanes.diq_g,0.7836159
+use of insulin,2013-2014,nhanes.diq_h,taking_insulin_now,True,1,taking insulin now,nhanes.diq_h,0.7836159
+use of insulin,2001-2002,nhanes.diq_b,taking_insulin_now,True,1,taking insulin now,nhanes.diq_b,0.78361595
+use of insulin,2003-2004,nhanes.diq_c,taking_insulin_now,True,1,taking insulin now,nhanes.diq_c,0.78361595
+use of insulin,2007-2008,nhanes.diq_e,taking_insulin_now,True,1,taking insulin now,nhanes.diq_e,0.7836159
+use of insulin,2009-2010,nhanes.diq_f,taking_insulin_now,True,1,taking insulin now,nhanes.diq_f,0.7836159
+use of insulin,2015-2016,nhanes.diq_i,taking_insulin_now,True,1,taking insulin now,nhanes.diq_i,0.78361595
+use of insulin,1999-2000,nhanes.diq,taking_insulin_now,True,1,taking insulin now,nhanes.diq,0.7836159
+use of other diabetes drugs,2005-2006,nhanes.diq_d,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_d,0.63446456
+use of other diabetes drugs,2017-2020,nhanes.p_diq,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.p_diq,0.63446456
+use of other diabetes drugs,2011-2012,nhanes.diq_g,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_g,0.63446456
+use of other diabetes drugs,2013-2014,nhanes.diq_h,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_h,0.63446456
+use of other diabetes drugs,2001-2002,nhanes.diq_b,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_b,0.63446456
+use of other diabetes drugs,2003-2004,nhanes.diq_c,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_c,0.63446456
+use of other diabetes drugs,2007-2008,nhanes.diq_e,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_e,0.63446456
+use of other diabetes drugs,2009-2010,nhanes.diq_f,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_f,0.63446456
+use of other diabetes drugs,2015-2016,nhanes.diq_i,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq_i,0.63446456
+use of other diabetes drugs,1999-2000,nhanes.diq,take_diabetic_pills_to_lower_blood_sugar,True,1,take diabetic pills to lower blood sugar,nhanes.diq,0.63446456
+fasting glucose (mmol/l),2005-2006,nhanes.glu_d,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_d,1.0
+fasting glucose (mmol/l),2017-2020,nhanes.p_glu,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.p_glu,1.0
+fasting glucose (mmol/l),2011-2012,nhanes.glu_g,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_g,1.0
+fasting glucose (mmol/l),2013-2014,nhanes.glu_h,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_h,1.0
+fasting glucose (mmol/l),2001-2002,nhanes.l10am_b,plasma_glucose_si_mmol_l,True,2,plasma glucose: si(mmol/l),nhanes.l10am_b,0.7288101
+fasting glucose (mmol/l),2003-2004,nhanes.l10am_c,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.l10am_c,1.0
+fasting glucose (mmol/l),2007-2008,nhanes.glu_e,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_e,1.0
+fasting glucose (mmol/l),2009-2010,nhanes.glu_f,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_f,1.0
+fasting glucose (mmol/l),2015-2016,nhanes.glu_i,fasting_glucose_mmol_l,True,1,fasting glucose (mmol/l),nhanes.glu_i,1.0
+fasting glucose (mmol/l),1999-2000,nhanes.lab10am,plasma_glucose_si_mmol_l,True,2,plasma glucose: si(mmol/l),nhanes.lab10am,0.7288101
+glycosylated hemoglobin a1c (hba1c) (%),2005-2006,nhanes.ghb_d,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_d,0.7357008
+glycosylated hemoglobin a1c (hba1c) (%),2017-2020,nhanes.p_ghb,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.p_ghb,0.7357008
+glycosylated hemoglobin a1c (hba1c) (%),2011-2012,nhanes.ghb_g,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_g,0.7357008
+glycosylated hemoglobin a1c (hba1c) (%),2013-2014,nhanes.ghb_h,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_h,0.7357008
+glycosylated hemoglobin a1c (hba1c) (%),2001-2002,nhanes.l10_b,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.l10_b,0.73570085
+glycosylated hemoglobin a1c (hba1c) (%),2003-2004,nhanes.l10_c,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.l10_c,0.7357008
+glycosylated hemoglobin a1c (hba1c) (%),2007-2008,nhanes.ghb_e,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_e,0.7357008
+glycosylated hemoglobin a1c (hba1c) (%),2009-2010,nhanes.ghb_f,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_f,0.7357008
+glycosylated hemoglobin a1c (hba1c) (%),2015-2016,nhanes.ghb_i,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_i,0.7357008
+glycosylated hemoglobin a1c (hba1c) (%),1999-2000,nhanes.lab10,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.lab10,0.73570085
+age at screening,2005-2006,nhanes.demo_d,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_d,0.9615551
+age at screening,2017-2020,nhanes.p_demo,age_in_years_at_screening,True,1,age in years at screening,nhanes.p_demo,0.9615551
+age at screening,2011-2012,nhanes.demo_g,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_g,0.9615551
+age at screening,2013-2014,nhanes.demo_h,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_h,0.9615551
+age at screening,2001-2002,nhanes.demo_b,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_b,0.9615551
+age at screening,2003-2004,nhanes.demo_c,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_c,0.9615551
+age at screening,2007-2008,nhanes.demo_e,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_e,0.9615551
+age at screening,2009-2010,nhanes.demo_f,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_f,0.9615551
+age at screening,2015-2016,nhanes.demo_i,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo_i,0.9615551
+age at screening,1999-2000,nhanes.demo,age_in_years_at_screening,True,1,age in years at screening,nhanes.demo,0.9615551
+urine albumin (mg/l),2005-2006,nhanes.alb_cr_d,albumin_urine_mg_l,True,1,"albumin, urine (mg/l)",nhanes.alb_cr_d,0.9804473
+urine albumin (mg/l),2017-2020,nhanes.p_alb_cr,albumin_urine_mg_l,True,1,"albumin, urine (mg/l)",nhanes.p_alb_cr,0.9804473
+urine albumin (mg/l),2011-2012,nhanes.alb_cr_g,albumin_urine_mg_l,True,1,"albumin, urine (mg/l)",nhanes.alb_cr_g,0.9804473
+urine albumin (mg/l),2013-2014,nhanes.alb_cr_h,albumin_urine_mg_l,True,1,"albumin, urine (mg/l)",nhanes.alb_cr_h,0.9804473
+urine albumin (mg/l),2001-2002,nhanes.l16_b,albumin_urine_mg_l_si,True,2,"albumin, urine (mg/l) si",nhanes.l16_b,0.9380132
+urine albumin (mg/l),2003-2004,nhanes.l16_c,albumin_urine_mg_l_si,True,1,"albumin, urine (mg/l) si",nhanes.l16_c,0.9380132
+urine albumin (mg/l),2007-2008,nhanes.alb_cr_e,albumin_urine_mg_l,True,1,"albumin, urine (mg/l)",nhanes.alb_cr_e,0.9804473
+urine albumin (mg/l),2009-2010,nhanes.alb_cr_f,albumin_urine_mg_l,True,1,"albumin, urine (mg/l)",nhanes.alb_cr_f,0.9804473
+urine albumin (mg/l),2015-2016,nhanes.alb_cr_i,albumin_urine_mg_l,True,1,"albumin, urine (mg/l)",nhanes.alb_cr_i,0.9804473
+urine albumin (mg/l),1999-2000,nhanes.lab16,albumin_urine_mg_l_si,True,1,"albumin, urine (mg/l) si",nhanes.lab16,0.9380132
+urine creatinine (mg/dl),2005-2006,nhanes.alb_cr_d,creatinine_urine_mg_dl,True,4,"creatinine, urine (mg/dl)",nhanes.alb_cr_d,0.97331154
+urine creatinine (mg/dl),2017-2020,nhanes.p_alb_cr,creatinine_urine_mg_dl,True,1,"creatinine, urine (mg/dl)",nhanes.p_alb_cr,0.97331154
+urine creatinine (mg/dl),2011-2012,nhanes.alb_cr_g,creatinine_urine_mg_dl,True,2,"creatinine, urine (mg/dl)",nhanes.alb_cr_g,0.97331154
+urine creatinine (mg/dl),2013-2014,nhanes.alb_cr_h,creatinine_urine_mg_dl,True,8,"creatinine, urine (mg/dl)",nhanes.alb_cr_h,0.97331154
+urine creatinine (mg/dl),2001-2002,nhanes.l16_b,creatinine_urine_mg_dl,True,3,"creatinine, urine (mg/dl)",nhanes.l16_b,0.97331154
+urine creatinine (mg/dl),2003-2004,nhanes.l16_c,creatinine_urine_mg_dl,True,8,"creatinine, urine (mg/dl)",nhanes.l16_c,0.97331154
+urine creatinine (mg/dl),2007-2008,nhanes.alb_cr_e,creatinine_urine_mg_dl,True,4,"creatinine, urine (mg/dl)",nhanes.alb_cr_e,0.97331154
+urine creatinine (mg/dl),2009-2010,nhanes.alb_cr_f,creatinine_urine_mg_dl,True,7,"creatinine, urine (mg/dl)",nhanes.alb_cr_f,0.97331154
+urine creatinine (mg/dl),2015-2016,nhanes.alb_cr_i,creatinine_urine_mg_dl,True,1,"creatinine, urine (mg/dl)",nhanes.alb_cr_i,0.97331154
+urine creatinine (mg/dl),1999-2000,nhanes.lab16,creatinine_urine_mg_dl,True,3,"creatinine, urine (mg/dl)",nhanes.lab16,0.97331154
+gender,2005-2006,nhanes.demo_d,gender,True,2,gender,nhanes.demo_d,1.0
+gender,2017-2020,nhanes.p_demo,gender,True,1,gender,nhanes.p_demo,1.0
+gender,2011-2012,nhanes.demo_g,gender,True,1,gender,nhanes.demo_g,1.0
+gender,2013-2014,nhanes.demo_h,gender,True,1,gender,nhanes.demo_h,1.0
+gender,2001-2002,nhanes.demo_b,gender,True,1,gender,nhanes.demo_b,1.0
+gender,2003-2004,nhanes.demo_c,gender,True,1,gender,nhanes.demo_c,1.0
+gender,2007-2008,nhanes.demo_e,gender,True,1,gender,nhanes.demo_e,1.0
+gender,2009-2010,nhanes.demo_f,gender,True,1,gender,nhanes.demo_f,1.0
+gender,2015-2016,nhanes.demo_i,gender,True,1,gender,nhanes.demo_i,1.0
+gender,1999-2000,nhanes.demo,gender,True,1,gender,nhanes.demo,1.0
+race/hispanic origin,2005-2006,nhanes.demo_d,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_d,1.0
+race/hispanic origin,2017-2020,nhanes.p_demo,race_hispanic_origin,True,1,race/hispanic origin,nhanes.p_demo,1.0
+race/hispanic origin,2011-2012,nhanes.demo_g,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_g,1.0
+race/hispanic origin,2013-2014,nhanes.demo_h,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_h,1.0
+race/hispanic origin,2001-2002,nhanes.demo_b,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_b,1.0
+race/hispanic origin,2003-2004,nhanes.demo_c,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_c,1.0
+race/hispanic origin,2007-2008,nhanes.demo_e,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_e,1.0
+race/hispanic origin,2009-2010,nhanes.demo_f,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_f,1.0
+race/hispanic origin,2015-2016,nhanes.demo_i,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_i,1.0
+race/hispanic origin,1999-2000,nhanes.demo,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo,1.0
+serum creatinine (mg/dl),2005-2006,nhanes.biopro_d,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_d,0.8873489
+serum creatinine (mg/dl),2017-2020,nhanes.p_biopro,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.p_biopro,0.8873489
+serum creatinine (mg/dl),2011-2012,nhanes.biopro_g,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_g,0.8873489
+serum creatinine (mg/dl),2013-2014,nhanes.biopro_h,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_h,0.8873489
+serum creatinine (mg/dl),2001-2002,nhanes.l40_b,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.l40_b,0.8873489
+serum creatinine (mg/dl),2003-2004,nhanes.l40_c,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.l40_c,0.8873489
+serum creatinine (mg/dl),2007-2008,nhanes.biopro_e,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_e,0.8873489
+serum creatinine (mg/dl),2009-2010,nhanes.biopro_f,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_f,0.8873489
+serum creatinine (mg/dl),2015-2016,nhanes.biopro_i,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.biopro_i,0.8873489
+serum creatinine (mg/dl),1999-2000,nhanes.lab18,creatinine_mg_dl,True,1,creatinine (mg/dl),nhanes.lab18,0.8873489
+neutrophil count,2005-2006,nhanes.cbc_d,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_d,0.71704406
+neutrophil count,2017-2020,nhanes.p_cbc,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.p_cbc,0.71704406
+neutrophil count,2011-2012,nhanes.cbc_g,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_g,0.71704406
+neutrophil count,2013-2014,nhanes.cbc_h,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_h,0.71704406
+neutrophil count,2001-2002,nhanes.l25_b,segmented_neutrophils_num_1000_cell_ul,True,2,segmented neutrophils num (1000 cell/ul),nhanes.l25_b,0.71704406
+neutrophil count,2003-2004,nhanes.l25_c,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.l25_c,0.71704406
+neutrophil count,2007-2008,nhanes.cbc_e,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_e,0.71704406
+neutrophil count,2009-2010,nhanes.cbc_f,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_f,0.71704406
+neutrophil count,2015-2016,nhanes.cbc_i,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.cbc_i,0.71704406
+neutrophil count,1999-2000,nhanes.lab25,segmented_neutrophils_num_1000_cell_ul,True,1,segmented neutrophils num (1000 cell/ul),nhanes.lab25,0.71704406
+lymphocyte count,2005-2006,nhanes.cbc_d,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_d,0.8138987
+lymphocyte count,2017-2020,nhanes.p_cbc,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.p_cbc,0.8138987
+lymphocyte count,2011-2012,nhanes.cbc_g,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_g,0.8138987
+lymphocyte count,2013-2014,nhanes.cbc_h,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_h,0.8138987
+lymphocyte count,2001-2002,nhanes.l25_b,lymphocyte_number_1000_cells_ul,True,2,lymphocyte number (1000 cells/ul),nhanes.l25_b,0.8138987
+lymphocyte count,2003-2004,nhanes.l25_c,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.l25_c,0.8138987
+lymphocyte count,2007-2008,nhanes.cbc_e,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_e,0.8138987
+lymphocyte count,2009-2010,nhanes.cbc_f,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_f,0.8138987
+lymphocyte count,2015-2016,nhanes.cbc_i,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.cbc_i,0.8138987
+lymphocyte count,1999-2000,nhanes.lab25,lymphocyte_number_1000_cells_ul,True,1,lymphocyte number (1000 cells/ul),nhanes.lab25,0.8138987
+had cancer,2005-2006,nhanes.mcq_d,ever_told_you_had_cancer_or_malignancy,True,1,ever told you had cancer or malignancy,nhanes.mcq_d,0.6914214
+had cancer,2017-2020,nhanes.p_mcq,ever_told_you_had_cancer_or_malignancy,True,1,ever told you had cancer or malignancy,nhanes.p_mcq,0.69142145
+had cancer,2011-2012,nhanes.mcq_g,ever_told_you_had_cancer_or_malignancy,True,1,ever told you had cancer or malignancy,nhanes.mcq_g,0.69142145
+had cancer,2013-2014,nhanes.mcq_h,ever_told_you_had_cancer_or_malignancy,True,1,ever told you had cancer or malignancy,nhanes.mcq_h,0.69142145
+had cancer,2001-2002,nhanes.mcq_b,ever_told_you_had_cancer_or_malignancy,True,1,ever told you had cancer or malignancy,nhanes.mcq_b,0.69142145
+had cancer,2003-2004,nhanes.mcq_c,ever_told_you_had_cancer_or_malignancy,True,1,ever told you had cancer or malignancy,nhanes.mcq_c,0.69142145
+had cancer,2007-2008,nhanes.mcq_e,ever_told_you_had_cancer_or_malignancy,True,1,ever told you had cancer or malignancy,nhanes.mcq_e,0.69142145
+had cancer,2009-2010,nhanes.mcq_f,ever_told_you_had_cancer_or_malignancy,True,1,ever told you had cancer or malignancy,nhanes.mcq_f,0.69142145
+had cancer,2015-2016,nhanes.mcq_i,ever_told_you_had_cancer_or_malignancy,True,1,ever told you had cancer or malignancy,nhanes.mcq_i,0.69142145
+had cancer,1999-2000,nhanes.mcq,ever_told_you_had_cancer_or_malignancy,True,1,ever told you had cancer or malignancy,nhanes.mcq,0.6914214
+pregnant at the time of the exam,2005-2006,nhanes.demo_d,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_d,0.83518887
+pregnant at the time of the exam,2017-2020,nhanes.p_demo,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.p_demo,0.83518887
+pregnant at the time of the exam,2011-2012,nhanes.demo_g,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_g,0.83518887
+pregnant at the time of the exam,2013-2014,nhanes.demo_h,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_h,0.83518887
+pregnant at the time of the exam,2001-2002,nhanes.demo_b,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_b,0.83518887
+pregnant at the time of the exam,2003-2004,nhanes.demo_c,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_c,0.83518887
+pregnant at the time of the exam,2007-2008,nhanes.demo_e,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_e,0.83518887
+pregnant at the time of the exam,2009-2010,nhanes.demo_f,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_f,0.83518887
+pregnant at the time of the exam,2015-2016,nhanes.demo_i,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo_i,0.83518887
+pregnant at the time of the exam,1999-2000,nhanes.demo,pregnancy_status_at_exam,True,1,pregnancy status at exam,nhanes.demo,0.83518887
+age,2005-2006,nhanes.demo_d,age_in_years_at_screening,True,9,age in years at screening,nhanes.demo_d,0.50418305
+age,2017-2020,nhanes.p_demo,age_in_years_at_screening,True,5,age in years at screening,nhanes.p_demo,0.50418305
+age,2011-2012,nhanes.demo_g,age_in_years_at_screening,True,9,age in years at screening,nhanes.demo_g,0.50418305
+age,2013-2014,nhanes.demo_h,age_in_years_at_screening,True,11,age in years at screening,nhanes.demo_h,0.50418305
+age,2001-2002,nhanes.demo_b,age_in_years_at_screening,True,7,age in years at screening,nhanes.demo_b,0.50418305
+age,2003-2004,nhanes.demo_c,age_in_years_at_screening,True,4,age in years at screening,nhanes.demo_c,0.50418305
+age,2007-2008,nhanes.demo_e,age_in_years_at_screening,True,10,age in years at screening,nhanes.demo_e,0.50418305
+age,2009-2010,nhanes.demo_f,age_in_years_at_screening,True,11,age in years at screening,nhanes.demo_f,0.50418305
+age,2015-2016,nhanes.demo_i,age_in_years_at_screening,True,9,age in years at screening,nhanes.demo_i,0.50418305
+age,1999-2000,nhanes.demo,age_in_years_at_screening,True,4,age in years at screening,nhanes.demo,0.50418305

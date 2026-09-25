@@ -1,0 +1,21 @@
+Search Keyword,Cycle,Expected Table,Expected Column,Found,Candidate Rank,Matched Variable,Matched Table,Similarity Score
+age (years),2005-2006,nhanes.demo_d,age_in_years_at_screening,True,7,age in years at screening,nhanes.demo_d,0.5277828
+age (years),2007-2008,nhanes.demo_e,age_in_years_at_screening,True,8,age in years at screening,nhanes.demo_e,0.5277828
+doctor told you have diabetes,2005-2006,nhanes.diq_d,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_d,1.0
+doctor told you have diabetes,2007-2008,nhanes.diq_e,doctor_told_you_have_diabetes,True,1,doctor told you have diabetes,nhanes.diq_e,1.0
+glycated hemoglobin (hba1c) level (%),2005-2006,nhanes.ghb_d,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_d,0.7550062
+glycated hemoglobin (hba1c) level (%),2007-2008,nhanes.ghb_e,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_e,0.7550062
+race/hispanic origin,2005-2006,nhanes.demo_d,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_d,1.0
+race/hispanic origin,2007-2008,nhanes.demo_e,race_hispanic_origin,True,1,race/hispanic origin,nhanes.demo_e,1.0
+gender,2005-2006,nhanes.demo_d,gender,True,2,gender,nhanes.demo_d,1.0
+gender,2007-2008,nhanes.demo_e,gender,True,1,gender,nhanes.demo_e,1.0
+any diabetic retinopathy gradings from the worse eye,2005-2006,nhanes.opxret_d,retinopathy_level_worse_eye,True,1,"retinopathy level, worse eye",nhanes.opxret_d,0.7911424
+any diabetic retinopathy gradings from the worse eye,2007-2008,nhanes.opxret_e,retinopathy_level_worse_eye,True,1,"retinopathy level, worse eye",nhanes.opxret_e,0.7911424
+systolic blood pressure 1st (mmHg),2005-2006,nhanes.bpx_d,systolic_blood_pres_1st_rdg_mm_hg,True,1,systolic: blood pres (1st rdg) mm hg,nhanes.bpx_d,0.71843654
+systolic blood pressure 1st (mmHg),2007-2008,nhanes.bpx_e,systolic_blood_pres_1st_rdg_mm_hg,True,1,systolic: blood pres (1st rdg) mm hg,nhanes.bpx_e,0.71843654
+diastolic blood pressure 1st (mmHg),2005-2006,nhanes.bpx_d,diastolic_blood_pres_1st_rdg_mm_hg,True,1,diastolic: blood pres (1st rdg) mm hg,nhanes.bpx_d,0.7349679
+diastolic blood pressure 1st (mmHg),2007-2008,nhanes.bpx_e,diastolic_blood_pres_1st_rdg_mm_hg,True,1,diastolic: blood pres (1st rdg) mm hg,nhanes.bpx_e,0.7349679
+glycohemoglobin hba1c (%),2005-2006,nhanes.ghb_d,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_d,0.90880966
+glycohemoglobin hba1c (%),2007-2008,nhanes.ghb_e,glycohemoglobin,True,1,glycohemoglobin (%),nhanes.ghb_e,0.90880966
+"presence of any retinopathy level, worse eye",2005-2006,nhanes.opxret_d,any_retinopathy_worse_eye,True,2,"any retinopathy, worse eye",nhanes.opxret_d,0.89802504
+"presence of any retinopathy level, worse eye",2007-2008,nhanes.opxret_e,any_retinopathy_worse_eye,True,2,"any retinopathy, worse eye",nhanes.opxret_e,0.89802504
