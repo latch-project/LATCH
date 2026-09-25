@@ -156,9 +156,7 @@ class VariableMatcher:
         lookup_table=None,
         llm_log=None,
     ): 
-        print("--------------")
-        print("years")
-        print(years)
+    
         try:
             if isinstance(question_parse, str):
                 question_parse_dict = json.loads(question_parse)

@@ -26,29 +26,51 @@ def main(result_folder, prompt_folder, sql_folder, analysis_name, llm_provider):
     lookup_table = None
     llm_log = None
 
-    for question_file in question_files:
-        question_path = prompt_folder / question_file
+    for question_path in question_files:
+        question_basename = question_path.stem
 
-        result_log = result_folder / f"{analysis_name}_{llm_provider}_{question_file}_result_log.csv"
+        result_log = (
+            result_folder
+            / f"{analysis_name}_{llm_provider}_{question_basename}_result_log.csv"
+        )
+
+
+    # for question_file in question_files:
+    #     question_path = prompt_folder / question_file
+
+    #     result_log = result_folder / f"{analysis_name}_{llm_provider}_{question_file}_result_log.csv"
 
         if result_log.exists():
             result_log.unlink()
-
+        
         if not question_path.exists():
-            print(f"Skipping {question_file}: file not found")
+            print(f"Skipping {question_path.name}: file not found")
             continue
 
         with open(question_path, "r") as f:
             question = f.read().strip()
 
         if not question:
-            print(f"Skipping {question_file}: file is empty")
+            print(f"Skipping {question_path.name}: file is empty")
             continue
+
+
+        # if not question_path.exists():
+        #     print(f"Skipping {question_file}: file not found")
+        #     continue
+
+        # with open(question_path, "r") as f:
+        #     question = f.read().strip()
+
+        # if not question:
+        #     print(f"Skipping {question_file}: file is empty")
+        #     continue
 
         start_time = datetime.now()
         title = utils.random_id()
 
-        print(f"Processing {question_file} | title={title}")
+        print(f"Processing {question_path.name} | title={title}")
+
 
         manager = FileManager(title, result_log, lookup_table, llm_log)
 
@@ -123,7 +145,7 @@ def main(result_folder, prompt_folder, sql_folder, analysis_name, llm_provider):
             llm_log,
         )
 
-        print(f"Finished {question_file} in {total_time:.2f} seconds")
+        print(f"Finished {question_path.name} in {total_time:.2f} seconds")
 
     print("All questions finished successfully.")
 

@@ -71,12 +71,12 @@ FROM registry.systemic_vitals;
 CREATE INDEX idx_temp_master_systolic_blood_pressure_mm_hg ON temp_master_systolic_blood_pressure_mm_hg (patient_id);
 
 -- TEMP TABLE FOR "cholesterol"
-DROP TABLE IF EXISTS temp_master_ldl_cholesterol_mg_dl;
-CREATE TEMP TABLE temp_master_ldl_cholesterol_mg_dl AS
-SELECT patient_id, "ldl_cholesterol_mg_dl" AS "ldl_cholesterol_mg_dl"
+DROP TABLE IF EXISTS temp_master_hdl_cholesterol_mg_dl;
+CREATE TEMP TABLE temp_master_hdl_cholesterol_mg_dl AS
+SELECT patient_id, "hdl_cholesterol_mg_dl" AS "hdl_cholesterol_mg_dl"
 FROM registry.metabolic_laboratory;
 -- Add index for faster joins
-CREATE INDEX idx_temp_master_ldl_cholesterol_mg_dl ON temp_master_ldl_cholesterol_mg_dl (patient_id);
+CREATE INDEX idx_temp_master_hdl_cholesterol_mg_dl ON temp_master_hdl_cholesterol_mg_dl (patient_id);
 
 -- TEMP TABLE FOR "presence of microaneurysm", "presence of microaneurysm"
 DROP TABLE IF EXISTS temp_master_microaneurysm_status;
@@ -107,7 +107,7 @@ SELECT patient_id FROM temp_master_smoking_status
 UNION
 SELECT patient_id FROM temp_master_systolic_blood_pressure_mm_hg
 UNION
-SELECT patient_id FROM temp_master_ldl_cholesterol_mg_dl
+SELECT patient_id FROM temp_master_hdl_cholesterol_mg_dl
 UNION
 SELECT patient_id FROM temp_master_microaneurysm_status;
 
@@ -128,7 +128,7 @@ SELECT
     t6."diabetes_duration_years",
     t7."smoking_status",
     t8."systolic_blood_pressure_mm_hg",
-    t9."ldl_cholesterol_mg_dl",
+    t9."hdl_cholesterol_mg_dl",
     t10."microaneurysm_status"
 FROM temp_all_ids a
 LEFT JOIN temp_master_age t0 ON a.patient_id = t0.patient_id 
@@ -140,7 +140,7 @@ LEFT JOIN temp_master_race_group t5 ON a.patient_id = t5.patient_id
 LEFT JOIN temp_master_diabetes_duration_years t6 ON a.patient_id = t6.patient_id 
 LEFT JOIN temp_master_smoking_status t7 ON a.patient_id = t7.patient_id 
 LEFT JOIN temp_master_systolic_blood_pressure_mm_hg t8 ON a.patient_id = t8.patient_id 
-LEFT JOIN temp_master_ldl_cholesterol_mg_dl t9 ON a.patient_id = t9.patient_id 
+LEFT JOIN temp_master_hdl_cholesterol_mg_dl t9 ON a.patient_id = t9.patient_id 
 LEFT JOIN temp_master_microaneurysm_status t10 ON a.patient_id = t10.patient_id;
 
 CREATE INDEX idx_final_master_patient_id    
@@ -176,80 +176,59 @@ WHERE f."insurance_type" = 'Commercial';
 
 -- ========== STEP 2: Exclusions ==========
 
--- STEP 2.1: Exclude patients with missing age
+-- STEP 2.1: Exclude patients with missing values for age
 CREATE TEMP TABLE temp_exclusion_step1 AS
 SELECT i."patient_id"
 FROM temp_inclusion_step4 i
 JOIN final_master_table f ON i."patient_id" = f."patient_id"
 WHERE f."age" IS NOT NULL;
 
--- STEP 2.2: Exclude patients with missing diabetes_type
+-- STEP 2.2: Exclude patients with missing values for sex_at_birth
 CREATE TEMP TABLE temp_exclusion_step2 AS
 SELECT i."patient_id"
 FROM temp_exclusion_step1 i
 JOIN final_master_table f ON i."patient_id" = f."patient_id"
-WHERE f."diabetes_type" IS NOT NULL;
+WHERE f."sex_at_birth" IS NOT NULL;
 
--- STEP 2.3: Exclude patients with missing insulin_use_status
+-- STEP 2.3: Exclude patients with missing values for race_group
 CREATE TEMP TABLE temp_exclusion_step3 AS
 SELECT i."patient_id"
 FROM temp_exclusion_step2 i
 JOIN final_master_table f ON i."patient_id" = f."patient_id"
-WHERE f."insulin_use_status" IS NOT NULL;
+WHERE f."race_group" IS NOT NULL;
 
--- STEP 2.4: Exclude patients with missing insurance_type
+-- STEP 2.4: Exclude patients with missing values for diabetes_duration_years
 CREATE TEMP TABLE temp_exclusion_step4 AS
 SELECT i."patient_id"
 FROM temp_exclusion_step3 i
 JOIN final_master_table f ON i."patient_id" = f."patient_id"
-WHERE f."insurance_type" IS NOT NULL;
+WHERE f."diabetes_duration_years" IS NOT NULL;
 
--- STEP 2.5: Exclude patients with missing sex_at_birth
+-- STEP 2.5: Exclude patients with missing values for smoking_status
 CREATE TEMP TABLE temp_exclusion_step5 AS
 SELECT i."patient_id"
 FROM temp_exclusion_step4 i
 JOIN final_master_table f ON i."patient_id" = f."patient_id"
-WHERE f."sex_at_birth" IS NOT NULL;
+WHERE f."smoking_status" IS NOT NULL;
 
--- STEP 2.6: Exclude patients with missing race_group
+-- STEP 2.6: Exclude patients with missing values for systolic_blood_pressure_mm_hg
 CREATE TEMP TABLE temp_exclusion_step6 AS
 SELECT i."patient_id"
 FROM temp_exclusion_step5 i
 JOIN final_master_table f ON i."patient_id" = f."patient_id"
-WHERE f."race_group" IS NOT NULL;
+WHERE f."systolic_blood_pressure_mm_hg" IS NOT NULL;
 
--- STEP 2.7: Exclude patients with missing diabetes_duration_years
+-- STEP 2.7: Exclude patients with missing values for hdl_cholesterol_mg_dl
 CREATE TEMP TABLE temp_exclusion_step7 AS
 SELECT i."patient_id"
 FROM temp_exclusion_step6 i
 JOIN final_master_table f ON i."patient_id" = f."patient_id"
-WHERE f."diabetes_duration_years" IS NOT NULL;
+WHERE f."hdl_cholesterol_mg_dl" IS NOT NULL;
 
--- STEP 2.8: Exclude patients with missing smoking_status
+-- STEP 2.8: Exclude patients with missing values for microaneurysm_status
 CREATE TEMP TABLE temp_exclusion_step8 AS
 SELECT i."patient_id"
 FROM temp_exclusion_step7 i
-JOIN final_master_table f ON i."patient_id" = f."patient_id"
-WHERE f."smoking_status" IS NOT NULL;
-
--- STEP 2.9: Exclude patients with missing systolic_blood_pressure_mm_hg
-CREATE TEMP TABLE temp_exclusion_step9 AS
-SELECT i."patient_id"
-FROM temp_exclusion_step8 i
-JOIN final_master_table f ON i."patient_id" = f."patient_id"
-WHERE f."systolic_blood_pressure_mm_hg" IS NOT NULL;
-
--- STEP 2.10: Exclude patients with missing ldl_cholesterol_mg_dl
-CREATE TEMP TABLE temp_exclusion_step10 AS
-SELECT i."patient_id"
-FROM temp_exclusion_step9 i
-JOIN final_master_table f ON i."patient_id" = f."patient_id"
-WHERE f."ldl_cholesterol_mg_dl" IS NOT NULL;
-
--- STEP 2.11: Exclude patients with missing microaneurysm_status
-CREATE TEMP TABLE temp_exclusion_step11 AS
-SELECT i."patient_id"
-FROM temp_exclusion_step10 i
 JOIN final_master_table f ON i."patient_id" = f."patient_id"
 WHERE f."microaneurysm_status" IS NOT NULL;
 
@@ -258,77 +237,67 @@ WHERE f."microaneurysm_status" IS NOT NULL;
 -- The final temp table in the exclusion sequence becomes temp_cohort.
 CREATE TEMP TABLE temp_cohort AS
 SELECT "patient_id"
-FROM temp_exclusion_step11;
+FROM temp_exclusion_step8;
 
 -- ========== STEP 4: Variables ==========
 
--- 4.1 Age (categorized)
--- Extract raw age for cohort
-CREATE TEMP TABLE temp_age_raw AS
-SELECT c."patient_id", f."age"
+-- 4.1 Age
+-- Categorize age into custom bins
+CREATE TEMP TABLE temp_age AS
+SELECT c."patient_id",
+  CASE
+    WHEN f."age" < 40 THEN '< 40'
+    WHEN f."age" >= 40 AND f."age" < 60 THEN '>= 40 and < 60'
+    WHEN f."age" >= 60 THEN '>= 60'
+    ELSE NULL
+  END AS "age"
 FROM temp_cohort c
 JOIN final_master_table f ON c."patient_id" = f."patient_id";
 
--- Assign age to custom categories
-CREATE TEMP TABLE temp_age_categorized AS
-SELECT "patient_id",
-  CASE
-    WHEN "age" < 40 THEN '< 40'
-    WHEN "age" >= 40 AND "age" < 60 THEN '>= 40 and < 60'
-    WHEN "age" >= 60 THEN '>= 60'
-    ELSE NULL
-  END AS "age"
-FROM temp_age_raw;
-
 -- 4.2 Sex
--- Extract sex_at_birth for cohort
+-- Extract sex_at_birth
 CREATE TEMP TABLE temp_sex AS
 SELECT c."patient_id", f."sex_at_birth" AS "sex"
 FROM temp_cohort c
 JOIN final_master_table f ON c."patient_id" = f."patient_id";
 
 -- 4.3 Race
--- Extract race_group for cohort
+-- Extract race_group
 CREATE TEMP TABLE temp_race AS
 SELECT c."patient_id", f."race_group" AS "race"
 FROM temp_cohort c
 JOIN final_master_table f ON c."patient_id" = f."patient_id";
 
 -- 4.4 Diabetes Duration
--- Extract diabetes_duration_years for cohort
+-- Extract diabetes_duration_years
 CREATE TEMP TABLE temp_diabetes_duration AS
 SELECT c."patient_id", f."diabetes_duration_years" AS "diabetes_duration"
 FROM temp_cohort c
 JOIN final_master_table f ON c."patient_id" = f."patient_id";
 
 -- 4.5 Smoking
--- Extract smoking_status for cohort
+-- Extract smoking_status
 CREATE TEMP TABLE temp_smoking AS
 SELECT c."patient_id", f."smoking_status" AS "smoking"
 FROM temp_cohort c
 JOIN final_master_table f ON c."patient_id" = f."patient_id";
 
--- 4.6 Blood Pressure Systolic (categorized)
--- Extract raw systolic_blood_pressure_mm_hg for cohort
-CREATE TEMP TABLE temp_blood_pressure_systolic_raw AS
-SELECT c."patient_id", f."systolic_blood_pressure_mm_hg"
+-- 4.6 Blood Pressure Systolic
+-- Categorize systolic blood pressure into custom bins
+CREATE TEMP TABLE temp_blood_pressure_systolic AS
+SELECT c."patient_id",
+  CASE
+    WHEN f."systolic_blood_pressure_mm_hg" < 130 THEN '< 130'
+    WHEN f."systolic_blood_pressure_mm_hg" >= 130 THEN '>= 130'
+    ELSE NULL
+  END AS "blood_pressure_systolic"
 FROM temp_cohort c
 JOIN final_master_table f ON c."patient_id" = f."patient_id";
 
--- Assign systolic blood pressure to custom categories
-CREATE TEMP TABLE temp_blood_pressure_systolic_categorized AS
-SELECT "patient_id",
-  CASE
-    WHEN "systolic_blood_pressure_mm_hg" < 130 THEN '< 130'
-    WHEN "systolic_blood_pressure_mm_hg" >= 130 THEN '>= 130'
-    ELSE NULL
-  END AS "blood_pressure_systolic"
-FROM temp_blood_pressure_systolic_raw;
-
 -- 4.7 Cholesterol
--- Extract ldl_cholesterol_mg_dl for cohort
+-- Extract hdl_cholesterol_mg_dl
 CREATE TEMP TABLE temp_cholesterol AS
-SELECT c."patient_id", f."ldl_cholesterol_mg_dl" AS "cholesterol"
+SELECT c."patient_id", f."hdl_cholesterol_mg_dl" AS "cholesterol"
 FROM temp_cohort c
 JOIN final_master_table f ON c."patient_id" = f."patient_id";
 
@@ -348,23 +317,23 @@ JOIN final_master_table f ON c."patient_id" = f."patient_id";
 CREATE TEMP TABLE temp_final_table AS
 SELECT
   c."patient_id",
-  age_cat."age",
+  a."age",
   s."sex",
   r."race",
   dd."diabetes_duration",
   sm."smoking",
-  bps_cat."blood_pressure_systolic",
-  chol."cholesterol",
-  pom."presence_of_microaneurysm"
+  bps."blood_pressure_systolic",
+  ch."cholesterol",
+  pm."presence_of_microaneurysm"
 FROM temp_cohort c
-JOIN temp_age_categorized age_cat ON c."patient_id" = age_cat."patient_id"
+JOIN temp_age a ON c."patient_id" = a."patient_id"
 JOIN temp_sex s ON c."patient_id" = s."patient_id"
 JOIN temp_race r ON c."patient_id" = r."patient_id"
 JOIN temp_diabetes_duration dd ON c."patient_id" = dd."patient_id"
 JOIN temp_smoking sm ON c."patient_id" = sm."patient_id"
-JOIN temp_blood_pressure_systolic_categorized bps_cat ON c."patient_id" = bps_cat."patient_id"
-JOIN temp_cholesterol chol ON c."patient_id" = chol."patient_id"
-JOIN temp_presence_of_microaneurysm pom ON c."patient_id" = pom."patient_id";
+JOIN temp_blood_pressure_systolic bps ON c."patient_id" = bps."patient_id"
+JOIN temp_cholesterol ch ON c."patient_id" = ch."patient_id"
+JOIN temp_presence_of_microaneurysm pm ON c."patient_id" = pm."patient_id";
 
 -- ========== STEP 6: Final Output ==========
 SELECT * FROM temp_final_table;
