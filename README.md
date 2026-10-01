@@ -1,16 +1,9 @@
 # LATCH: LLM-Assisted Testing of Clinical Hypotheses
 
-**LATCH** is a framework that translates natural-language clinical questions into reproducible statistical analyses with structured health data.
+**LATCH** translates natural-language clinical research questions into reproducible cohort definitions, SQL queries, and statistical analyses for structured health data. It supports workflows for NHANES and AI-READI and includes a fully runnable fictional registry example demonstrating how the framework can be adapted to a new dataset without using restricted clinical data.
 
----
-
-## Versioned Releases
-
-Versioned releases of LATCH are available through GitHub Releases.
-
-Current stable release: `v1.0.0`
-
-Users seeking a fixed version of the code should use a tagged release rather than the continuously updated `main` branch.
+[Paper](https://doi.org/10.64898/2026.02.10.26346008) ·
+[Citation](#citation) 
 
 ---
 
@@ -135,7 +128,7 @@ Executable workflows for:
 - **Study extension** — targeted extensions of existing analyses
 - **Hypothesis-generating studies** — exploratory analyses beginning from investigator-formulated research questions
 - **Iterative analysis refinement** — documents successive prompt refinements and analysis outputs following human review; suffixes such as `_1`, `_2`, and `_3` indicate sequential iterations.
-- **LATCH adaptation example** — demonstrates how LATCH can be adapted to registry-style data using a synthetic schema summary. The workflow generates SQL from the synthetic schema, allowing queries to be reviewed and later executed within a protected environment without requiring direct access to the secure dataset during query generation. The configuration file (`config.py`)  can be used to specify dataset-specific schema information.
+- **LATCH dataset adaptation example** — demonstrates how LATCH can be adapted to registry-style data using fictional schema metadata and a locally generated synthetic database. The example contains no real participant data or schema metadata derived from a real registry and is not intended to reproduce the distributions of any real dataset. The configuration file (`config.py`) specifies the dataset-specific schema information.
 
 Each script can be run independently and may reference prompts from `analyses/prompts/`.
 
@@ -189,6 +182,53 @@ analyses/results/fig2_reproduction/fig_2_2_3_google_gemini-2.5-flash_result_log.
 
 This example demonstrates the workflow from the natural-language research prompt through study specification, variable mapping, analysis generation, statistical analysis, safeguards, and result logging.
 
+
+## Dataset Adaptation Example
+
+This example demonstrates how LATCH can be adapted to a registry-like dataset
+without using real data or metadata. It includes synthetic, fictional
+schema metadata and 10 tables containing 5,000 deterministically
+generated participants. These data are intended only for software testing and
+must not be used for clinical research purposes.
+
+The relevant files are:
+
+- **Schema metadata:** `data/registry/schema_summary/schema_summary.csv`
+- **Fictional CSV tables:** `data/registry/tables/`
+- **CSV generator:** `data/registry/generate_synthetic_tables.py`
+- **PostgreSQL loader:** `data/registry/load_synthetic_registry.py`
+- **Example prompt:** `analyses/prompts/registry/example_prompt.txt`
+- **Setup script:** `analyses/scripts/setup_registry_example.sh`
+- **Full-analysis runner:** `analyses/scripts/run_registry_full.sh`
+- **Optional SQL-generation runner:** `analyses/scripts/run_registry_generate_sql.sh`
+
+### Run the full example
+
+Start the dedicated local PostgreSQL container, then generate, validate, and load
+the fictional data:
+
+```bash
+bash analyses/scripts/setup_registry_example.sh
+```
+
+This setup replaces the 10 tables in the local `registry` schema and therefore
+must be used only with the dedicated demonstration database. Set `GOOGLE_API_KEY`
+in `.env`, then run:
+
+```bash
+conda run -n latch_conda bash analyses/scripts/run_registry_full.sh
+```
+
+The workflow maps variables, generates and executes SQL locally, constructs the
+cohort, runs deterministic R analysis, and logs the results under
+`analyses/results/registry/full_analysis/`. Participant records remain in the
+local database; only the study specification and schema metadata are sent to the
+LLM.
+
+To generate SQL solely from the schema summary, without accessing participant data or making API calls from the server that contains the data, run:
+`conda run -n latch_conda bash analyses/scripts/run_registry_generate_sql.sh`.
+The SQL can then be reviewed and executed inside a secure data environment.
+
 ## Expected Runtime
 
 **Data preparation and setup.** Using the provided pipeline, NHANES data preparation typically requires approximately 2–3 hours from download through PostgreSQL loading and schema generation. Processing the tabular portion of AI-READI typically requires approximately 1–2 hours after the dataset has been downloaded. Runtime can vary depending on network conditions, local hardware, and available computing resources.
@@ -222,6 +262,17 @@ These directories contain datasets, experiment code, and results used to evaluat
 NHANES data are retrieved from external source URLs maintained by NHANES. Because these upstream resources may change over time, future reruns may be affected by changes in file availability, URLs, or source organization. The download workflow was verified to function at the time of the study and repository preparation.
 
 These scripts are provided to document the workflow and code used in the study. Because LATCH includes LLM-integrated components, exact generated outputs may not be identical across runs.
+
+
+## Releases and Support
+
+The current stable release is `v.1.1.0`. For a fixed version of the code, use a
+tagged [GitHub release](https://github.com/latch-project/LATCH/releases) rather
+than the continuously updated `main` branch.
+
+If you encounter a problem or have a question, please
+[open an issue](https://github.com/latch-project/LATCH/issues).
+
 
 ## Citation
 
