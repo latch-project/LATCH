@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 echo "ROOT_DIR: $ROOT_DIR"
 
-export PYTHONPATH="$ROOT_DIR:$PYTHONPATH"
+export PYTHONPATH="$ROOT_DIR:${PYTHONPATH:-}"
 
 RESULT_ROOT="$ROOT_DIR/analyses/results/registry"
 PROMPT_ROOT="$ROOT_DIR/analyses/prompts/registry"
@@ -16,6 +17,8 @@ RESULT_FOLDER="$RESULT_ROOT/result"
 SQL_FOLDER="$RESULT_ROOT/sql"
 
 mkdir -p "$RESULT_FOLDER" "$SQL_FOLDER"
+
+python3 "$ROOT_DIR/data/registry/validate_registry_example.py"
 
 python3 "$RUNNER_PY" \
     --prompt_folder "$PROMPT_ROOT" \

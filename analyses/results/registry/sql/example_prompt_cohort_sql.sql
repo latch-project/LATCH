@@ -7,19 +7,19 @@ WITH counts AS (
     UNION ALL
     SELECT 3 AS step_num, 'Step 3' AS step, COUNT(*) AS count FROM temp_master_insurance_type
     UNION ALL
-    SELECT 4 AS step_num, 'Step 4' AS step, COUNT(*) AS count FROM temp_master_sex_at_birth
+    SELECT 4 AS step_num, 'Step 4' AS step, COUNT(*) AS count FROM temp_master_hdl_cholesterol_mg_dl
     UNION ALL
-    SELECT 5 AS step_num, 'Step 5' AS step, COUNT(*) AS count FROM temp_master_race_group
+    SELECT 5 AS step_num, 'Step 5' AS step, COUNT(*) AS count FROM temp_master_microaneurysm_status
     UNION ALL
-    SELECT 6 AS step_num, 'Step 6' AS step, COUNT(*) AS count FROM temp_master_diabetes_duration_years
+    SELECT 6 AS step_num, 'Step 6' AS step, COUNT(*) AS count FROM temp_master_sex_at_birth
     UNION ALL
-    SELECT 7 AS step_num, 'Step 7' AS step, COUNT(*) AS count FROM temp_master_smoking_status
+    SELECT 7 AS step_num, 'Step 7' AS step, COUNT(*) AS count FROM temp_master_race_group
     UNION ALL
-    SELECT 8 AS step_num, 'Step 8' AS step, COUNT(*) AS count FROM temp_master_systolic_blood_pressure_mm_hg
+    SELECT 8 AS step_num, 'Step 8' AS step, COUNT(*) AS count FROM temp_master_diabetes_duration_years
     UNION ALL
-    SELECT 9 AS step_num, 'Step 9' AS step, COUNT(*) AS count FROM temp_master_hdl_cholesterol_mg_dl
+    SELECT 9 AS step_num, 'Step 9' AS step, COUNT(*) AS count FROM temp_master_smoking_status
     UNION ALL
-    SELECT 10 AS step_num, 'Step 10' AS step, COUNT(*) AS count FROM temp_master_microaneurysm_status
+    SELECT 10 AS step_num, 'Step 10' AS step, COUNT(*) AS count FROM temp_master_systolic_blood_pressure_mm_hg
     UNION ALL
     SELECT 11 AS step_num, 'Step 11' AS step, COUNT(*) AS count FROM temp_all_ids
     UNION ALL
@@ -31,41 +31,47 @@ WITH counts AS (
     UNION ALL
     SELECT 15 AS step_num, 'STEP 1.4: From the above group, include only those with private insurance (Commercial)' AS step, COUNT(*) AS count FROM temp_inclusion_step4
     UNION ALL
-    SELECT 16 AS step_num, 'STEP 2.1: Exclude patients with missing values for age' AS step, COUNT(*) AS count FROM temp_exclusion_step1
+    SELECT 16 AS step_num, 'STEP 2.1: Exclude patients with missing cholesterol (hdl_cholesterol_mg_dl)' AS step, COUNT(*) AS count FROM temp_exclusion_step1
     UNION ALL
-    SELECT 17 AS step_num, 'STEP 2.2: Exclude patients with missing values for sex_at_birth' AS step, COUNT(*) AS count FROM temp_exclusion_step2
+    SELECT 17 AS step_num, 'STEP 2.2: Exclude patients with missing microaneurysm status' AS step, COUNT(*) AS count FROM temp_exclusion_step2
     UNION ALL
-    SELECT 18 AS step_num, 'STEP 2.3: Exclude patients with missing values for race_group' AS step, COUNT(*) AS count FROM temp_exclusion_step3
+    SELECT 18 AS step_num, 'STEP 2.3: Exclude patients with missing age' AS step, COUNT(*) AS count FROM temp_exclusion_step3
     UNION ALL
-    SELECT 19 AS step_num, 'STEP 2.4: Exclude patients with missing values for diabetes_duration_years' AS step, COUNT(*) AS count FROM temp_exclusion_step4
+    SELECT 19 AS step_num, 'STEP 2.4: Exclude patients with missing sex' AS step, COUNT(*) AS count FROM temp_exclusion_step4
     UNION ALL
-    SELECT 20 AS step_num, 'STEP 2.5: Exclude patients with missing values for smoking_status' AS step, COUNT(*) AS count FROM temp_exclusion_step5
+    SELECT 20 AS step_num, 'STEP 2.5: Exclude patients with missing race' AS step, COUNT(*) AS count FROM temp_exclusion_step5
     UNION ALL
-    SELECT 21 AS step_num, 'STEP 2.6: Exclude patients with missing values for systolic_blood_pressure_mm_hg' AS step, COUNT(*) AS count FROM temp_exclusion_step6
+    SELECT 21 AS step_num, 'STEP 2.6: Exclude patients with missing diabetes duration' AS step, COUNT(*) AS count FROM temp_exclusion_step6
     UNION ALL
-    SELECT 22 AS step_num, 'STEP 2.7: Exclude patients with missing values for hdl_cholesterol_mg_dl' AS step, COUNT(*) AS count FROM temp_exclusion_step7
+    SELECT 22 AS step_num, 'STEP 2.7: Exclude patients with missing smoking status' AS step, COUNT(*) AS count FROM temp_exclusion_step7
     UNION ALL
-    SELECT 23 AS step_num, 'STEP 2.8: Exclude patients with missing values for microaneurysm_status' AS step, COUNT(*) AS count FROM temp_exclusion_step8
+    SELECT 23 AS step_num, 'STEP 2.8: Exclude patients with missing systolic blood pressure' AS step, COUNT(*) AS count FROM temp_exclusion_step8
     UNION ALL
-    SELECT 24 AS step_num, 'The final temp table in the exclusion sequence becomes temp_cohort.' AS step, COUNT(*) AS count FROM temp_cohort
+    SELECT 24 AS step_num, 'STEP 2.9: Exclude patients with missing diabetes type (already handled by inclusion, but for completeness)' AS step, COUNT(*) AS count FROM temp_exclusion_step9
     UNION ALL
-    SELECT 25 AS step_num, 'Categorize age into custom bins' AS step, COUNT(*) AS count FROM temp_age
+    SELECT 25 AS step_num, 'STEP 2.10: Exclude patients with missing insulin use status (already handled by inclusion, but for completeness)' AS step, COUNT(*) AS count FROM temp_exclusion_step10
     UNION ALL
-    SELECT 26 AS step_num, 'Extract sex_at_birth' AS step, COUNT(*) AS count FROM temp_sex
+    SELECT 26 AS step_num, 'STEP 2.11: Exclude patients with missing insurance type (already handled by inclusion, but for completeness)' AS step, COUNT(*) AS count FROM temp_exclusion_step11
     UNION ALL
-    SELECT 27 AS step_num, 'Extract race_group' AS step, COUNT(*) AS count FROM temp_race
+    SELECT 27 AS step_num, 'The final temp table in the exclusion sequence becomes temp_cohort.' AS step, COUNT(*) AS count FROM temp_cohort
     UNION ALL
-    SELECT 28 AS step_num, 'Extract diabetes_duration_years' AS step, COUNT(*) AS count FROM temp_diabetes_duration
+    SELECT 28 AS step_num, 'Bin age into custom categories' AS step, COUNT(*) AS count FROM temp_age_binned
     UNION ALL
-    SELECT 29 AS step_num, 'Extract smoking_status' AS step, COUNT(*) AS count FROM temp_smoking
+    SELECT 29 AS step_num, 'Extract sex_at_birth' AS step, COUNT(*) AS count FROM temp_sex
     UNION ALL
-    SELECT 30 AS step_num, 'Categorize systolic blood pressure into custom bins' AS step, COUNT(*) AS count FROM temp_blood_pressure_systolic
+    SELECT 30 AS step_num, 'Extract race_group' AS step, COUNT(*) AS count FROM temp_race
     UNION ALL
-    SELECT 31 AS step_num, 'Extract hdl_cholesterol_mg_dl' AS step, COUNT(*) AS count FROM temp_cholesterol
+    SELECT 31 AS step_num, 'Extract diabetes_duration_years' AS step, COUNT(*) AS count FROM temp_diabetes_duration
     UNION ALL
-    SELECT 32 AS step_num, 'Map microaneurysm_status to binary (1 for Present, 0 for Absent)' AS step, COUNT(*) AS count FROM temp_presence_of_microaneurysm
+    SELECT 32 AS step_num, 'Extract smoking_status' AS step, COUNT(*) AS count FROM temp_smoking
     UNION ALL
-    SELECT 33 AS step_num, '========== STEP 5: Final Table ==========' AS step, COUNT(*) AS count FROM temp_final_table
+    SELECT 33 AS step_num, 'Bin systolic_blood_pressure_mm_hg into custom categories' AS step, COUNT(*) AS count FROM temp_blood_pressure_systolic_binned
+    UNION ALL
+    SELECT 34 AS step_num, 'Extract hdl_cholesterol_mg_dl' AS step, COUNT(*) AS count FROM temp_cholesterol
+    UNION ALL
+    SELECT 35 AS step_num, 'Map microaneurysm_status to 1/0' AS step, COUNT(*) AS count FROM temp_microaneurysm_mapped
+    UNION ALL
+    SELECT 36 AS step_num, '========== STEP 5: Final Table ==========' AS step, COUNT(*) AS count FROM temp_final_table
 ),
 differences AS (
     SELECT

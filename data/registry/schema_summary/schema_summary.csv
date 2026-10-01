@@ -1,5 +1,5 @@
 column_name,column_description,table_name,values
-synthetic_patient_id,Synthetic patient identifier used only for testing.,patient_demographics,"['SYN-DM-0001', 'SYN-DM-0002', 'SYN-DM-0003']"
+patient_id,Synthetic patient identifier used only for testing.,patient_demographics,"['SYN-DM-0001', 'SYN-DM-0002', 'SYN-DM-0003']"
 age,Synthetic age.,patient_demographics,"['62', '91', '28', '74']"
 sex_at_birth,Synthetic sex-at-birth category.,patient_demographics,"['Female', 'Male', 'Intersex', 'Unknown']"
 race_group,Synthetic race category.,patient_demographics,"['Asian', 'Black', 'White', 'Other', 'Unknown']"

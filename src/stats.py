@@ -4,6 +4,7 @@ from rpy2.robjects import r, globalenv
 from rpy2.robjects import pandas2ri
 from rpy2.robjects.conversion import localconverter
 import rpy2.robjects as ro
+from config import data_config
 
 
 def description(analysis, df, id_column):
@@ -1467,6 +1468,10 @@ def run_description(analysis, df, schema):
         id_column = "respondent_sequence_number"
     elif "aireadi" in schema:
         id_column = "person_id"
+    elif "registry" in schema:
+        id_column = data_config.schema_configs["registry"]["patientid"]
+    else:
+        raise ValueError(f"Unsupported schema for statistical analysis: {schema}")
 
     r1 = description(analysis, df, id_column)
 
@@ -1492,6 +1497,10 @@ def imputation_module(analysis, df, schema):
         id_column = "respondent_sequence_number"
     elif "aireadi" in schema:
         id_column = "person_id"
+    elif "registry" in schema:
+        id_column = data_config.schema_configs["registry"]["patientid"]
+    else:
+        raise ValueError(f"Unsupported schema for statistical analysis: {schema}")
 
     if "weighted" in analysis:
         r = f"""
@@ -1820,6 +1829,10 @@ def run_r(analysis, df, schema):
         id_column = "respondent_sequence_number"
     elif "aireadi" in schema:
         id_column = "person_id"
+    elif "registry" in schema:
+        id_column = data_config.schema_configs["registry"]["patientid"]
+    else:
+        raise ValueError(f"Unsupported schema for statistical analysis: {schema}")
 
     r1 = description(analysis, df, id_column)
 

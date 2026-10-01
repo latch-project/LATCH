@@ -51,10 +51,11 @@ class DataConfig:
             "available_years": [[2023, 2025]]
         },
         "registry": {
-            "schema_folder": f"{root}/registry/schema",
+            # Registry adaptation uses schema-level metadata for variable matching.
+            "schema_folder": f"{root}/registry/schema_summary",
             "dictionary": f"{root}/registry/schema_summary/schema_summary.csv",
             "patientid": "patient_id",
-            "available_years": [[2021, 2023]]
+            "available_years": [[2001, 2002]]
         },
     } 
 ###########################
