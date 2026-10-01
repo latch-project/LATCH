@@ -1,6 +1,8 @@
 # LATCH: LLM-Assisted Testing of Clinical Hypotheses
 
-**LATCH** translates natural-language clinical research questions into reproducible cohort definitions, SQL queries, and statistical analyses for structured health data. It supports workflows for NHANES and AI-READI and includes a fully runnable fictional registry example demonstrating how the framework can be adapted to a new dataset without using restricted clinical data.
+**LATCH** translates natural-language clinical research questions into reproducible cohort definitions, SQL queries, and statistical analyses for structured health data. 
+
+It supports workflows for NHANES and AI-READI and includes a fully runnable fictional registry example demonstrating how the framework can be adapted to a new dataset without using restricted clinical data.
 
 [Paper](https://doi.org/10.64898/2026.02.10.26346008) ·
 [Citation](#citation) 
@@ -185,49 +187,25 @@ This example demonstrates the workflow from the natural-language research prompt
 
 ## Dataset Adaptation Example
 
-This example demonstrates how LATCH can be adapted to a registry-like dataset
-without using real data or metadata. It includes synthetic, fictional
-schema metadata and 10 tables containing 5,000 deterministically
-generated participants. These data are intended only for software testing and
-must not be used for clinical research purposes.
-
-The relevant files are:
-
-- **Schema metadata:** `data/registry/schema_summary/schema_summary.csv`
-- **Fictional CSV tables:** `data/registry/tables/`
-- **CSV generator:** `data/registry/generate_synthetic_tables.py`
-- **PostgreSQL loader:** `data/registry/load_synthetic_registry.py`
-- **Example prompt:** `analyses/prompts/registry/example_prompt.txt`
-- **Setup script:** `analyses/scripts/setup_registry_example.sh`
-- **Full-analysis runner:** `analyses/scripts/run_registry_full.sh`
-- **Optional SQL-generation runner:** `analyses/scripts/run_registry_generate_sql.sh`
-
-### Run the full example
-
-Start the dedicated local PostgreSQL container, then generate, validate, and load
-the fictional data:
+An example using fictional placeholder metadata and locally generated records is
+provided to demonstrate adaptation to a new dataset. It is not derived from real
+participant data or registry metadata and must not be used for clinical
+inference.
 
 ```bash
-bash analyses/scripts/setup_registry_example.sh
-```
-
-This setup replaces the 10 tables in the local `registry` schema and therefore
-must be used only with the dedicated demonstration database. Set `GOOGLE_API_KEY`
-in `.env`, then run:
-
-```bash
+docker compose -f database.yaml up -d
+conda run -n latch_conda bash analyses/scripts/setup_registry_example.sh
 conda run -n latch_conda bash analyses/scripts/run_registry_full.sh
 ```
 
-The workflow maps variables, generates and executes SQL locally, constructs the
-cohort, runs deterministic R analysis, and logs the results under
-`analyses/results/registry/full_analysis/`. Participant records remain in the
-local database; only the study specification and schema metadata are sent to the
-LLM.
+Set `GOOGLE_API_KEY` in `.env` before running the analysis. Results are written
+to `analyses/results/registry/full_analysis/`.
 
-To generate SQL solely from the schema summary, without accessing participant data or making API calls from the server that contains the data, run:
-`conda run -n latch_conda bash analyses/scripts/run_registry_generate_sql.sh`.
-The SQL can then be reviewed and executed inside a secure data environment.
+
+To generate SQL without connecting to the data environment, run
+`conda run -n latch_conda bash analyses/scripts/run_registry_generate_sql.sh`
+using only the schema metadata.
+
 
 ## Expected Runtime
 
